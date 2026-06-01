@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WanderSync - AI Travel Course & Companionship Platform</title>
+  <meta name="description" content="AI-personalized travel itinerary planning and verified real-name companion matching. Connected with Urang Cafe.">
+  <link rel="stylesheet" href="style.css">
+  <!-- Inline SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%238a5cf6%22/></svg>">
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.4z"/>
+        </svg>
+      </div>
+      <div class="logo-text" data-i18n="nav_logo">WanderSync</div>
+    </div>
+    
+    <div class="header-right">
+      <!-- Language Toggle -->
+      <button class="lang-toggle" id="langToggle" aria-label="Toggle Language">
+        <span class="active" id="lang-ko">KO</span>
+        <span id="lang-en">EN</span>
+      </button>
+      
+      <!-- User Status -->
+      <div class="user-status-widget">
+        <div class="dot"></div>
+        <span id="headerProfileName">홍길동</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Navigation Tabs -->
+  <nav class="nav-tabs">
+    <button class="nav-tab-btn active" data-target="dashboard">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span data-i18n="nav_dashboard">홈</span>
+    </button>
+    <button class="nav-tab-btn" data-target="planner">
+      <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+      <span data-i18n="nav_planner">AI 일정 생성</span>
+    </button>
+    <button class="nav-tab-btn" data-target="companions">
+      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      <span data-i18n="nav_companions">동행 매칭</span>
+    </button>
+    <button class="nav-tab-btn" data-target="profile">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span data-i18n="nav_profile">내 프로필</span>
+    </button>
+  </nav>
+
+  <!-- Main View Frame -->
+  <main>
+    
+    <!-- 1. DASHBOARD VIEW -->
+    <section id="dashboard-view" class="view-section active">
+      <div class="hero-banner">
+        <h1 data-i18n="dash_welcome">어디로 떠나시나요?</h1>
+        <p data-i18n="dash_subtitle">AI 맞춤 코스부터 실시간 실명 동행 매칭까지 한 번에</p>
+        <div class="hero-cta">
+          <button class="btn-primary" onclick="document.querySelector('[data-target=planner]').click()">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <span data-i18n="dash_start_planner">AI 코스 짜러가기</span>
+          </button>
+          <button class="btn-secondary" onclick="document.querySelector('[data-target=companions]').click()">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <span data-i18n="dash_find_companion">함께할 동행 찾기</span>
+          </button>
+        </div>
+      </div>
+
+
+      <h3 class="section-title"><span></span><span data-i18n="dash_popular_dest">인기 여행지</span></h3>
+      <div class="destinations-grid" id="popularDestinationsGrid">
+        <!-- Rendered dynamically from CITIES -->
+      </div>
+
+      <!-- Urang Cafe & Real-Name Reference Section -->
+      <div class="ref-section">
+        <div class="ref-header">
+          <div class="ref-badge" data-i18n="dash_ref_title">검증된 여행 커뮤니티 연동</div>
+          <div style="color: var(--secondary); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Urang Cafe Reference</div>
+        </div>
+        <p class="ref-body" data-i18n="dash_ref_desc">
+          네이버 대표 유럽 여행 카페 '유랑' 및 주요 동행 서비스의 매칭 노하우를 결합하여 신뢰할 수 있는 매칭 시스템을 구축했습니다. 실명제 SNS 연동 프로필과 카카오 실명 검증 연계를 통해 더욱 투명하고 즐거운 동행 서비스를 선사합니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 2. AI PLANNER VIEW -->
+    <section id="planner-view" class="view-section">
+      <h2 class="section-title"><span></span><span data-i18n="planner_title">AI 여행 코스 플래너</span></h2>
+      <p style="color: var(--text-muted); margin-bottom: 24px;" data-i18n="planner_desc">도시를 선택하고 여행 날짜와 선호하는 취향을 고르시면 AI가 정밀한 시간대별 일정을 추천해 드립니다.</p>
+
+      <div class="planner-container">
+        <!-- Inputs Sidebar -->
+        <div class="planner-sidebar">
+          <div class="form-group">
+            <label class="form-label" for="plannerDest" data-i18n="planner_dest_label">목적지 도시 선택</label>
+            <select class="form-control" id="plannerDest">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="plannerDuration" data-i18n="planner_date_label">여행 기간 (일수)</label>
+            <select class="form-control" id="plannerDuration">
+              <option value="1">1 Day (1일차)</option>
+              <option value="2" selected>2 Days (2일차)</option>
+              <option value="3">3 Days (3일차)</option>
+              <option value="4">4 Days (4일차)</option>
+              <option value="5">5 Days (5일차)</option>
+              <option value="6">6 Days (6일차)</option>
+              <option value="7">7 Days (7일차)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="planner_pref_label">나의 여행 취향 (다중 선택 가능)</label>
+            <div class="pref-selector">
+              <div class="pref-chip selected" data-pref="healing">
+                <span data-i18n="planner_pref_healing">🌿 힐링 & 휴식</span>
+                <span class="checkbox"></span>
+              </div>
+              <div class="pref-chip selected" data-pref="gourmet">
+                <span data-i18n="planner_pref_gourmet">🍕 식도락 & 까페</span>
+                <span class="checkbox"></span>
+              </div>
+              <div class="pref-chip" data-pref="culture">
+                <span data-i18n="planner_pref_culture">🏛️ 관광 & 역사/문화</span>
+                <span class="checkbox"></span>
+              </div>
+              <div class="pref-chip" data-pref="activity">
+                <span data-i18n="planner_pref_activity">🏃 액티비티 & 스포츠</span>
+                <span class="checkbox"></span>
+              </div>
+              <div class="pref-chip" data-pref="shopping">
+                <span data-i18n="planner_pref_shopping">🛍️ 쇼핑 & 인생샷</span>
+                <span class="checkbox"></span>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="generateItineraryBtn" style="width: 100%; justify-content: center; margin-top: 10px;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <span data-i18n="planner_generate_btn">AI 맞춤 코스 생성하기</span>
+          </button>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="planner-results">
+          <!-- Shimmer Loader -->
+          <div class="shimmer-loader" id="itineraryLoader">
+            <h4 style="text-align:center;" data-i18n="planner_generating">AI가 가장 최적의 루트를 생성하고 있습니다...</h4>
+            <div class="shimmer-line" style="width: 80%; height: 32px; margin: 0 auto;"></div>
+            <div class="shimmer-line" style="width: 90%;"></div>
+            <div class="shimmer-line" style="width: 95%;"></div>
+            <div class="shimmer-line" style="width: 70%;"></div>
+            <div class="shimmer-line" style="width: 85%;"></div>
+          </div>
+
+          <!-- Real Content -->
+          <div id="itineraryResultContent">
+            <h3 class="section-title" style="margin-bottom:8px;">
+              <span></span>
+              <span data-i18n="planner_result_title">추천 여행 일정</span>
+            </h3>
+            <p style="color:var(--text-muted); font-size: 13px; margin-bottom: 24px;" data-i18n="planner_result_desc">선택하신 취향에 최적화된 시간대별 동선입니다. (각 장소별 예상 소요 시간 포함)</p>
+            
+            <!-- Day tabs navigator -->
+            <div class="day-navigator" id="itineraryDayTabs">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <!-- Timeline items list -->
+            <div class="timeline" id="itineraryTimelineList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. COMPANION MATCHING VIEW -->
+    <section id="companions-view" class="view-section">
+      <div class="comp-header-bar">
+        <div>
+          <h2 class="section-title" style="margin-bottom: 6px;"><span></span><span data-i18n="comp_title">실시간 동행 매칭</span></h2>
+          <p style="color: var(--text-muted); font-size: 13.5px;" data-i18n="comp_desc">카테고리를 선택하거나 특정 장소를 골라 동행 방을 만들어 함께 여행해 보세요.</p>
+        </div>
+        
+        <button class="btn-primary" id="openCreateRoomModalBtn">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          <span data-i18n="comp_btn_create">동행 방 만들기</span>
+        </button>
+      </div>
+
+      <!-- Categories filters list -->
+      <div class="category-tabs" id="companionCategoryFilterList" style="margin: 20px 0;">
+        <button class="category-tab-btn active" data-category="all" data-i18n="comp_category_all">전체</button>
+        <button class="category-tab-btn" data-category="country" data-i18n="comp_category_country">나라별</button>
+        <button class="category-tab-btn" data-category="city" data-i18n="comp_category_city">도시별</button>
+        <button class="category-tab-btn" data-category="place" data-i18n="comp_category_place">특정 장소</button>
+        <button class="category-tab-btn" data-category="restaurant" data-i18n="comp_category_restaurant">식당</button>
+        <button class="category-tab-btn" data-category="taxi" data-i18n="comp_category_taxi">택시 쉐어</button>
+        <button class="category-tab-btn" data-category="rent" data-i18n="comp_category_rent">렌트카 쉐어</button>
+        <button class="category-tab-btn" data-category="activity" data-i18n="comp_category_activity">액티비티</button>
+      </div>
+
+      <!-- Cards Grid -->
+      <div class="companion-grid" id="companionRoomCardsGrid">
+        <!-- Rendered dynamically from mockData / state -->
+      </div>
+    </section>
+
+    <!-- 4. MY PROFILE VIEW -->
+    <section id="profile-view" class="view-section">
+      <div class="profile-card">
+        <!-- Verification stamp indicator -->
+        <div class="verified-stamp" id="profileVerifiedStamp" data-i18n="profile_verified">실명 인증 완료</div>
+        
+        <h2 class="section-title"><span></span><span data-i18n="profile_title">프로필 설정</span></h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;" data-i18n="profile_info">
+          동행 매칭 시 상대방에게 공개되는 정보입니다. 실명 인증 시 신뢰도가 더 높아집니다.
+        </p>
+
+        <form id="profileForm" onsubmit="event.preventDefault();">
+          <div class="form-group">
+            <label class="form-label" for="profileName" data-i18n="profile_name">이름/닉네임</label>
+            <input type="text" class="form-control" id="profileName" value="김민수" required>
+          </div>
+
+          <div class="grid-2col">
+            <div class="form-group">
+              <label class="form-label" for="profileGender" data-i18n="profile_gender">성별</label>
+              <select class="form-control" id="profileGender">
+                <option value="남성" data-i18n="gender_male" selected>남성</option>
+                <option value="여성" data-i18n="gender_female">여성</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="profileMBTI" data-i18n="profile_mbti">MBTI</label>
+              <select class="form-control" id="profileMBTI">
+                <option value="INTJ">INTJ</option>
+                <option value="INFP">INFP</option>
+                <option value="INFJ">INFJ</option>
+                <option value="INTP">INTP</option>
+                <option value="ISTJ">ISTJ</option>
+                <option value="ISFP">ISFP</option>
+                <option value="ISFJ">ISFJ</option>
+                <option value="ISTP">ISTP</option>
+                <option value="ENTJ">ENTJ</option>
+                <option value="ENFP">ENFP</option>
+                <option value="ENFJ">ENFJ</option>
+                <option value="ENTP">ENTP</option>
+                <option value="ESTJ">ESTJ</option>
+                <option value="ESFP" selected>ESFP</option>
+                <option value="ESFJ">ESFJ</option>
+                <option value="ESTP">ESTP</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="button" class="btn-secondary" id="verifyIdentityBtn" style="width:100%; justify-content:center; margin-bottom: 16px; border-color: var(--secondary);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--secondary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <span data-i18n="profile_verify_btn">실명 인증하기 (카카오/네이버 연동)</span>
+          </button>
+
+          <button type="submit" class="btn-primary" id="saveProfileBtn" style="width:100%; justify-content:center;">
+            <span data-i18n="profile_save">프로필 저장하기</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 5. CHAT ROOM VIEW -->
+    <section id="chat-view" class="view-section">
+      <div class="chat-container">
+        <!-- Sidebar Members -->
+        <div class="chat-sidebar">
+          <h4 data-i18n="chat_members">참여자 목록</h4>
+          <div class="member-list" id="chatMemberListContainer">
+            <!-- Members rendered dynamically -->
+          </div>
+          
+          <button class="btn-secondary" id="leaveChatRoomBtn" style="margin-top: auto; justify-content: center; font-size: 13px; padding: 10px; border-color: var(--accent); color: var(--accent);">
+            <span data-i18n="chat_leave_btn">동행 탈퇴하기</span>
+          </button>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area">
+          <div class="chat-header">
+            <div class="chat-room-title" id="chatRoomTitleText">동행 소통방</div>
+            <div class="room-status" id="chatRoomCategoryBadge">TAXI</div>
+          </div>
+          
+          <!-- Message log list -->
+          <div class="chat-messages" id="chatMessagesLogList">
+            <!-- Messages rendered dynamically -->
+          </div>
+
+          <!-- Input bar -->
+          <div class="chat-input-bar">
+            <input type="text" id="chatInputMessageField" placeholder="메시지를 입력하세요... (코스 및 비용 등 자유로운 조율)" data-i18n-placeholder="chat_placeholder">
+            <button id="chatSendMessageBtn">
+              <span data-i18n="chat_send">전송</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CREATE COMPANION ROOM MODAL -->
+  <div class="modal-overlay" id="createRoomModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="createRoomModalTitle" data-i18n="modal_title">새 동행 모집 생성</h3>
+        <button class="modal-close" id="closeCreateRoomModalBtn">&times;</button>
+      </div>
+      
+      <form id="createRoomForm" onsubmit="event.preventDefault();">
+        <div class="form-group">
+          <label class="form-label" for="modalRoomTitle" data-i18n="modal_room_title">모집 제목</label>
+          <input type="text" class="form-control" id="modalRoomTitle" placeholder="예: 여의도 더현대 서울 쇼핑하고 카폐 같이 가실 분!" required>
+        </div>
+
+        <div class="grid-2col">
+          <div class="form-group">
+            <label class="form-label" for="modalRoomDest" data-i18n="modal_room_dest">목적지 도시</label>
+            <select class="form-control" id="modalRoomDest">
+              <!-- Loaded dynamically -->
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="modalRoomCat" data-i18n="modal_room_cat">동행 카테고리</label>
+            <select class="form-control" id="modalRoomCat">
+              <option value="country" data-i18n="comp_category_country">나라별</option>
+              <option value="city" data-i18n="comp_category_city" selected>도시별</option>
+              <option value="place" data-i18n="comp_category_place">특정 장소</option>
+              <option value="restaurant" data-i18n="comp_category_restaurant">식당</option>
+              <option value="taxi" data-i18n="comp_category_taxi">택시 쉐어</option>
+              <option value="rent" data-i18n="comp_category_rent">렌트카 쉐어</option>
+              <option value="activity" data-i18n="comp_category_activity">액티비티</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modalRoomPlace" data-i18n="modal_room_place">정확한 장소 (직접 입력 가능)</label>
+          <input type="text" class="form-control" id="modalRoomPlace" placeholder="예: 더현대 정문 앞 사거리" required>
+        </div>
+
+        <div class="grid-datetime">
+          <div class="form-group">
+            <label class="form-label" for="modalRoomDate" data-i18n="modal_room_date">동행 날짜</label>
+            <input type="date" class="form-control" id="modalRoomDate" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="modalRoomTime" data-i18n="modal_room_time">동행 시작 시간</label>
+            <input type="time" class="form-control" id="modalRoomTime" value="14:00" required>
+          </div>
+        </div>
+
+        <div class="grid-2col">
+          <div class="form-group">
+            <label class="form-label" for="modalRoomMax" data-i18n="modal_room_max">최대 모집 인원</label>
+            <select class="form-control" id="modalRoomMax">
+              <option value="0">인원 제한 없음 (Unlimited)</option>
+              <option value="2">2명 (2 Pax)</option>
+              <option value="3">3명 (3 Pax)</option>
+              <option value="4" selected>4명 (4 Pax)</option>
+              <option value="6">6명 (6 Pax)</option>
+              <option value="8">8명 (8 Pax)</option>
+              <option value="10">10명 (10 Pax)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modalRoomGender" data-i18n="modal_room_gender">희망 성별</label>
+            <select class="form-control" id="modalRoomGender">
+              <option value="성별 무관" data-i18n="gender_any" selected>성별 무관</option>
+              <option value="남성" data-i18n="gender_male">남성만</option>
+              <option value="여성" data-i18n="gender_female">여성만</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modalRoomDesc" data-i18n="modal_room_desc">상세 설명 및 안내 사항</label>
+          <textarea class="form-control" id="modalRoomDesc" rows="3" placeholder="동행비 정산 및 만날 상세 위치, 추가 설명에 관해 적어주세요..." required></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelCreateRoomModalBtn" data-i18n="modal_cancel">취소</button>
+          <button type="submit" class="btn-primary" id="createRoomModalSubmitBtn" data-i18n="modal_submit">동행 방 생성하기</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toastNotification">프로필이 저장되었습니다.</div>
+
+  <!-- Main JS Scripts -->
+  <script src="mockData.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

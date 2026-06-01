@@ -1,0 +1,62 @@
+<USER_REQUEST>
+Please carry out the following modifications in mockData.js and app.js:
+
+1. Update `c:/Users/kseunghyeon/.gemini/antigravity/scratch/travel-app/mockData.js`:
+At the bottom of the file (before the closing line), add the metadata for the 39 new capital cities and an expansion loop to dynamically push them into `CITIES` and `ATTRACTIONS`.
+Here is the metadata structure and expansion code to append:
+```javascript
+const EXTRA_CITIES_META = {
+  washington: {
+    name_ko: "워싱턴 D.C.", name_en: "Washington D.C.", country_ko: "미국", country_en: "United States",
+    desc_ko: "내셔널 몰과 박물관들이 늘어선 정치와 역사적 랜드마크의 심장부", desc_en: "The neoclassical capital of the US, home to the National Mall.",
+    core: {
+      healing: { name_ko: "내셔널 몰 리플렉팅 풀", name_en: "National Mall Reflecting Pool", open: 0, close: 1440, x: 4.5, y: 5.0 },
+      gourmet: { name_ko: "올드 에빗 그릴", name_en: "Old Ebbitt Grill", open: 660, close: 1320, x: 4.9, y: 5.3 },
+      culture: { name_ko: "미국 국회의사당", name_en: "US Capitol Building", open: 510, close: 1020, x: 6.5, y: 4.9, isLandmark: true },
+      activity: { name_ko: "타이달 베이슨 보트선착장", name_en: "Tidal Basin Boathouse", open: 600, close: 1080, x: 4.8, y: 4.0 },
+      shopping: { name_ko: "조지타운 엠 스트리트", name_en: "Georgetown M Street", open: 600, close: 1260, x: 3.2, y: 6.0 }
+    }
+  },
+  berlin: {
+    name_ko: "베를린", name_en: "Berlin", country_ko: "독일", country_en: "Germany",
+    desc_ko: "장벽의 역사와 현대 힙스터 문화가 공존하는 독일의 수도", desc_en: "German capital blending wall history with techno and hipster vibes.",
+    core: {
+      healing: { name_ko: "티어가르텐 공원", name_en: "Tiergarten Park", open: 360, close: 1260, x: 4.0, y: 5.5 },
+      gourmet: { name_ko: "커리 36 소시지 레스토랑", name_en: "Curry 36 Restaurant", open: 660, close: 1320, x: 3.8, y: 3.5 },
+      culture: { name_ko: "브란덴
+<truncated 45214 bytes>
+ desc_en: `Stroll through landscaped flower beds viewing modernist sculptures.`,
+          duration: 90, x: core.healing.x + 0.3, y: core.healing.y + 0.2, open: 360, close: 1260
+        }
+      ],
+      activity: [
+        {
+          name_ko: `${core.healing.name_ko} 숲길 자전거 라이딩`,
+          name_en: `Bicycle Trail Ride at ${core.healing.name_en}`,
+          desc_ko: `자전거를 대여하여 울창한 나무 터널 아래를 달리는 코스`,
+          desc_en: `Rent a cruiser bike and pedal along scenic forested trails.`,
+          duration: 120, x: core.healing.x - 0.1, y: core.healing.y - 0.2, open: 480, close: 1200
+        },
+        {
+          name_ko: `${city} 가상현실 VR & 레이저택 배틀`,
+          name_en: `${cityEn} Action VR & Laser Battle Zone`,
+          desc_ko: `친구들과 한 팀이 되어 점수를 겨루는 액티브 실내 스포츠 게임`,
+          desc_en: `Immersive virtual reality simulators and high-tech laser tagging.`,
+          duration: 90, x: coreItem.x - 0.3, y: coreItem.y + 0.3, open: 600, close: 1320
+        },
+        {
+          name_ko: `${city} 역사 지구 옛 지하 감옥 탐험`,
+          name_en: `Old Town Dungeon Exploration`,
+          desc_ko: `미스터리한 분위기의 지하 벽돌 미로와 비밀 동굴 역사 하이킹`,
+          desc_en: `Walk through underground storage tunnels and crypt passages.`,
+          duration: 100, x: coreItem.x + 0.4, y: coreItem.y - 0.4, open: 600, close: 1140
+        },
+        {
+          name_ko: `${core.activity.name_ko} 일몰 카약 / 크루즈`,
+          name_en: `Sunset Kayak/Cruise at ${core.activity.name_en}`,
+          desc_ko: `황홀한 노을빛 물결을 배경으로 노를 젓는 로맨틱한 순간`,
+          desc_en: `Enjoy an active paddle as the sunset colors the sky and water.`,
+          duration: 120, x: core.activity.
+<truncated 3557 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.

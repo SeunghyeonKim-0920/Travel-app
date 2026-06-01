@@ -1,0 +1,91 @@
+﻿<USER_REQUEST>
+Please carry out the following modifications in mockData.js and app.js:
+
+1. Update `c:/Users/kseunghyeon/.gemini/antigravity/scratch/travel-app/mockData.
+js`:
+At the bottom of the file (before the closing line), add the metadata for the 39
+ new capital cities and an expansion loop to dynamically push them into `CITIES`
+ and `ATTRACTIONS`.
+Here is the metadata structure and expansion code to append:
+```javascript
+const EXTRA_CITIES_META = {
+  washington: {
+    name_ko: "ì›Œì‹±í„´ D.C.", name_en: "Washington D.C.", country_ko: "ë¯¸êµ­",
+ country_en: "United States",
+    desc_ko: "ë‚´ì…”ë„ ëª°ê³¼ ë°•ë¬¼ê´€ë“¤ì´ ëŠ˜ì–´ì„  ì •ì¹˜ì™€ ì—­ì‚¬ì  ëžœ
+ë“œë§ˆí¬ì˜ ì‹¬ìž¥ë¶€", desc_en: "The neoclassical capital of the US, home to t
+he National Mall.",
+    core: {
+      healing: { name_ko: "ë‚´ì…”ë„ ëª° ë¦¬í”Œë ‰íŒ… í’€", name_en: "National M
+all Reflecting Pool", open: 0, close: 1440, x: 4.5, y: 5.0 },
+      gourmet: { name_ko: "ì˜¬ë“œ ì—ë¹— ê·¸ë¦´", name_en: "Old Ebbitt Grill", o
+pen: 660, close: 1320, x: 4.9, y: 5.3 },
+      culture: { name_ko: "ë¯¸êµ­ êµ­íšŒì˜ì‚¬ë‹¹", name_en: "US Capitol Buildin
+g", open: 510, close: 1020, x: 6.5, y: 4.9, isLandmark: true },
+      activity: { name_ko: "íƒ€ì´ë‹¬ ë² ì´ìŠ¨ ë³´íŠ¸ì„ ì°©ìž¥", name_en: "Tida
+l Basin Boathouse", open: 600, close: 1080, x: 4.8, y: 4.0 },
+      shopping: { name_ko: "ì¡°ì§€íƒ€ìš´ ì—  ìŠ¤íŠ¸ë¦¬íŠ¸", name_en: "Georgetown
+ M Street", open: 600, close: 1260, x: 3.2, y: 6.0 }
+    }
+  },
+  berlin: {
+    name_ko: "ë² ë¥¼ë¦°", name_en: "Berlin", country_ko: "ë…ì¼", country_en: "
+Germany",
+    desc_ko: "ìž¥ë²½ì˜ ì—­ì‚¬ì™€ í˜„ëŒ€ íž™ìŠ¤í„° ë¬¸í™”ê°€ ê³µì¡´í•˜ëŠ” ë…ì¼
+ì˜ ìˆ˜ë„", desc_en: "German capital blending wall history with techno and hips
+ter vibes.",
+    core: {
+      healing: { name_ko: "í‹°ì–´ê°€ë¥´í… ê³µì›", name_en: "Tiergarten Park", 
+open: 360, close: 1260, x: 4.0, y: 5.5 },
+      gourmet: { name_ko: "ì»¤ë¦¬ 36 ì†Œì‹œì§€ ë ˆìŠ¤í† ëž‘", name_en: "Curry 36
+ Restaurant", open: 660, close: 1320, x: 3.8, y: 3.5 },
+      culture: { name_ko: "ë¸Œëž€ë´
+<truncated 45214 bytes>
+ desc_en: `Stroll through landscaped flower beds viewing modernist sculptures.`,
+          duration: 90, x: core.healing.x + 0.3, y: core.healing.y + 0.2, open: 
+360, close: 1260
+        }
+      ],
+      activity: [
+        {
+          name_ko: `${core.healing.name_ko} ìˆ²ê¸¸ ìžì „ê±° ë¼ì´ë”©`,
+          name_en: `Bicycle Trail Ride at ${core.healing.name_en}`,
+          desc_ko: `ìžì „ê±°ë¥¼ ëŒ€ì—¬í•˜ì—¬ ìš¸ì°½í•œ ë‚˜ë¬´ í„°ë„ ì•„ëž˜ë¥¼ 
+ë‹¬ë¦¬ëŠ” ì½”ìŠ¤`,
+          desc_en: `Rent a cruiser bike and pedal along scenic forested trails.`
+,
+          duration: 120, x: core.healing.x - 0.1, y: core.healing.y - 0.2, open:
+ 480, close: 1200
+        },
+        {
+          name_ko: `${city} ê°€ìƒí˜„ì‹¤ VR & ë ˆì´ì €íƒ ë°°í‹€`,
+          name_en: `${cityEn} Action VR & Laser Battle Zone`,
+          desc_ko: `ì¹œêµ¬ë“¤ê³¼ í•œ íŒ€ì´ ë˜ì–´ ì ìˆ˜ë¥¼ ê²¨ë£¨ëŠ” ì•¡í‹°ë¸Œ
+ ì‹¤ë‚´ ìŠ¤í¬ì¸  ê²Œìž„`,
+          desc_en: `Immersive virtual reality simulators and high-tech laser tag
+ging.`,
+          duration: 90, x: coreItem.x - 0.3, y: coreItem.y + 0.3, open: 600, clo
+se: 1320
+        },
+        {
+          name_ko: `${city} ì—­ì‚¬ ì§€êµ¬ ì˜› ì§€í•˜ ê°ì˜¥ íƒí—˜`,
+          name_en: `Old Town Dungeon Exploration`,
+          desc_ko: `ë¯¸ìŠ¤í„°ë¦¬í•œ ë¶„ìœ„ê¸°ì˜ ì§€í•˜ ë²½ëŒ ë¯¸ë¡œì™€ ë¹„ë°€ 
+ë™êµ´ ì—­ì‚¬ í•˜ì´í‚¹`,
+          desc_en: `Walk through underground storage tunnels and crypt passages.
+`,
+          duration: 100, x: coreItem.x + 0.4, y: coreItem.y - 0.4, open: 600, cl
+ose: 1140
+        },
+        {
+          name_ko: `${core.activity.name_ko} ì¼ëª° ì¹´ì•½ / í¬ë£¨ì¦ˆ`,
+          name_en: `Sunset Kayak/Cruise at ${core.activity.name_en}`,
+          desc_ko: `í™©í™€í•œ ë…¸ì„ë¹› ë¬¼ê²°ì„ ë°°ê²½ìœ¼ë¡œ ë…¸ë¥¼ ì “ëŠ” ë¡œ
+ë§¨í‹±í•œ ìˆœê°„`,
+          desc_en: `Enjoy an active paddle as the sunset colors the sky and wate
+r.`,
+          duration: 120, x: core.activity.
+<truncated 3557 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted quer
+y or a smaller range to get the information you need.
