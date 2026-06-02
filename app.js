@@ -348,6 +348,10 @@ function setupUIStrings() {
   renderPopularDestinations();
   renderCitySelectors();
   updateDurationSelectorOptions();
+  const selectPlanner = document.getElementById('plannerDest');
+  if (selectPlanner) {
+    updateLodgingSelector(selectPlanner.value);
+  }
   renderCompanionRooms();
   if (state.activeCourse) {
     renderItinerary(state.activeCourse);
@@ -1204,8 +1208,8 @@ function generateItinerary() {
             const attractions = dayPlan.items.filter(it => !it.isTransit && !it.isLodging);
             
             const lodgingStart = {
-              name_ko: `🏨 숙소 출발 (${lodging.name})`,
-              name_en: `🏨 Depart from Lodging (${lodging.name})`,
+              name_ko: `🏨 숙소 출발 (${lodging.name_ko || lodging.name})`,
+              name_en: `🏨 Depart from Lodging (${lodging.name_en || lodging.name})`,
               desc_ko: '숙소에서 오늘의 일정을 시작합니다.',
               desc_en: 'Start today\'s itinerary from your accommodation.',
               x: lodging.x,
@@ -1217,8 +1221,8 @@ function generateItinerary() {
             };
             
             const lodgingEnd = {
-              name_ko: `🏨 숙소 복귀 (${lodging.name})`,
-              name_en: `🏨 Return to Lodging (${lodging.name})`,
+              name_ko: `🏨 숙소 복귀 (${lodging.name_ko || lodging.name})`,
+              name_en: `🏨 Return to Lodging (${lodging.name_en || lodging.name})`,
               desc_ko: '오늘의 모든 일정을 마치고 숙소로 복귀하여 휴식을 취합니다.',
               desc_en: 'Finish today\'s activities and return to your accommodation to rest.',
               x: lodging.x,
@@ -2124,141 +2128,141 @@ const getCityMealFallback = (cityId, cityNameKo, cityNameEn, mealType, idx, visi
 
 const CITY_CLUSTERS = {
   seoul: [
-    { name: "Jongno/Myeongdong (Center)", keywords: ["경복궁", "북촌", "인사동", "창덕궁", "명동", "남산", "인왕산", "광장시장", "익선", "Gyeongbokgung", "Bukchon", "Insadong", "Changdeokgung", "Myeongdong", "Namsan", "Inwangsan", "Gwangjang", "Ikseon"], x: 126.9780, y: 37.5665 },
-    { name: "Seongsu/DDP (East)", keywords: ["성수", "서울숲", "뚝섬", "동대문", "DDP", "신당동", "Seongsu", "Seoul Forest", "Ttukseom", "Dongdaemun", "Sindang"], x: 127.0565, y: 37.5370 },
-    { name: "Jamsil (Southeast)", keywords: ["잠실", "롯데월드", "Jamsil", "Lotte World"], x: 127.1245, y: 37.5113 },
-    { name: "Hongdae/Mangwon (West)", keywords: ["홍대", "망원", "Hongdae", "Mangwon"], x: 126.9230, y: 37.5560 },
-    { name: "Gangnam/Sinsa (South)", keywords: ["신사", "가로수길", "강남", "Sinsa", "Garosu", "Gangnam"], x: 127.0225, y: 37.5215 },
-    { name: "Yongsan (Center-South)", keywords: ["박물관", "Museum", "Yongsan", "용산"], x: 126.9790, y: 37.5325 },
-    { name: "Yeouido (West-Center)", keywords: ["여의도", "더현대", "Yeouido", "Hyundai"], x: 126.9215, y: 37.5255 }
+    { name_ko: "종로/명동 (시내 중심)", name_en: "Jongno/Myeongdong (Center)", keywords: ["경복궁", "북촌", "인사동", "창덕궁", "명동", "남산", "인왕산", "광장시장", "익선", "Gyeongbokgung", "Bukchon", "Insadong", "Changdeokgung", "Myeongdong", "Namsan", "Inwangsan", "Gwangjang", "Ikseon"], x: 126.9780, y: 37.5665 },
+    { name_ko: "성수/DDP (동부)", name_en: "Seongsu/DDP (East)", keywords: ["성수", "서울숲", "뚝섬", "동대문", "DDP", "신당동", "Seongsu", "Seoul Forest", "Ttukseom", "Dongdaemun", "Sindang"], x: 127.0565, y: 37.5370 },
+    { name_ko: "잠실 (동남부)", name_en: "Jamsil (Southeast)", keywords: ["잠실", "롯데월드", "Jamsil", "Lotte World"], x: 127.1245, y: 37.5113 },
+    { name_ko: "홍대/망원 (서부)", name_en: "Hongdae/Mangwon (West)", keywords: ["홍대", "망원", "Hongdae", "Mangwon"], x: 126.9230, y: 37.5560 },
+    { name_ko: "강남/신사 (남부)", name_en: "Gangnam/Sinsa (South)", keywords: ["신사", "가로수길", "강남", "Sinsa", "Garosu", "Gangnam"], x: 127.0225, y: 37.5215 },
+    { name_ko: "용산 (중남부)", name_en: "Yongsan (Center-South)", keywords: ["박물관", "Museum", "Yongsan", "용산"], x: 126.9790, y: 37.5325 },
+    { name_ko: "여의도 (서중부)", name_en: "Yeouido (West-Center)", keywords: ["여의도", "더현대", "Yeouido", "Hyundai"], x: 126.9215, y: 37.5255 }
   ],
   jeju: [
-    { name: "Jeju City/Airport (North)", keywords: ["공항", "동문", "용두암", "Airport", "Dongmun", "Yongduam", "보말"], x: 126.4930, y: 33.5113 },
-    { name: "East (Seongsan/Woljeongri)", keywords: ["성산", "우도", "월정리", "평대리", "사려니", "비자림", "함덕", "김녕", "벙커", "민속마을", "Seongsan", "Udo", "Woljeongri", "Pyeongdae", "Saryeoni", "Bijarim", "Hamdeok", "Gimnyeong", "Bunker", "Seongeup"], x: 126.9279, y: 33.4580 },
-    { name: "South (Seogwipo)", keywords: ["서귀포", "이중섭", "쇠소깍", "올레시장", "천지연", "정방", "민속촌", "Seogwipo", "Lee Jung-seop", "Soesokkak", "Olle Market", "Cheonjiyeon", "Jeongbang", "Folk Village"], x: 126.5601, y: 33.2541 },
-    { name: "West (Aewol/Hyeopjae)", keywords: ["애월", "협재", "한담", "미술관", "Hyeopjae", "Aewol", "Handam", "Contemporary Art", "저지"], x: 126.2390, y: 33.3940 },
-    { name: "Southwest (Jungmun/O'sulloc)", keywords: ["중문", "오설록", "산방산", "카멜리아", "송악산", "Jungmun", "O'sulloc", "Sanbangsan", "Camellia", "Songaksan"], x: 126.2894, y: 33.2513 }
+    { name_ko: "제주시/공항 (북부)", name_en: "Jeju City/Airport (North)", keywords: ["공항", "동문", "용두암", "Airport", "Dongmun", "Yongduam", "보말"], x: 126.4930, y: 33.5113 },
+    { name_ko: "동부 (성산/월정리)", name_en: "East (Seongsan/Woljeongri)", keywords: ["성산", "우도", "월정리", "평대리", "사려니", "비자림", "함덕", "김녕", "벙커", "민속마을", "Seongsan", "Udo", "Woljeongri", "Pyeongdae", "Saryeoni", "Bijarim", "Hamdeok", "Gimnyeong", "Bunker", "Seongeup"], x: 126.9279, y: 33.4580 },
+    { name_ko: "남부 (서귀포)", name_en: "South (Seogwipo)", keywords: ["서귀포", "이중섭", "쇠소깍", "올레시장", "천지연", "정방", "민속촌", "Seogwipo", "Lee Jung-seop", "Soesokkak", "Olle Market", "Cheonjiyeon", "Jeongbang", "Folk Village"], x: 126.5601, y: 33.2541 },
+    { name_ko: "서부 (애월/협재)", name_en: "West (Aewol/Hyeopjae)", keywords: ["애월", "협재", "한담", "미술관", "Hyeopjae", "Aewol", "Handam", "Contemporary Art", "저지"], x: 126.2390, y: 33.3940 },
+    { name_ko: "남서부 (중문/오설록)", name_en: "Southwest (Jungmun/O'sulloc)", keywords: ["중문", "오설록", "산방산", "카멜리아", "송악산", "Jungmun", "O'sulloc", "Sanbangsan", "Camellia", "Songaksan"], x: 126.2894, y: 33.2513 }
   ],
   tokyo: [
-    { name: "Shinjuku/West", keywords: ["신주쿠", "시모키타자와", "Shinjuku", "Shimokitazawa"], x: 139.6917, y: 35.6895 },
-    { name: "Shibuya/Harajuku/Southwest", keywords: ["시부야", "하라주쿠", "메이지", "Shibuya", "Harajuku", "Meiji"], x: 139.7016, y: 35.6580 },
-    { name: "Tokyo Station/Ginza/Tsukiji", keywords: ["도쿄역", "긴자", "츠키지", "도쿄 타워", "도쿄타워", "가부키자", "Tokyo Station", "Ginza", "Tsukiji", "Tokyo Tower", "Kabukiza"], x: 139.7671, y: 35.6812 },
-    { name: "Asakusa/Ueno/Northeast", keywords: ["아사쿠사", "우에노", "센소지", "스카이트리", "아키하바라", "야네센", "박물관", "Asakusa", "Ueno", "Sensoji", "Skytree", "Akihabara", "Yanesen", "Edo-Tokyo"], x: 139.7967, y: 35.7148 },
-    { name: "Odaiba/Roppongi/Southeast", keywords: ["오다이바", "롯폰기", "토요스", "팀랩", "하네다", "Odaiba", "Roppongi", "Toyosu", "teamLab", "Haneda"], x: 139.7764, y: 35.6264 },
-    { name: "Disney/Chiba (Far East)", keywords: ["디즈니", "Disney", "Disneyland"], x: 139.8804, y: 35.6329 }
+    { name_ko: "신주쿠 (서부)", name_en: "Shinjuku/West", keywords: ["신주쿠", "시모키타자와", "Shinjuku", "Shimokitazawa"], x: 139.6917, y: 35.6895 },
+    { name_ko: "시부야/하라주쿠 (남서부)", name_en: "Shibuya/Harajuku/Southwest", keywords: ["시부야", "하라주쿠", "메이지", "Shibuya", "Harajuku", "Meiji"], x: 139.7016, y: 35.6580 },
+    { name_ko: "도쿄역/긴자/츠키지 (동부)", name_en: "Tokyo Station/Ginza/Tsukiji", keywords: ["도쿄역", "긴자", "츠키지", "도쿄 타워", "도쿄타워", "가부키자", "Tokyo Station", "Ginza", "Tsukiji", "Tokyo Tower", "Kabukiza"], x: 139.7671, y: 35.6812 },
+    { name_ko: "아사쿠사/우에노 (북동부)", name_en: "Asakusa/Ueno/Northeast", keywords: ["아사쿠사", "우에노", "센소지", "스카이트리", "아키하바라", "야네센", "박물관", "Asakusa", "Ueno", "Sensoji", "Skytree", "Akihabara", "Yanesen", "Edo-Tokyo"], x: 139.7967, y: 35.7148 },
+    { name_ko: "오다이바/롯폰기 (남동부)", name_en: "Odaiba/Roppongi/Southeast", keywords: ["오다이바", "롯폰기", "토요스", "팀랩", "하네다", "Odaiba", "Roppongi", "Toyosu", "teamLab", "Haneda"], x: 139.7764, y: 35.6264 },
+    { name_ko: "디즈니/치바 (극동부)", name_en: "Disney/Chiba (Far East)", keywords: ["디즈니", "Disney", "Disneyland"], x: 139.8804, y: 35.6329 }
   ],
   osaka: [
-    { name: "Namba/Dotonbori (South)", keywords: ["난바", "도톤보리", "신세카이", "하루카스", "구로몬", "텐노지", "쯔텐카쿠", "덴덴타운", "시텐노지", "스미요시", "신사이바시", "우키요에", "분라쿠", "오렌지", "스파월드", "Namba", "Dotonbori", "Shinsekai", "Harukas", "Kuromon", "Tennoji", "Tsutenkaku", "Den Den Town", "Shitennoji", "Sumiyoshi", "Shinsaibashi", "Ukiyoe", "Bunraku", "Orange Street", "Spa World"], x: 135.5013, y: 34.6687 },
-    { name: "Umeda (North)", keywords: ["우메다", "공중정원", "헵파이브", "나카노시마", "미노오", "한신", "Umeda", "Floating Garden", "Hep Five", "Nakanoshima", "Minoo", "Hanshin"], x: 135.4959, y: 34.7025 },
-    { name: "Osaka Castle (East)", keywords: ["오사카성", "주택박물관", "Osaka Castle", "Housing Museum"], x: 135.5262, y: 34.6873 },
-    { name: "Bay Area (West)", keywords: ["유니버셜", "덴포잔", "가이유칸", "산타마리아", "Universal", "Tempozan", "Kaiyukan", "Santa Maria", "린쿠", "Rinku"], x: 135.4304, y: 34.6431 }
+    { name_ko: "난바/도톤보리 (남부)", name_en: "Namba/Dotonbori (South)", keywords: ["난바", "도톤보리", "신세카이", "하루카스", "구로몬", "텐노지", "쯔텐카쿠", "덴덴타운", "시텐노지", "스미요시", "신사이바시", "우키요에", "분라쿠", "오렌지", "스파월드", "Namba", "Dotonbori", "Shinsekai", "Harukas", "Kuromon", "Tennoji", "Tsutenkaku", "Den Den Town", "Shitennoji", "Sumiyoshi", "Shinsaibashi", "Ukiyoe", "Bunraku", "Orange Street", "Spa World"], x: 135.5013, y: 34.6687 },
+    { name_ko: "우메다 (북부)", name_en: "Umeda (North)", keywords: ["우메다", "공중정원", "헵파이브", "나카노시마", "미노오", "한신", "Umeda", "Floating Garden", "Hep Five", "Nakanoshima", "Minoo", "Hanshin"], x: 135.4959, y: 34.7025 },
+    { name_ko: "오사카성 (동부)", name_en: "Osaka Castle (East)", keywords: ["오사카성", "주택박물관", "Osaka Castle", "Housing Museum"], x: 135.5262, y: 34.6873 },
+    { name_ko: "베이 에어리어 (서부)", name_en: "Bay Area (West)", keywords: ["유니버셜", "덴포잔", "가이유칸", "산타마리아", "Universal", "Tempozan", "Kaiyukan", "Santa Maria", "린쿠", "Rinku"], x: 135.4304, y: 34.6431 }
   ],
   paris: [
-    { name: "Eiffel/Seine (West)", keywords: ["에펠탑", "바토무슈", "센강", "Eiffel", "Bateaux", "Seine", "셰익스피어"], x: 2.2945, y: 48.8584 },
-    { name: "Louvre/Center", keywords: ["루브르", "오르세", "퐁피두", "노트르담", "마레", "시테", "튈르리", "룩셈부르크", "Louvre", "Orsay", "Pompidou", "Notre", "Marais", "Cite", "Tuileries", "Luxembourg", "안젤리나", "플로르", "생제르맹", "샤르티에", "생트샤펠", "카타콤", "Angelina", "Germain", "Chartier", "Sainte-Chapelle", "Catacombs"], x: 2.3376, y: 48.8606 },
-    { name: "Montmartre (North)", keywords: ["몽마르뜨", "사크레", "사랑해", "Montmartre", "Sacre", "Je t'aime", "마르탱", "생마르탱", "Saint-Martin", "투앙"], x: 2.3431, y: 48.8867 },
-    { name: "Champs-Elysees (Northwest)", keywords: ["샹젤리제", "개선문", "오페라 가르니에", "Champs", "Arc de", "Opera Garnier", "라파예트", "Lafayette"], x: 2.2950, y: 48.8738 },
-    { name: "Versailles (Far West)", keywords: ["베르사유", "Versailles"], x: 2.1301, y: 48.8014 },
-    { name: "Marne-la-Vallee (Far East)", keywords: ["디즈니", "라발레", "Disney", "Vallee", "Disneyland"], x: 2.7758, y: 48.8722 }
+    { name_ko: "에펠탑/센강 (서부)", name_en: "Eiffel/Seine (West)", keywords: ["에펠탑", "바토무슈", "센강", "Eiffel", "Bateaux", "Seine", "셰익스피어"], x: 2.2945, y: 48.8584 },
+    { name_ko: "루브르/시내 중심 (중부)", name_en: "Louvre/Center", keywords: ["루브르", "오르세", "퐁피두", "노트르담", "마레", "시테", "튈르리", "룩셈부르크", "Louvre", "Orsay", "Pompidou", "Notre", "Marais", "Cite", "Tuileries", "Luxembourg", "안젤리나", "플로르", "생제르맹", "샤르티에", "생트샤펠", "카타콤", "Angelina", "Germain", "Chartier", "Sainte-Chapelle", "Catacombs"], x: 2.3376, y: 48.8606 },
+    { name_ko: "몽마르뜨 (북부)", name_en: "Montmartre (North)", keywords: ["몽마르뜨", "사크레", "사랑해", "Montmartre", "Sacre", "Je t'aime", "마르탱", "생마르탱", "Saint-Martin", "투앙"], x: 2.3431, y: 48.8867 },
+    { name_ko: "샹젤리제 (북서부)", name_en: "Champs-Elysees (Northwest)", keywords: ["샹젤리제", "개선문", "오페라 가르니에", "Champs", "Arc de", "Opera Garnier", "라파예트", "Lafayette"], x: 2.2950, y: 48.8738 },
+    { name_ko: "베르사유 (극서부)", name_en: "Versailles (Far West)", keywords: ["베르사유", "Versailles"], x: 2.1301, y: 48.8014 },
+    { name_ko: "마른라발레/디즈니랜드 (극동부)", name_en: "Marne-la-Vallee (Far East)", keywords: ["디즈니", "라발레", "Disney", "Vallee", "Disneyland"], x: 2.7758, y: 48.8722 }
   ],
   london: [
-    { name: "Westminster/Eye (Center-South)", keywords: ["웨스트민스터", "빅벤", "런던아이", "런던 아이", "Westminster", "Big Ben", "London Eye", "제임스", "James"], x: -0.1246, y: 51.5007 },
-    { name: "Soho/Covent Garden (Center-North)", keywords: ["소호", "코벤트 가든", "코벤트가든", "대영박물관", "대영 박물관", "러셀", "세인트폴", "세인트 폴", "Soho", "Covent Garden", "British Museum", "Russell", "St. Paul", "몬머스", "테이트 모던", "Tate Modern"], x: -0.1220, y: 51.5120 },
-    { name: "Tower Bridge/City (East)", keywords: ["타워 브릿지", "타워브릿지", "런던탑", "런던 탑", "더 샤드", "버로우", "Tower Bridge", "Tower of London", "The Shard", "Borough"], x: -0.0754, y: 51.5055 },
-    { name: "Kensington/Chelsea (West)", keywords: ["켄싱턴", "하이드 파크", "하이드파크", "자연사", "해로즈", "빅토리아", "Kensington", "Hyde Park", "Natural History", "Harrods", "Victoria", "앨버트", "V&A"], x: -0.1910, y: 51.4950 },
-    { name: "Greenwich (Far Southeast)", keywords: ["그리니치", "천문대", "Greenwich", "Observatory"], x: 0.0000, y: 51.4800 },
-    { name: "Watford/Outskirts (Far Northwest)", keywords: ["해리포터", "Harry Potter", "Warner Bros", "워너브라더스"], x: -0.4178, y: 51.6900 }
+    { name_ko: "웨스트민스터/런던아이 (중남부)", name_en: "Westminster/Eye (Center-South)", keywords: ["웨스트민스터", "빅벤", "런던아이", "런던 아이", "Westminster", "Big Ben", "London Eye", "제임스", "James"], x: -0.1246, y: 51.5007 },
+    { name_ko: "소호/코벤트 가든 (중북부)", name_en: "Soho/Covent Garden (Center-North)", keywords: ["소호", "코벤트 가든", "코벤트가든", "대영박물관", "대영 박물관", "러셀", "세인트폴", "세인트 폴", "Soho", "Covent Garden", "British Museum", "Russell", "St. Paul", "몬머스", "테이트 모던", "Tate Modern"], x: -0.1220, y: 51.5120 },
+    { name_ko: "타워 브릿지/시티 (동부)", name_en: "Tower Bridge/City (East)", keywords: ["타워 브릿지", "타워브릿지", "런던탑", "런던 탑", "더 샤드", "버로우", "Tower Bridge", "Tower of London", "The Shard", "Borough"], x: -0.0754, y: 51.5055 },
+    { name_ko: "켄싱턴/첼시 (서부)", name_en: "Kensington/Chelsea (West)", keywords: ["켄싱턴", "하이드 파크", "하이드파크", "자연사", "해로즈", "빅토리아", "Kensington", "Hyde Park", "Natural History", "Harrods", "Victoria", "앨버트", "V&A"], x: -0.1910, y: 51.4950 },
+    { name_ko: "그리니치 (극동남부)", name_en: "Greenwich (Far Southeast)", keywords: ["그리니치", "천문대", "Greenwich", "Observatory"], x: 0.0000, y: 51.4800 },
+    { name_ko: "왓포드/외곽 (극북서부)", name_en: "Watford/Outskirts (Far Northwest)", keywords: ["해리포터", "Harry Potter", "Warner Bros", "워너브라더스"], x: -0.4178, y: 51.6900 }
   ],
   newyork: [
-    { name: "Midtown/Times Square (Center)", keywords: ["타임스스퀘어", "타임즈스퀘어", "엠파이어", "록펠러", "현대미술관", "모마", "탑오브더락", "브로드웨이", "공립도서관", "센트럴파크", "Times Square", "Empire State", "Rockefeller", "MoMA", "Top of the Rock", "Broadway", "Public Library", "Central Park", "Intelligentsia", "조스 피자", "Joe's Pizza", "카마인스", "Carmine's", "하이드아웃", "Hideout", "그럼피", "Grumpy"], x: -73.9855, y: 40.7580 },
-    { name: "Lower Manhattan/Soho (South)", keywords: ["자유의 여신상", "자유의여신상", "원월드", "그라운드 제로", "소호", "첼시마켓", "하이라인", "그리니치", "Statue of Liberty", "One World", "Ground Zero", "Soho", "Chelsea Market", "High Line", "Greenwich", "블루보틀", "Blue Bottle", "노부", "Nobu", "조앤더주스", "Joe & The Juice", "로리스", "Lawry's"], x: -74.0007, y: 40.7220 },
-    { name: "Central Park (North)", keywords: ["메트로폴리탄 미술관", "구겐하임", "Metropolitan Museum", "Guggenheim"], x: -73.9683, y: 40.7851 },
-    { name: "Brooklyn Bridge/DUMBO (Southeast)", keywords: ["덤보", "브루클린", "DUMBO", "Brooklyn", "그릴"], x: -73.9969, y: 40.7061 },
-    { name: "Queens/Astoria (Northeast)", keywords: ["퀸즈", "아스토리아", "Queens", "Astoria"], x: -73.9235, y: 40.7644 }
+    { name_ko: "미드타운/타임스 스퀘어 (시내 중심)", name_en: "Midtown/Times Square (Center)", keywords: ["타임스스퀘어", "타임즈스퀘어", "엠파이어", "록펠러", "현대미술관", "모마", "탑오브더락", "브로드웨이", "공립도서관", "센트럴파크", "Times Square", "Empire State", "Rockefeller", "MoMA", "Top of the Rock", "Broadway", "Public Library", "Central Park", "Intelligentsia", "조스 피자", "Joe's Pizza", "카마인스", "Carmine's", "하이드아웃", "Hideout", "그럼피", "Grumpy"], x: -73.9855, y: 40.7580 },
+    { name_ko: "로어 맨해튼/소호 (남부)", name_en: "Lower Manhattan/Soho (South)", keywords: ["자유의 여신상", "자유의여신상", "원월드", "그라운드 제로", "소호", "첼시마켓", "하이라인", "그리니치", "Statue of Liberty", "One World", "Ground Zero", "Soho", "Chelsea Market", "High Line", "Greenwich", "블루보틀", "Blue Bottle", "노부", "Nobu", "조앤더주스", "Joe & The Juice", "로리스", "Lawry's"], x: -74.0007, y: 40.7220 },
+    { name_ko: "센트럴 파크 (북부)", name_en: "Central Park (North)", keywords: ["메트로폴리탄 미술관", "구겐하임", "Metropolitan Museum", "Guggenheim"], x: -73.9683, y: 40.7851 },
+    { name_ko: "브루클린 브릿지/덤보 (동남부)", name_en: "Brooklyn Bridge/DUMBO (Southeast)", keywords: ["덤보", "브루클린", "DUMBO", "Brooklyn", "그릴"], x: -73.9969, y: 40.7061 },
+    { name_ko: "퀸즈/아스토리아 (북동부)", name_en: "Queens/Astoria (Northeast)", keywords: ["퀸즈", "아스토리아", "Queens", "Astoria"], x: -73.9235, y: 40.7644 }
   ],
   barcelona: [
-    { name: "Gothic Quarter/Ramblas (Center)", keywords: ["고딕 지구", "고딕지구", "람블라스", "보케리아", "레이알", "피카소", "Gothic Quarter", "Ramblas", "Boqueria", "Placa Reial", "Picasso", "카탈루냐", "Catalunya"], x: 2.1730, y: 41.3800 },
-    { name: "Eixample/Sagrada Familia (North)", keywords: ["사그라다", "카사 바트요", "카사 밀라", "카사바트요", "카사밀라", "Sagrada Familia", "Casa Batllo", "Casa Mila"], x: 2.1744, y: 41.4036 },
-    { name: "Montjuic (Southwest)", keywords: ["몬주익", "에스파냐", "미로", "Montjuic", "Placa d'Espanya", "Joan Miro"], x: 2.1528, y: 41.3685 },
-    { name: "Park Guell/Gracia (Far North)", keywords: ["구엘", "Park Guell", "Gracia", "티비다보", "Tibidabo"], x: 2.1527, y: 41.4144 },
-    { name: "Barceloneta (East/Waterfront)", keywords: ["바르셀로네타", "포트 벨", "Barceloneta", "Port Vell"], x: 2.1925, y: 41.3780 }
+    { name_ko: "고딕 지구/람블라스 (시내 중심)", name_en: "Gothic Quarter/Ramblas (Center)", keywords: ["고딕 지구", "고딕지구", "람블라스", "보케리아", "레이알", "피카소", "Gothic Quarter", "Ramblas", "Boqueria", "Placa Reial", "Picasso", "카탈루냐", "Catalunya"], x: 2.1730, y: 41.3800 },
+    { name_ko: "에샤플레/사그라다 파밀리아 (북부)", name_en: "Eixample/Sagrada Familia (North)", keywords: ["사그라다", "카사 바트요", "카사 밀라", "카사바트요", "카사밀라", "Sagrada Familia", "Casa Batllo", "Casa Mila"], x: 2.1744, y: 41.4036 },
+    { name_ko: "몬주익 (남서부)", name_en: "Montjuic (Southwest)", keywords: ["몬주익", "에스파냐", "미로", "Montjuic", "Placa d'Espanya", "Joan Miro"], x: 2.1528, y: 41.3685 },
+    { name_ko: "구엘 공원/그라시아 (북서부)", name_en: "Park Guell/Gracia (Far North)", keywords: ["구엘", "Park Guell", "Gracia", "티비다보", "Tibidabo"], x: 2.1527, y: 41.4144 },
+    { name_ko: "바르셀로네타 (동부 해안)", name_en: "Barceloneta (East/Waterfront)", keywords: ["바르셀로네타", "포트 벨", "Barceloneta", "Port Vell"], x: 2.1925, y: 41.3780 }
   ],
   rome: [
-    { name: "Colosseum/Ancient (South-East)", keywords: ["콜로세움", "포로 로마노", "팔라티노", "Colosseum", "Roman Forum", "Palatine"], x: 12.4922, y: 41.8902 },
-    { name: "Vatican (Far West)", keywords: ["바티칸", "성 베드로", "천사의 성", "성베드로", "천사의성", "Vatican", "St. Peter", "Sant'Angelo"], x: 12.4539, y: 41.9022 },
-    { name: "Trevi/Pantheon (Center)", keywords: ["트레비", "판테온", "나보나", "스페인 광장", "스페인광장", "진실의 입", "Trevi", "Pantheon", "Navona", "Spanish Steps", "Spanish", "Bocca della"], x: 12.4833, y: 41.9009 },
-    { name: "Trastevere (South-West)", keywords: ["트라스테베레", "Trastevere"], x: 12.4707, y: 41.8883 },
-    { name: "Borghese (North-East)", keywords: ["보르게세", "포폴로", "Borghese", "Popolo"], x: 12.4862, y: 41.9142 }
+    { name_ko: "콜로세움/고대 로마 유적지 (동남부)", name_en: "Colosseum/Ancient (South-East)", keywords: ["콜로세움", "포로 로마노", "팔라티노", "Colosseum", "Roman Forum", "Palatine"], x: 12.4922, y: 41.8902 },
+    { name_ko: "바티칸 (극서부)", name_en: "Vatican (Far West)", keywords: ["바티칸", "성 베드로", "천사의 성", "성베드로", "천사의성", "Vatican", "St. Peter", "Sant'Angelo"], x: 12.4539, y: 41.9022 },
+    { name_ko: "트레비 분수/판테온 (시내 중심)", name_en: "Trevi/Pantheon (Center)", keywords: ["트레비", "판테온", "나보나", "스페인 광장", "스페인광장", "진실의 입", "Trevi", "Pantheon", "Navona", "Spanish Steps", "Spanish", "Bocca della"], x: 12.4833, y: 41.9009 },
+    { name_ko: "트라스테베레 (남서부)", name_en: "Trastevere (South-West)", keywords: ["트라스테베레", "Trastevere"], x: 12.4707, y: 41.8883 },
+    { name_ko: "보르게세 (북동부)", name_en: "Borghese (North-East)", keywords: ["보르게세", "포폴로", "Borghese", "Popolo"], x: 12.4862, y: 41.9142 }
   ],
   bangkok: [
-    { name: "Grand Palace/Wat Arun (West)", keywords: ["왕궁", "왓 아룬", "왓 포", "카오산", "Grand Palace", "Wat Arun", "Wat Pho", "Khaosan"], x: 100.4900, y: 13.7500 },
-    { name: "Siam/Pratunam (Center)", keywords: ["시암", "센트럴월드", "빠뚜남", "스쿰빗", "수쿰빗", "Siam", "Centralworld", "Pratunam", "Sukhumvit"], x: 100.5340, y: 13.7460 },
-    { name: "Silom/Chinatown (South/Southwest)", keywords: ["실롬", "차이나타운", "야오와랏", "룸피니", "Silom", "Chinatown", "Yaowarat", "Lumpini"], x: 100.5160, y: 13.7240 },
-    { name: "Riverside/Iconsiam (Southwest)", keywords: ["아이콘시암", "아시아티크", "짜오프라야", "Iconsiam", "Asiatique", "Chao Phraya"], x: 100.5100, y: 13.7200 },
-    { name: "Chatuchak (Far North)", keywords: ["짜뚜짝", "Chatuchak"], x: 100.5530, y: 13.8030 }
+    { name_ko: "방콕 왕궁/왓 아룬 (서부)", name_en: "Grand Palace/Wat Arun (West)", keywords: ["왕궁", "왓 아룬", "왓 포", "카오산", "Grand Palace", "Wat Arun", "Wat Pho", "Khaosan"], x: 100.4900, y: 13.7500 },
+    { name_ko: "시암/빠뚜남 (시내 중심)", name_en: "Siam/Pratunam (Center)", keywords: ["시암", "센트럴월드", "빠뚜남", "스쿰빗", "수쿰빗", "Siam", "Centralworld", "Pratunam", "Sukhumvit"], x: 100.5340, y: 13.7460 },
+    { name_ko: "실롬/차이나타운 (남/남서부)", name_en: "Silom/Chinatown (South/Southwest)", keywords: ["실롬", "차이나타운", "야오와랏", "룸피니", "Silom", "Chinatown", "Yaowarat", "Lumpini"], x: 100.5160, y: 13.7240 },
+    { name_ko: "강변/아이콘시암 (남서부)", name_en: "Riverside/Iconsiam (Southwest)", keywords: ["아이콘시암", "아시아티크", "짜오프라야", "Iconsiam", "Asiatique", "Chao Phraya"], x: 100.5100, y: 13.7200 },
+    { name_ko: "짜뚜짝 주말시장 (극북부)", name_en: "Chatuchak (Far North)", keywords: ["짜뚜짝", "Chatuchak"], x: 100.5530, y: 13.8030 }
   ],
   sydney: [
-    { name: "Circular Quay (North)", keywords: ["오페라", "Circular Quay", "Harbour Bridge", "Rocks", "록스", "하버 브릿지", "천문대", "Observatory"], x: 151.2108, y: -33.8614 },
-    { name: "Darling Harbour/CBD (Center)", keywords: ["달링", "Darling", "CBD", "Town Hall", "Hyde Park", "하이드"], x: 151.2009, y: -33.8748 },
-    { name: "Taronga Zoo (North Coast)", keywords: ["타롱가", "Taronga"], x: 151.2413, y: -33.8436 },
-    { name: "Bondi Beach (East)", keywords: ["본다이", "Bondi"], x: 151.2767, y: -33.8915 },
-    { name: "Blue Mountains (Far West)", keywords: ["블루마운틴", "블루 마운틴", "Blue Mountain"], x: 150.3119, y: -33.7149 }
+    { name_ko: "써큘러 키 (북부)", name_en: "Circular Quay (North)", keywords: ["오페라", "Circular Quay", "Harbour Bridge", "Rocks", "록스", "하버 브릿지", "천문대", "Observatory"], x: 151.2108, y: -33.8614 },
+    { name_ko: "달링 하버/CBD (시내 중심)", name_en: "Darling Harbour/CBD (Center)", keywords: ["달링", "Darling", "CBD", "Town Hall", "Hyde Park", "하이드"], x: 151.2009, y: -33.8748 },
+    { name_ko: "타롱가 동물원 (북부 해안)", name_en: "Taronga Zoo (North Coast)", keywords: ["타롱가", "Taronga"], x: 151.2413, y: -33.8436 },
+    { name_ko: "본다이 비치 (동부)", name_en: "Bondi Beach (East)", keywords: ["본다이", "Bondi"], x: 151.2767, y: -33.8915 },
+    { name_ko: "블루 마운틴 (극서부)", name_en: "Blue Mountains (Far West)", keywords: ["블루마운틴", "블루 마운틴", "Blue Mountain"], x: 150.3119, y: -33.7149 }
   ],
   singapore: [
-    { name: "Marina Bay (East)", keywords: ["마리나", "Gardens by the Bay", "Flyer", "Merlion", "머라이언", "플라이어"], x: 103.8609, y: 1.2828 },
-    { name: "Clarke Quay/CBD (Center)", keywords: ["클락 키", "클락키", "래플스", "Raffles", "Clarke Quay"], x: 103.8465, y: 1.2906 },
-    { name: "Orchard/Botanic (West)", keywords: ["오차드", "보타닉", "Orchard", "Botanic"], x: 103.8318, y: 1.3048 },
-    { name: "Chinatown/Little India (Center)", keywords: ["차이나타운", "리틀 인디아", "Chinatown", "Little India"], x: 103.8439, y: 1.2848 },
-    { name: "Sentosa (South)", keywords: ["센토사", "유니버셜", "Sentosa", "Universal"], x: 103.8303, y: 1.2494 }
+    { name_ko: "마리나 베이 (동부)", name_en: "Marina Bay (East)", keywords: ["마리나", "Gardens by the Bay", "Flyer", "Merlion", "머라이언", "플라이어"], x: 103.8609, y: 1.2828 },
+    { name_ko: "클락 키/CBD (시내 중심)", name_en: "Clarke Quay/CBD (Center)", keywords: ["클락 키", "클락키", "래플스", "Raffles", "Clarke Quay"], x: 103.8465, y: 1.2906 },
+    { name_ko: "오차드/보타닉 가든 (서부)", name_en: "Orchard/Botanic (West)", keywords: ["오차드", "보타닉", "Orchard", "Botanic"], x: 103.8318, y: 1.3048 },
+    { name_ko: "차이나타운/리틀 인디아 (중부)", name_en: "Chinatown/Little India (Center)", keywords: ["차이나타운", "리틀 인디아", "Chinatown", "Little India"], x: 103.8439, y: 1.2848 },
+    { name_ko: "센토사 섬 (남부)", name_en: "Sentosa (South)", keywords: ["센토사", "유니버셜", "Sentosa", "Universal"], x: 103.8303, y: 1.2494 }
   ],
   dubai: [
-    { name: "Downtown (Center)", keywords: ["버즈 칼리파", "버즈칼리파", "두바이 몰", "두바이몰", "Burj Khalifa", "Dubai Mall"], x: 55.2744, y: 25.1972 },
-    { name: "Jumeirah (Coast)", keywords: ["주메이라", "버즈 알 아랍", "Jumeirah", "Burj Al Arab"], x: 55.2000, y: 25.1500 },
-    { name: "Marina (Southwest)", keywords: ["마리나", "Marina", "Palm Jumeirah", "팜 주메이라"], x: 55.1400, y: 25.0800 },
-    { name: "Old Dubai (Northeast)", keywords: ["알 파히디", "수크", "크리크", "Al Fahidi", "Souk", "Creek"], x: 55.3090, y: 25.2630 },
-    { name: "Desert (Far East)", keywords: ["사막", "사파리", "Desert", "Safari"], x: 55.6000, y: 24.9500 }
+    { name_ko: "다운타운 (시내 중심)", name_en: "Downtown (Center)", keywords: ["버즈 칼리파", "버즈칼리파", "두바이 몰", "두바이몰", "Burj Khalifa", "Dubai Mall"], x: 55.2744, y: 25.1972 },
+    { name_ko: "주메이라 (해안가)", name_en: "Jumeirah (Coast)", keywords: ["주메이라", "버즈 알 아랍", "Jumeirah", "Burj Al Arab"], x: 55.2000, y: 25.1500 },
+    { name_ko: "두바이 마리나 (남서부)", name_en: "Marina (Southwest)", keywords: ["마리나", "Marina", "Palm Jumeirah", "팜 주메이라"], x: 55.1400, y: 25.0800 },
+    { name_ko: "올드 두바이 (북동부)", name_en: "Old Dubai (Northeast)", keywords: ["알 파히디", "수크", "크리크", "Al Fahidi", "Souk", "Creek"], x: 55.3090, y: 25.2630 },
+    { name_ko: "사막 지구 (극동부)", name_en: "Desert (Far East)", keywords: ["사막", "사파리", "Desert", "Safari"], x: 55.6000, y: 24.9500 }
   ],
   munich: [
-    { name: "Altstadt (Center)", keywords: ["마리엔", "레지덴츠", "호프브로이", "Marienplatz", "Viktualienmarkt", "Residenz", "Hofbrauhaus"], x: 11.5755, y: 48.1372 },
-    { name: "Englischer Garten (North-East)", keywords: ["영국 정원", "영국정원", "Englischer Garten"], x: 11.6019, y: 48.1627 },
-    { name: "Nymphenburg (West)", keywords: ["님펜부르크", "Nymphenburg"], x: 11.5033, y: 48.1581 },
-    { name: "Allianz Arena (North)", keywords: ["알리안츠", "Allianz"], x: 11.6247, y: 48.2188 },
-    { name: "Oktoberfest (South-West)", keywords: ["옥토버페스트", "테레지엔비제", "Oktoberfest", "Deutsches Museum", "독일박물관"], x: 11.5492, y: 48.1312 }
+    { name_ko: "알트슈타트 (시내 중심)", name_en: "Altstadt (Center)", keywords: ["마리엔", "레지덴츠", "호프브로이", "Marienplatz", "Viktualienmarkt", "Residenz", "Hofbrauhaus"], x: 11.5755, y: 48.1372 },
+    { name_ko: "영국 정원 (북동부)", name_en: "Englischer Garten (North-East)", keywords: ["영국 정원", "영국정원", "Englischer Garten"], x: 11.6019, y: 48.1627 },
+    { name_ko: "님펜부르크 (서부)", name_en: "Nymphenburg (West)", keywords: ["님펜부르크", "Nymphenburg"], x: 11.5033, y: 48.1581 },
+    { name_ko: "알리안츠 아레나 (북부)", name_en: "Allianz Arena (North)", keywords: ["알리안츠", "Allianz"], x: 11.6247, y: 48.2188 },
+    { name_ko: "옥토버페스트/테레지엔비제 (남서부)", name_en: "Oktoberfest (South-West)", keywords: ["옥토버페스트", "테레지엔비제", "Oktoberfest", "Deutsches Museum", "독일박물관"], x: 11.5492, y: 48.1312 }
   ],
   prague: [
-    { name: "Prague Castle (West)", keywords: ["프라하 성", "프라하성", "카렐교", "존 레논", "Prague Castle", "Charles Bridge", "Lennon"], x: 14.4005, y: 50.0902 },
-    { name: "Old Town (Center)", keywords: ["구시가지", "틴 성당", "천문 시계", "천문시계", "Old Town", "Astronomical Clock"], x: 14.4205, y: 50.0878 },
-    { name: "New Town (South-Center)", keywords: ["바츨라프", "댄싱 하우스", "Wenceslas", "Dancing House"], x: 14.4255, y: 50.0784 },
-    { name: "Vysehrad (South)", keywords: ["비셰하드", "Vysehrad"], x: 14.4200, y: 50.0644 },
-    { name: "Letna Park (North)", keywords: ["레트나", "Letna"], x: 14.4150, y: 50.0950 }
+    { name_ko: "프라하 성 (서부)", name_en: "Prague Castle (West)", keywords: ["프라하 성", "프라하성", "카렐교", "존 레논", "Prague Castle", "Charles Bridge", "Lennon"], x: 14.4005, y: 50.0902 },
+    { name_ko: "구시가지 (시내 중심)", name_en: "Old Town (Center)", keywords: ["구시가지", "틴 성당", "천문 시계", "천문시계", "Old Town", "Astronomical Clock"], x: 14.4205, y: 50.0878 },
+    { name_ko: "신시가지 (중남부)", name_en: "New Town (South-Center)", keywords: ["바츨라프", "댄싱 하우스", "Wenceslas", "Dancing House"], x: 14.4255, y: 50.0784 },
+    { name_ko: "비셰하드 (남부)", name_en: "Vysehrad (South)", keywords: ["비셰하드", "Vysehrad"], x: 14.4200, y: 50.0644 },
+    { name_ko: "레트나 공원 (북부)", name_en: "Letna Park (North)", keywords: ["레트나", "Letna"], x: 14.4150, y: 50.0950 }
   ],
   beijing: [
-    { name: "Forbidden City (Center)", keywords: ["자금성", "천안문", "경산공원", "Forbidden City", "Tiananmen", "Jingshan"], x: 116.3970, y: 39.9169 },
-    { name: "Wangfujing/East", keywords: ["왕푸징", "난뤄구샹", "옹화궁", "Temple of Heaven", "천단", "Wangfujing", "Nanluoguxiang", "Yonghe", "Temple of Heaven"], x: 116.4110, y: 39.9140 },
-    { name: "Summer Palace (Northwest)", keywords: ["이화원", "원명원", "Summer Palace", "Yuanmingyuan"], x: 116.2710, y: 39.9972 },
-    { name: "Olympic Stadium (North)", keywords: ["올림픽", "주경기장", "Bird's Nest", "Olympic Stadium"], x: 116.3960, y: 40.0016 },
-    { name: "Great Wall (Far North)", keywords: ["만리장성", "Great Wall"], x: 116.0200, y: 40.3597 }
+    { name_ko: "자금성/천안문 (시내 중심)", name_en: "Forbidden City (Center)", keywords: ["자금성", "천안문", "경산공원", "Forbidden City", "Tiananmen", "Jingshan"], x: 116.3970, y: 39.9169 },
+    { name_ko: "왕푸징 (동부)", name_en: "Wangfujing/East", keywords: ["왕푸징", "난뤄구샹", "옹화궁", "Temple of Heaven", "천단", "Wangfujing", "Nanluoguxiang", "Yonghe", "Temple of Heaven"], x: 116.4110, y: 39.9140 },
+    { name_ko: "이화원 (북서부)", name_en: "Summer Palace (Northwest)", keywords: ["이화원", "원명원", "Summer Palace", "Yuanmingyuan"], x: 116.2710, y: 39.9972 },
+    { name_ko: "올림픽 경기장 (북부)", name_en: "Olympic Stadium (North)", keywords: ["올림픽", "주경기장", "Bird's Nest", "Olympic Stadium"], x: 116.3960, y: 40.0016 },
+    { name_ko: "만리장성 (극북부)", name_en: "Great Wall (Far North)", keywords: ["만리장성", "Great Wall"], x: 116.0200, y: 40.3597 }
   ],
   cairo: [
-    { name: "Giza (West)", keywords: ["피라미드", "스핑크스", "기자", "Pyramids", "Sphinx", "Giza", "Saqqara", "사카라"], x: 31.1342, y: 29.9792 },
-    { name: "Downtown (Center)", keywords: ["이집트 박물관", "타흐리르", "Tahrir", "Egyptian Museum"], x: 31.2357, y: 30.0444 },
-    { name: "Zamalek (West-Center)", keywords: ["자말렉", "카이로 타워", "Zamalek", "Cairo Tower"], x: 31.2208, y: 30.0631 },
-    { name: "Islamic Cairo (East)", keywords: ["칸 엘 칼릴리", "시타델", "무함마드 알리", "아즈하르", "Khan El Khalili", "Citadel", "Mosque", "Azhar"], x: 31.2625, y: 30.0478 },
-    { name: "New Cairo (Far East)", keywords: ["페스티벌", "Festival City"], x: 31.4800, y: 30.0300 }
+    { name_ko: "기자/피라미드 (서부)", name_en: "Giza (West)", keywords: ["피라미드", "스핑크스", "기자", "Pyramids", "Sphinx", "Giza", "Saqqara", "사카라"], x: 31.1342, y: 29.9792 },
+    { name_ko: "카이로 다운타운 (시내 중심)", name_en: "Downtown (Center)", keywords: ["이집트 박물관", "타흐리르", "Tahrir", "Egyptian Museum"], x: 31.2357, y: 30.0444 },
+    { name_ko: "자말렉 (서중부)", name_en: "Zamalek (West-Center)", keywords: ["자말렉", "카이로 타워", "Zamalek", "Cairo Tower"], x: 31.2208, y: 30.0631 },
+    { name_ko: "이슬람 카이로 (동부)", name_en: "Islamic Cairo (East)", keywords: ["칸 엘 칼릴리", "시타델", "무함마드 알리", "아즈하르", "Khan El Khalili", "Citadel", "Mosque", "Azhar"], x: 31.2625, y: 30.0478 },
+    { name_ko: "뉴 카이로 (극동부)", name_en: "New Cairo (Far East)", keywords: ["페스티벌", "Festival City"], x: 31.4800, y: 30.0300 }
   ],
   rio: [
-    { name: "Copacabana (East Coast)", keywords: ["코파카바나", "Copacabana"], x: -43.1857, y: -22.9714 },
-    { name: "Ipanema (South Coast)", keywords: ["이파네마", "레블론", "Ipanema", "Leblon", "Hippie"], x: -43.2081, y: -22.9836 },
-    { name: "Centro (North)", keywords: ["도서관", "셀라론", "대성당", "Reading Room", "Selaron", "Cathedral", "Tomorrow"], x: -43.1797, y: -22.9064 },
-    { name: "Corcovado/Sugarloaf (Center-East)", keywords: ["예수상", "빵드아수카르", "Christ the Redeemer", "Sugarloaf"], x: -43.2105, y: -22.9519 },
-    { name: "Tijuca/Botanico (West)", keywords: ["식물원", "라주", "티주카", "Jardim Botanico", "Lage", "Tijuca"], x: -43.2244, y: -22.9697 }
+    { name_ko: "코파카바나 해변 (동부 해안)", name_en: "Copacabana (East Coast)", keywords: ["코파카바나", "Copacabana"], x: -43.1857, y: -22.9714 },
+    { name_ko: "이파네마 해변 (남부 해안)", name_en: "Ipanema (South Coast)", keywords: ["이파네마", "레블론", "Ipanema", "Leblon", "Hippie"], x: -43.2081, y: -22.9836 },
+    { name_ko: "센트로 (북부)", name_en: "Centro (North)", keywords: ["도서관", "셀라론", "대성당", "Reading Room", "Selaron", "Cathedral", "Tomorrow"], x: -43.1797, y: -22.9064 },
+    { name_ko: "코르코바두 예수상 (중동부)", name_en: "Corcovado/Sugarloaf (Center-East)", keywords: ["예수상", "빵드아수카르", "Christ the Redeemer", "Sugarloaf"], x: -43.2105, y: -22.9519 },
+    { name_ko: "티주카/식물원 (서부)", name_en: "Tijuca/Botanico (West)", keywords: ["식물원", "라주", "티주카", "Jardim Botanico", "Lage", "Tijuca"], x: -43.2244, y: -22.9697 }
   ],
   vancouver: [
-    { name: "Stanley Park (North-West)", keywords: ["스탠리", "콜 해버", "Stanley", "Coal Harbour"], x: -123.1417, y: 49.3017 },
-    { name: "Gastown/Downtown (Center)", keywords: ["개스타운", "증기시계", "롭슨", "퍼시픽", "아트 갤러리", "Gastown", "Steam Clock", "Robson", "Pacific Centre", "Art Gallery", "Medina"], x: -123.1207, y: 49.2827 },
-    { name: "Granville/Kitsilano (South-West)", keywords: ["그랜빌", "잉글리시", "키칠라노", "Granville", "English Bay", "Kitsilano"], x: -123.1364, y: 49.2734 },
-    { name: "Capilano/Grouse (Far North)", keywords: ["카필라노", "그라우스", "Capilano", "Grouse"], x: -123.1112, y: 49.3429 },
-    { name: "Richmond/Metrotown (South/East)", keywords: ["리치먼드", "메트로타운", "Richmond", "Metrotown", "McArthurGlen"], x: -123.1333, y: 49.1667 }
+    { name_ko: "스탠리 파크 (북서부)", name_en: "Stanley Park (North-West)", keywords: ["스탠리", "콜 해버", "Stanley", "Coal Harbour"], x: -123.1417, y: 49.3017 },
+    { name_ko: "개스타운/다운타운 (시내 중심)", name_en: "Gastown/Downtown (Center)", keywords: ["개스타운", "증기시계", "롭슨", "퍼시픽", "아트 갤러리", "Gastown", "Steam Clock", "Robson", "Pacific Centre", "Art Gallery", "Medina"], x: -123.1207, y: 49.2827 },
+    { name_ko: "그랜빌/키칠라노 (남서부)", name_en: "Granville/Kitsilano (South-West)", keywords: ["그랜빌", "잉글리시", "키칠라노", "Granville", "English Bay", "Kitsilano"], x: -123.1364, y: 49.2734 },
+    { name_ko: "카필라노/그라우스 마운틴 (극북부)", name_en: "Capilano/Grouse (Far North)", keywords: ["카필라노", "그라우스", "Capilano", "Grouse"], x: -123.1112, y: 49.3429 },
+    { name_ko: "리치먼드/메트로타운 (남/동부)", name_en: "Richmond/Metrotown (South/East)", keywords: ["리치먼드", "메트로타운", "Richmond", "Metrotown", "McArthurGlen"], x: -123.1333, y: 49.1667 }
   ]
 };
 
@@ -5076,6 +5080,10 @@ function showAddPlaceModal(allAttractions, dayPlan, cityId) {
             <label class="form-label">${state.lang === 'ko' ? '소요 시간 (분)' : 'Duration (minutes)'}</label>
             <input type="number" class="form-control" id="addPlaceDurationField" value="90" min="10" max="600" step="10">
           </div>
+          <div class="form-group">
+            <label class="form-label">${state.lang === 'ko' ? '원하는 시작 시간 (선택)' : 'Desired Start Time (Optional)'}</label>
+            <input type="time" class="form-control" id="addPlaceTimeField">
+          </div>
           <div class="modal-footer">
             <button type="button" class="btn-secondary" onclick="document.getElementById('timelineAddPlaceModal').classList.remove('active')">${state.lang === 'ko' ? '취소' : 'Cancel'}</button>
             <button type="button" class="btn-primary" id="addPlaceModalSubmitBtn">${state.lang === 'ko' ? '추가하기' : 'Add'}</button>
@@ -5104,6 +5112,22 @@ function showAddPlaceModal(allAttractions, dayPlan, cityId) {
     select.appendChild(opt);
   });
 
+  // Calculate default time after the last attraction
+  const attractionsOnly = dayPlan.items.filter(it => !it.isTransit && !it.isLodging);
+  let defaultTime = "09:30";
+  if (attractionsOnly.length > 0) {
+    const lastAtt = attractionsOnly[attractionsOnly.length - 1];
+    if (lastAtt.timeSlot) {
+      const parts = lastAtt.timeSlot.split('-');
+      if (parts.length > 1) {
+        defaultTime = parts[1].trim();
+      } else {
+        defaultTime = parts[0].trim();
+      }
+    }
+  }
+  document.getElementById('addPlaceTimeField').value = defaultTime;
+
   modal.classList.add('active');
 
   const submitBtn = document.getElementById('addPlaceModalSubmitBtn');
@@ -5116,24 +5140,107 @@ function showAddPlaceModal(allAttractions, dayPlan, cityId) {
 
     const att = JSON.parse(selectedVal);
     const duration = parseInt(document.getElementById('addPlaceDurationField').value, 10) || 90;
+    let timeVal = document.getElementById('addPlaceTimeField').value;
+    if (!timeVal) timeVal = defaultTime;
     
+    const [hours, minutes] = timeVal.split(':').map(Number);
+    const newStartMin = hours * 60 + minutes;
+
     const newItem = {
       ...att,
       duration: duration,
       cityId: cityId
     };
 
-    const attractions = dayPlan.items.filter(it => !it.isTransit);
-    
-    // If ending with lodging, insert right before lodging return
-    const endLodgingIdx = attractions.findIndex(it => it.isLodging && it.isEnd);
-    if (endLodgingIdx !== -1) {
-      attractions.splice(endLodgingIdx, 0, newItem);
-    } else {
-      attractions.push(newItem);
+    const attractions = dayPlan.items.filter(it => !it.isTransit && !it.isLodging);
+
+    function parseStartTime(item) {
+      if (!item.timeSlot) return 570;
+      const parts = item.timeSlot.split('-');
+      const startStr = parts[0].trim();
+      const [h, m] = startStr.split(':').map(Number);
+      return h * 60 + m;
     }
 
-    dayPlan.items = attractions;
+    function parseEndTime(item) {
+      if (!item.timeSlot) return 570;
+      const parts = item.timeSlot.split('-');
+      if (parts.length > 1) {
+        const [h, m] = parts[1].trim().split(':').map(Number);
+        return h * 60 + m;
+      }
+      const [h, m] = parts[0].trim().split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    // Find chronological index
+    let insertIdx = attractions.length;
+    for (let i = 0; i < attractions.length; i++) {
+      if (parseStartTime(attractions[i]) > newStartMin) {
+        insertIdx = i;
+        break;
+      }
+    }
+
+    // Insert with idle gap filling
+    if (insertIdx > 0) {
+      const prevItem = attractions[insertIdx - 1];
+      const prevEndMin = parseEndTime(prevItem);
+      const transit = calculateTransit(prevItem, newItem);
+      const arrivalMin = prevEndMin + transit.duration;
+
+      if (newStartMin > arrivalMin + 10) {
+        const gap = newStartMin - arrivalMin;
+        const restItem = {
+          name_ko: "자유시간 및 휴식",
+          name_en: "Free Time & Rest",
+          desc_ko: "일정 사이에 갖는 여유로운 자유 시간 및 개별 휴식",
+          desc_en: "Enjoy a relaxing free time and personal rest between schedules.",
+          isRest: true,
+          duration: gap,
+          cityId: cityId
+        };
+        attractions.splice(insertIdx, 0, restItem);
+        attractions.splice(insertIdx + 1, 0, newItem);
+      } else {
+        attractions.splice(insertIdx, 0, newItem);
+      }
+    } else {
+      const startLodging = dayPlan.items.find(it => it.isLodging && it.isStart);
+      const startMin = 570; // 09:30
+      let arrivalMin = startMin;
+      if (startLodging) {
+        const transit = calculateTransit(startLodging, newItem);
+        arrivalMin = startMin + transit.duration;
+      }
+
+      if (newStartMin > arrivalMin + 10) {
+        const gap = newStartMin - arrivalMin;
+        const restItem = {
+          name_ko: "자유시간 및 휴식",
+          name_en: "Free Time & Rest",
+          desc_ko: "일정 사이에 갖는 여유로운 자유 시간 및 개별 휴식",
+          desc_en: "Enjoy a relaxing free time and personal rest between schedules.",
+          isRest: true,
+          duration: gap,
+          cityId: cityId
+        };
+        attractions.splice(0, 0, restItem, newItem);
+      } else {
+        attractions.splice(0, 0, newItem);
+      }
+    }
+
+    // Reassemble itinerary day plan items
+    const startLodging = dayPlan.items.find(it => it.isLodging && it.isStart);
+    const endLodging = dayPlan.items.find(it => it.isLodging && it.isEnd);
+    
+    let finalItems = [];
+    if (startLodging) finalItems.push(startLodging);
+    finalItems.push(...attractions);
+    if (endLodging) finalItems.push(endLodging);
+
+    dayPlan.items = finalItems;
     recalculateDayPlanTimes(dayPlan, cityId);
 
     saveToLocalStorage();
@@ -5220,8 +5327,8 @@ function handleCustomRegen(requestText) {
               const lodging = itinerary.lodging;
               
               const lodgingStart = {
-                name_ko: `🏨 숙소 출발 (${lodging.name})`,
-                name_en: `🏨 Depart from Lodging (${lodging.name})`,
+                name_ko: `🏨 숙소 출발 (${lodging.name_ko || lodging.name})`,
+                name_en: `🏨 Depart from Lodging (${lodging.name_en || lodging.name})`,
                 desc_ko: '숙소에서 오늘의 일정을 시작합니다.',
                 desc_en: 'Start today\'s itinerary from your accommodation.',
                 x: lodging.x,
@@ -5233,8 +5340,8 @@ function handleCustomRegen(requestText) {
               };
               
               const lodgingEnd = {
-                name_ko: `🏨 숙소 복귀 (${lodging.name})`,
-                name_en: `🏨 Return to Lodging (${lodging.name})`,
+                name_ko: `🏨 숙소 복귀 (${lodging.name_ko || lodging.name})`,
+                name_en: `🏨 Return to Lodging (${lodging.name_en || lodging.name})`,
                 desc_ko: '오늘의 모든 일정을 마치고 숙소로 복귀하여 휴식을 취합니다.',
                 desc_en: 'Finish today\'s activities and return to your accommodation to rest.',
                 x: lodging.x,
@@ -5272,8 +5379,8 @@ function handleCustomRegen(requestText) {
               const lodging = itinerary.lodging;
               
               const lodgingStart = {
-                name_ko: `🏨 숙소 출발 (${lodging.name})`,
-                name_en: `🏨 Depart from Lodging (${lodging.name})`,
+                name_ko: `🏨 숙소 출발 (${lodging.name_ko || lodging.name})`,
+                name_en: `🏨 Depart from Lodging (${lodging.name_en || lodging.name})`,
                 desc_ko: '숙소에서 오늘의 일정을 시작합니다.',
                 desc_en: 'Start today\'s itinerary from your accommodation.',
                 x: lodging.x,
@@ -5285,8 +5392,8 @@ function handleCustomRegen(requestText) {
               };
               
               const lodgingEnd = {
-                name_ko: `🏨 숙소 복귀 (${lodging.name})`,
-                name_en: `🏨 Return to Lodging (${lodging.name})`,
+                name_ko: `🏨 숙소 복귀 (${lodging.name_ko || lodging.name})`,
+                name_en: `🏨 Return to Lodging (${lodging.name_en || lodging.name})`,
                 desc_ko: '오늘의 모든 일정을 마치고 숙소로 복귀하여 휴식을 취합니다.',
                 desc_en: 'Finish today\'s activities and return to your accommodation to rest.',
                 x: lodging.x,
@@ -5326,6 +5433,7 @@ function updateLodgingSelector(cityId) {
   const select = document.getElementById('plannerLodging');
   if (!select) return;
   
+  const prevVal = select.value;
   select.innerHTML = '';
   const defaultOpt = document.createElement('option');
   defaultOpt.value = '';
@@ -5337,10 +5445,74 @@ function updateLodgingSelector(cityId) {
   if (clusters && clusters.length > 0) {
     clusters.forEach(cluster => {
       const opt = document.createElement('option');
-      opt.value = JSON.stringify({ name: cluster.name, x: cluster.x, y: cluster.y });
-      opt.textContent = cluster.name;
+      const name_ko = cluster.name_ko || cluster.name;
+      const name_en = cluster.name_en || cluster.name;
+      opt.value = JSON.stringify({ 
+        name_ko: name_ko, 
+        name_en: name_en, 
+        name: name_en, 
+        x: cluster.x, 
+        y: cluster.y 
+      });
+      opt.textContent = state.lang === 'ko' ? name_ko : name_en;
       select.appendChild(opt);
     });
+  } else if (typeof EXTRA_CITIES_META !== 'undefined' && EXTRA_CITIES_META[cityId]) {
+    const meta = EXTRA_CITIES_META[cityId];
+    const core = meta.core;
+    if (core) {
+      const extraClusters = [
+        {
+          name_ko: "시티 센터 (문화 지구)",
+          name_en: "City Center (Culture District)",
+          x: core.culture ? core.culture.x : (core.gourmet ? core.gourmet.x : 0),
+          y: core.culture ? core.culture.y : (core.gourmet ? core.gourmet.y : 0)
+        },
+        {
+          name_ko: "자연 & 힐링 구역",
+          name_en: "Nature & Healing Area",
+          x: core.healing ? core.healing.x : 0,
+          y: core.healing ? core.healing.y : 0
+        },
+        {
+          name_ko: "쇼핑 & 미식 거리",
+          name_en: "Shopping & Gourmet District",
+          x: core.shopping ? core.shopping.x : (core.gourmet ? core.gourmet.x : 0),
+          y: core.shopping ? core.shopping.y : (core.gourmet ? core.gourmet.y : 0)
+        }
+      ];
+      extraClusters.forEach(cluster => {
+        const opt = document.createElement('option');
+        opt.value = JSON.stringify({ 
+          name_ko: cluster.name_ko, 
+          name_en: cluster.name_en, 
+          name: cluster.name_en, 
+          x: cluster.x, 
+          y: cluster.y 
+        });
+        opt.textContent = state.lang === 'ko' ? cluster.name_ko : cluster.name_en;
+        select.appendChild(opt);
+      });
+    }
+  }
+
+  // Restore selection if matching coordinates found
+  if (prevVal) {
+    try {
+      const prevObj = JSON.parse(prevVal);
+      for (let i = 0; i < select.options.length; i++) {
+        const optVal = select.options[i].value;
+        if (optVal) {
+          const optObj = JSON.parse(optVal);
+          if (optObj.x === prevObj.x && optObj.y === prevObj.y) {
+            select.selectedIndex = i;
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Error restoring selected lodging value:", e);
+    }
   }
 }
 
