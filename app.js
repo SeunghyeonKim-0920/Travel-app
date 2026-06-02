@@ -13,7 +13,9 @@ const state = {
   editingRoomId: null,
   chatLogs: {},
   activeCourse: null, // Stores currently generated course
-  currentItineraryDay: 1 // Currently selected day tab in planner
+  currentItineraryDay: 1, // Currently selected day tab in planner
+  savedCourses: [],
+  regenConfig: null
 };
 
 // --- Remote Sync Endpoint (MockBolt) ---
@@ -140,6 +142,39 @@ function init() {
   renderPopularDestinations();
   renderCitySelectors();
   renderCompanionRooms();
+  
+  // Parse shared query parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const shareData = urlParams.get('share');
+  if (shareData) {
+    try {
+      const decodedJson = decodeURIComponent(escape(atob(shareData)));
+      const sharedCourse = JSON.parse(decodedJson);
+      if (sharedCourse && sharedCourse.days && sharedCourse.cityName) {
+        state.activeCourse = sharedCourse;
+        state.currentItineraryDay = 1;
+        state.currentView = 'planner';
+        
+        // Remove share query parameter from URL without page reload
+        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({ path: newUrl }, '', newUrl);
+        
+        showToast(state.lang === 'ko' ? '공유받은 일정을 로드했습니다.' : 'Shared itinerary loaded.');
+      }
+    } catch (e) {
+      console.error("Failed to decode shared itinerary:", e);
+    }
+  }
+
+  // Populate lodging selector for the initial city selection
+  const selectPlanner = document.getElementById('plannerDest');
+  if (selectPlanner) {
+    updateLodgingSelector(selectPlanner.value);
+  }
+  
+  // Render saved courses
+  renderSavedCoursesList();
+
   updateView();
   if (state.currentView === 'chat' && state.joinedRoomId !== null) {
     renderChatRoom();
@@ -236,6 +271,27 @@ function loadFromLocalStorage() {
   } else {
     state.currentView = 'dashboard';
   }
+
+  const localActiveCourse = localStorage.getItem('wander_active_course');
+  if (localActiveCourse) {
+    state.activeCourse = JSON.parse(localActiveCourse);
+  } else {
+    state.activeCourse = null;
+  }
+
+  const localCurrentItineraryDay = localStorage.getItem('wander_current_itinerary_day');
+  if (localCurrentItineraryDay) {
+    state.currentItineraryDay = parseInt(localCurrentItineraryDay, 10) || 1;
+  } else {
+    state.currentItineraryDay = 1;
+  }
+
+  const localSavedCourses = localStorage.getItem('wander_saved_courses');
+  if (localSavedCourses) {
+    state.savedCourses = JSON.parse(localSavedCourses);
+  } else {
+    state.savedCourses = [];
+  }
   
   // Sync profile values to input fields
   document.getElementById('profileName').value = state.activeProfile.name;
@@ -253,6 +309,9 @@ function saveToLocalStorage() {
   localStorage.setItem('wander_chat_logs', JSON.stringify(state.chatLogs));
   localStorage.setItem('wander_joined_room_id', state.joinedRoomId !== null ? String(state.joinedRoomId) : '');
   localStorage.setItem('wander_current_view', state.currentView);
+  localStorage.setItem('wander_active_course', state.activeCourse ? JSON.stringify(state.activeCourse) : '');
+  localStorage.setItem('wander_current_itinerary_day', String(state.currentItineraryDay || 1));
+  localStorage.setItem('wander_saved_courses', JSON.stringify(state.savedCourses || []));
 }
 
 // --- Translation Engine ---
@@ -548,6 +607,90 @@ function setupEventListeners() {
   document.getElementById('chatInputMessageField').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendChatMessage();
   });
+
+  // Lodging selector updater
+  const plannerDestSelect = document.getElementById('plannerDest');
+  if (plannerDestSelect) {
+    plannerDestSelect.addEventListener('change', (e) => {
+      updateLodgingSelector(e.target.value);
+    });
+  }
+
+  // Itinerary Save Action Button
+  const saveBtn = document.getElementById('saveTripActionBtn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', saveCurrentItinerary);
+  }
+
+  // Itinerary Share Action Button
+  const shareBtn = document.getElementById('shareTripActionBtn');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', copyShareLink);
+  }
+
+  // Itinerary Download Action Button
+  const downloadBtn = document.getElementById('downloadTripActionBtn');
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', exportItineraryToMarkdown);
+  }
+
+  // Custom AI Regeneration Submit Button
+  const customRegenSubmit = document.getElementById('customRegenSubmitBtn');
+  if (customRegenSubmit) {
+    customRegenSubmit.addEventListener('click', () => {
+      const input = document.getElementById('customRegenInput');
+      const text = input ? input.value.trim() : '';
+      if (text) {
+        handleCustomRegen(text);
+        if (input) input.value = '';
+      }
+    });
+  }
+
+  // Custom AI Regeneration Tag Buttons
+  document.querySelectorAll('.regen-tag-btn').forEach(tagBtn => {
+    tagBtn.addEventListener('click', (e) => {
+      const tagText = e.currentTarget.textContent;
+      handleCustomRegen(tagText);
+    });
+  });
+
+  // Chat Share Course Button
+  const chatShareBtn = document.getElementById('chatShareCourseBtn');
+  if (chatShareBtn) {
+    chatShareBtn.addEventListener('click', () => {
+      if (!state.activeCourse) {
+        showToast(state.lang === 'ko' ? '공유할 일정이 없습니다. 코스를 먼저 생성해주세요.' : 'No itinerary to share. Please generate a course first.');
+        return;
+      }
+      if (!state.joinedRoomId) return;
+      
+      const course = state.activeCourse;
+      const text = state.lang === 'ko'
+        ? `[일정 공유] ${state.activeProfile.name}님이 짠 ${course.cityName} ${course.days.length}일 코스`
+        : `[Shared Course] ${state.activeProfile.name}'s ${course.days.length}-day course for ${course.cityName}`;
+        
+      const msgObj = createMessageObject({
+        sender: state.activeProfile.name,
+        mbti: state.activeProfile.mbti,
+        text: text
+      });
+      
+      msgObj.type = 'share_course';
+      msgObj.course = course;
+      
+      if (!state.chatLogs[state.joinedRoomId]) {
+        state.chatLogs[state.joinedRoomId] = [];
+      }
+      state.chatLogs[state.joinedRoomId].push(msgObj);
+      
+      pushToRemote().then(() => {
+        renderChatRoom();
+      });
+      
+      showToast(state.lang === 'ko' ? '채팅방에 일정이 공유되었습니다.' : 'Itinerary shared in chat.');
+    });
+  }
 }
 
 function closeCreateModal() {
@@ -1007,6 +1150,9 @@ function generateItinerary() {
     return;
   }
 
+  // Clear previous regeneration config
+  state.regenConfig = null;
+
   // Find matched city
   const matchedCity = CITIES.find(city => city.id === cityId);
   const cityName = matchedCity ? (state.lang === 'ko' ? matchedCity.name_ko : matchedCity.name_en) : cityId;
@@ -1033,12 +1179,64 @@ function generateItinerary() {
     ? (state.lang === 'ko' ? matchedCity.name_ko : matchedCity.name_en) 
     : cityName;
 
+  // Fetch lodging selection
+  const lodgingSelect = document.getElementById('plannerLodging');
+  let lodging = null;
+  if (lodgingSelect && lodgingSelect.value) {
+    try {
+      lodging = JSON.parse(lodgingSelect.value);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   fetchWikiAttractions(searchName, cityId, state.lang)
     .then(wikiPools => {
       try {
         const itinerary = buildCourseStructure(cityId, days, selectedPrefs, cityName, wikiPools);
+        
+        // Save lodging configuration
+        itinerary.lodging = lodging;
+        
+        // Inject lodging start/end to all days
+        if (lodging) {
+          itinerary.days.forEach(dayPlan => {
+            const attractions = dayPlan.items.filter(it => !it.isTransit && !it.isLodging);
+            
+            const lodgingStart = {
+              name_ko: `🏨 숙소 출발 (${lodging.name})`,
+              name_en: `🏨 Depart from Lodging (${lodging.name})`,
+              desc_ko: '숙소에서 오늘의 일정을 시작합니다.',
+              desc_en: 'Start today\'s itinerary from your accommodation.',
+              x: lodging.x,
+              y: lodging.y,
+              isLodging: true,
+              isStart: true,
+              duration: 0,
+              hideDuration: true
+            };
+            
+            const lodgingEnd = {
+              name_ko: `🏨 숙소 복귀 (${lodging.name})`,
+              name_en: `🏨 Return to Lodging (${lodging.name})`,
+              desc_ko: '오늘의 모든 일정을 마치고 숙소로 복귀하여 휴식을 취합니다.',
+              desc_en: 'Finish today\'s activities and return to your accommodation to rest.',
+              x: lodging.x,
+              y: lodging.y,
+              isLodging: true,
+              isEnd: true,
+              duration: 0,
+              hideDuration: true
+            };
+            
+            dayPlan.items = [lodgingStart, ...attractions, lodgingEnd];
+            recalculateDayPlanTimes(dayPlan, cityId);
+          });
+        }
+
         state.activeCourse = itinerary;
         state.currentItineraryDay = 1;
+        saveToLocalStorage();
 
         renderItinerary(itinerary);
 
@@ -1054,8 +1252,46 @@ function generateItinerary() {
       console.error("Error fetching attractions:", err);
       try {
         const itinerary = buildCourseStructure(cityId, days, selectedPrefs, cityName, null);
+        
+        itinerary.lodging = lodging;
+        if (lodging) {
+          itinerary.days.forEach(dayPlan => {
+            const attractions = dayPlan.items.filter(it => !it.isTransit && !it.isLodging);
+            
+            const lodgingStart = {
+              name_ko: `🏨 숙소 출발 (${lodging.name})`,
+              name_en: `🏨 Depart from Lodging (${lodging.name})`,
+              desc_ko: '숙소에서 오늘의 일정을 시작합니다.',
+              desc_en: 'Start today\'s itinerary from your accommodation.',
+              x: lodging.x,
+              y: lodging.y,
+              isLodging: true,
+              isStart: true,
+              duration: 0,
+              hideDuration: true
+            };
+            
+            const lodgingEnd = {
+              name_ko: `🏨 숙소 복귀 (${lodging.name})`,
+              name_en: `🏨 Return to Lodging (${lodging.name})`,
+              desc_ko: '오늘의 모든 일정을 마치고 숙소로 복귀하여 휴식을 취합니다.',
+              desc_en: 'Finish today\'s activities and return to your accommodation to rest.',
+              x: lodging.x,
+              y: lodging.y,
+              isLodging: true,
+              isEnd: true,
+              duration: 0,
+              hideDuration: true
+            };
+            
+            dayPlan.items = [lodgingStart, ...attractions, lodgingEnd];
+            recalculateDayPlanTimes(dayPlan, cityId);
+          });
+        }
+
         state.activeCourse = itinerary;
         state.currentItineraryDay = 1;
+        saveToLocalStorage();
 
         renderItinerary(itinerary);
       } catch (innerErr) {
@@ -2323,7 +2559,21 @@ function buildCourseStructure(cityId, days, preferences, customCityName, wikiPoo
       });
     });
   } else {
-    cityPools = ATTRACTIONS[cityId] || ATTRACTIONS['seoul'];
+    const originalPools = ATTRACTIONS[cityId] || ATTRACTIONS['seoul'];
+    cityPools = {
+      healing: [...(originalPools.healing || [])],
+      gourmet: [...(originalPools.gourmet || [])],
+      culture: [...(originalPools.culture || [])],
+      activity: [...(originalPools.activity || [])],
+      shopping: [...(originalPools.shopping || [])]
+    };
+  }
+
+  // Handle custom regeneration filters
+  if (state.regenConfig) {
+    if (state.regenConfig.excludeShopping) {
+      cityPools.shopping = [];
+    }
   }
 
   // Pre-resolve coordinates and cityId for all pool items
@@ -2612,7 +2862,15 @@ function buildCourseStructure(cityId, days, preferences, customCityName, wikiPoo
 
   const getItemDuration = (item) => {
     const dur = item.duration || 90;
-    return Math.min(dur, 150); // cap at 150 min
+    // Full-day attractions (theme parks, big day trips) keep their actual duration
+    // These places dominate an entire day intentionally
+    const FULL_DAY_THRESHOLD = 300; // 5 hours or more = full day attraction
+    if (dur >= FULL_DAY_THRESHOLD) return dur;
+    // Large half-day attractions (major sites, big outlets) - keep up to 360min
+    const HALF_DAY_THRESHOLD = 180; // 3+ hours = half day
+    if (dur >= HALF_DAY_THRESHOLD) return Math.min(dur, 360);
+    // Regular sightseeing capped at 180 min
+    return Math.min(dur, 180);
   };
 
   const isOpenDuring = (item, startMin, endMin) => {
@@ -2645,6 +2903,32 @@ function buildCourseStructure(cityId, days, preferences, customCityName, wikiPoo
     let preferredQuadrant = null;
     let lastItem = null;
     let currentCoords = { x: 5.0, y: 5.0 };
+
+    // === CLUSTER ANCHORING: Prefer nearby places on the same day ===
+    // If a heavy attraction (4+ hrs: theme park, big outlet, major day trip)
+    // is still unvisited, anchor today's cluster around it so nearby places follow.
+    const getHeavyUnvisited = () => {
+      const allPools = [
+        ...(cityPools.activity || []),
+        ...(cityPools.shopping || []),
+        ...(cityPools.culture || []),
+      ];
+      return allPools.find(item => {
+        if (visitedNames.has(item.name_ko)) return false;
+        return (item.duration || 0) >= 240; // 4+ hours
+      }) || null;
+    };
+    let dayAnchorCluster = null;
+    const heavyForToday = getHeavyUnvisited();
+    if (heavyForToday) {
+      const hCoords = getAttractionCoords(heavyForToday);
+      const clusters = CITY_CLUSTERS[cityId] || [];
+      let minDist = Infinity;
+      clusters.forEach(cluster => {
+        const dist = getHaversineDistance(cluster.y, cluster.x, hCoords.y, hCoords.x);
+        if (dist < minDist) { minDist = dist; dayAnchorCluster = cluster; }
+      });
+    }
 
     const prepareItem = (item) => {
       if (!item) return;
@@ -2957,6 +3241,30 @@ function buildCourseStructure(cityId, days, preferences, customCityName, wikiPoo
     };
 
     const getSightseeingSpot = (fromItem, isNightSlot, preferredQuadrant) => {
+      // If today has a cluster anchor (due to heavy attraction), strongly prefer same cluster
+      if (dayAnchorCluster && !isNightSlot) {
+        const anchorX = dayAnchorCluster.x;
+        const anchorY = dayAnchorCluster.y;
+        const pool = isNightSlot ? nightSightseeing : daySightseeing;
+        const unvisited = pool.filter(item => !visitedNames.has(item.name_ko));
+        // Find items close to the anchor cluster (within 5km)
+        const nearbyItems = unvisited.filter(item => {
+          const coords = getAttractionCoords(item);
+          const dist = getHaversineDistance(anchorY, anchorX, coords.y, coords.x);
+          return dist <= 8.0; // 8km radius to match cluster items
+        });
+        if (nearbyItems.length > 0) {
+          // Among nearby, pick closest to fromItem
+          const sortedNearby = nearbyItems.slice().sort((a, b) => {
+            const da = fromItem ? getDistance(fromItem, a) : 0;
+            const db = fromItem ? getDistance(fromItem, b) : 0;
+            return da - db;
+          });
+          // Return but don't remove yet - let the normal flow handle that
+          const temp = [...sortedNearby];
+          return pullClosestItem(fromItem, temp, preferredQuadrant);
+        }
+      }
       // 1. Try landmarks first!
       const landmarkCandidates = unvisitedLandmarks.filter(l => 
         (isNightSlot ? isActualNightView(l) : (d === 1 || !isActualNightView(l))) && !visitedNames.has(l.name_ko)
@@ -3353,8 +3661,8 @@ function buildCourseStructure(cityId, days, preferences, customCityName, wikiPoo
         }
       }
 
-      // Sightseeing 2 (Optional) — only if we have room
-      if (morningScheduled) {
+      // Sightseeing 2 (Optional) — only if we have room and not relaxed mode
+      if (morningScheduled && (!state.regenConfig || !state.regenConfig.relaxed)) {
         let s2 = getSightseeingSpot(lastItem, false, preferredQuadrant);
         prepareItem(s2);
 
@@ -3395,14 +3703,16 @@ function buildCourseStructure(cityId, days, preferences, customCityName, wikiPoo
             markAsVisited(s3, false);
           }
 
-          // Sightseeing 4 (Optional)
-          let s4 = getSightseeingSpot(lastItem, false, preferredQuadrant);
-          prepareItem(s4);
-          if (s4 && !s4.isRest) {
-            const s4dur = getItemDuration(s4);
-            if (fitsBeforeDinner(s4, s4dur)) {
-              if (tryScheduleAttraction(s4, s4dur)) {
-                markAsVisited(s4, false);
+          // Sightseeing 4 (Optional) — only if not relaxed mode
+          if (!state.regenConfig || !state.regenConfig.relaxed) {
+            let s4 = getSightseeingSpot(lastItem, false, preferredQuadrant);
+            prepareItem(s4);
+            if (s4 && !s4.isRest) {
+              const s4dur = getItemDuration(s4);
+              if (fitsBeforeDinner(s4, s4dur)) {
+                if (tryScheduleAttraction(s4, s4dur)) {
+                  markAsVisited(s4, false);
+                }
               }
             }
           }
@@ -3553,6 +3863,8 @@ function renderItinerary(itinerary) {
       document.querySelectorAll('#itineraryDayTabs .day-btn').forEach((b, i) => {
         b.classList.toggle('active', i === dayPlan.day - 1);
       });
+      // Update map when clicking day tabs
+      renderMapForDay(state.currentItineraryDay - 1);
     });
     tabContainer.appendChild(btn);
   });
@@ -3561,24 +3873,32 @@ function renderItinerary(itinerary) {
   if (activeDayPlan) {
     renderItineraryTimeline(activeDayPlan.items);
   }
+  // Render map on loading itinerary
+  renderMapForDay(state.currentItineraryDay - 1);
 }
 
 function renderItineraryTimeline(items) {
   const list = document.getElementById('itineraryTimelineList');
   list.innerHTML = '';
 
-  items.forEach(item => {
+  const dayIndex = state.currentItineraryDay - 1;
+  const dayPlan = state.activeCourse.days[dayIndex];
+  const cityId = state.activeCourse.cityId;
+  
+  // Calculate attraction indices (excluding transits)
+  const attractions = dayPlan.items.filter(it => !it.isTransit);
+
+  dayPlan.items.forEach((item) => {
     const name = state.lang === 'ko' ? item.name_ko : item.name_en;
     const desc = state.lang === 'ko' ? item.desc_ko : item.desc_en;
     const durationLabel = TRANSLATIONS[state.lang].planner_duration;
 
-    let itemHTML = '';
     if (item.isTransit) {
       const isWalk = item.transitType === 'Walk';
       const iconSVG = isWalk 
         ? `<svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 21.5h2.1l1.9-8.6 2.1 2v6.6h2v-8.1l-2.1-2 1-4.9c1.6 1.8 3.8 2.9 6.2 2.9v-2c-1.9 0-3.6-1-4.7-2.5l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.6.1-.9.2L6 5.8v6.5h2V9.3l1.8-.4"/></svg>`
         : `<svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.27-3.82c.14-.4.52-.68.96-.68h9.54c.44 0 .82.28.96.68L19 11H5z"/></svg>`;
-      itemHTML = `
+      const itemHTML = `
         <div class="timeline-item transit">
           <div class="timeline-marker"></div>
           <div class="timeline-content">
@@ -3590,26 +3910,75 @@ function renderItineraryTimeline(items) {
           </div>
         </div>
       `;
+      list.insertAdjacentHTML('beforeend', itemHTML);
     } else {
-      itemHTML = `
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
+      const attIdx = attractions.indexOf(item);
+      const details = getAttractionDetails(item, cityId);
+      const isSpecialItem = item.isRest || name.includes('점심') || name.includes('저녁') || name.includes('Lunch') || name.includes('Dinner') || name.includes('식사') || name.includes('Meal') || name.includes('조식') || name.includes('아침') || name.includes('Breakfast') || item.isLodging;
+      
+      const itemHTML = `
+        <div class="timeline-item" draggable="${item.isLodging ? 'false' : 'true'}" data-attraction-index="${attIdx}">
+          <div class="timeline-marker" style="${item.isLodging ? 'background: #10b981; border-color: #10b981;' : ''}"></div>
           <div class="timeline-content">
-            <span class="timeline-time-badge">${item.timeSlot}</span>
-            <h4 class="timeline-title">${name}</h4>
-            <p class="timeline-desc">${desc}</p>
-            ${item.hideDuration ? '' : `
-            <div class="timeline-duration">
-              <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-              <span>${durationLabel}: ${item.duration}m</span>
+            <div class="timeline-card-header">
+              <span class="timeline-time-badge">${item.timeSlot}</span>
+              <div class="timeline-card-actions">
+                ${isSpecialItem ? '' : `
+                  <span style="font-size:11px; color:var(--text-muted);">${durationLabel}:</span>
+                  <input type="number" class="timeline-duration-input" data-attraction-index="${attIdx}" value="${item.duration || 90}" min="10" max="600" step="10">
+                  <span style="font-size:11px; color:var(--text-muted); margin-right:8px;">m</span>
+                `}
+                ${item.isLodging ? '' : `
+                  <button class="timeline-delete-btn" data-attraction-index="${attIdx}" title="${state.lang === 'ko' ? '삭제' : 'Delete'}">&times;</button>
+                `}
+              </div>
             </div>
+            <h4 class="timeline-title" style="display: flex; align-items: center; gap: 8px;">
+              ${item.isLodging ? '' : `
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="color: var(--text-muted); cursor: grab; flex-shrink:0;"><path d="M20 9H4v2h16V9zM4 15h16v-2H4v2z"/></svg>
+              `}
+              <span style="${item.isLodging ? 'font-weight:700; color:#10b981;' : ''}">${name}</span>
+            </h4>
+            ${desc ? `<p class="timeline-desc">${desc}</p>` : ''}
+            
+            ${isSpecialItem ? '' : `
+              <div class="timeline-extra-info">
+                <span class="timeline-info-badge fee">
+                  🎟️ ${item.fee || details.fee}
+                </span>
+                <span class="timeline-info-badge reservation">
+                  📅 ${item.reservation || details.reservation}
+                </span>
+                <div class="timeline-info-links">
+                  <a href="${item.mapsLink || details.mapsLink}" target="_blank" class="timeline-link-btn">
+                    📍 ${state.lang === 'ko' ? '지도 보기' : 'View Map'}
+                  </a>
+                  <a href="${item.website || details.website}" target="_blank" class="timeline-link-btn">
+                    🌐 ${state.lang === 'ko' ? '공식 사이트' : 'Website'}
+                  </a>
+                </div>
+              </div>
             `}
           </div>
         </div>
       `;
+      list.insertAdjacentHTML('beforeend', itemHTML);
     }
-    list.insertAdjacentHTML('beforeend', itemHTML);
   });
+
+  // Add the "장소 추가" button at the bottom of the timeline
+  const addPlaceHTML = `
+    <div class="timeline-add-place-container">
+      <button class="timeline-add-place-btn" id="timelineAddPlaceBtn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        <span>${state.lang === 'ko' ? '새로운 장소 추가' : 'Add New Place'}</span>
+      </button>
+    </div>
+  `;
+  list.insertAdjacentHTML('beforeend', addPlaceHTML);
+  
+  // Bind actions
+  bindTimelineActions();
 }
 
 // --- Companion Board Engine ---
@@ -3900,6 +4269,11 @@ function renderChatRoom() {
   const room = state.rooms.find(r => r.id === state.joinedRoomId);
   if (!room) return;
 
+  const shareBtn = document.getElementById('chatShareCourseBtn');
+  if (shareBtn) {
+    shareBtn.style.display = state.activeCourse ? 'flex' : 'none';
+  }
+
   const title = state.lang === 'ko' ? room.title_ko : room.title_en;
   
   // Update header titles
@@ -3992,6 +4366,47 @@ function renderChatMessages(forceScrollToBottom = false) {
   logs.forEach(log => {
     if (log.system) {
       container.insertAdjacentHTML('beforeend', `<div class="chat-msg-system">${log.text}</div>`);
+    } else if (log.type === 'share_course') {
+      const isMe = log.sender === state.activeProfile.name;
+      const bubbleClass = isMe ? 'outgoing' : 'incoming';
+      const senderText = isMe ? '' : `<span class="chat-msg-sender">${log.sender} (${log.mbti})</span>`;
+      
+      const course = log.course;
+      const cardId = `chat-card-${log.id}`;
+      
+      const cardHTML = `
+        <div class="chat-msg-bubble ${bubbleClass}">
+          ${senderText}
+          <div class="chat-msg-text" style="padding: 10px;">
+            <div class="chat-msg-card">
+              <div class="chat-msg-card-title">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.4z"/></svg>
+                <span>${state.lang === 'ko' ? '공유된 여행 코스' : 'Shared Course'}</span>
+              </div>
+              <div class="chat-msg-card-desc">
+                <b>${course.cityName}</b> ${course.days.length}일 일정<br>
+                ${state.lang === 'ko' ? '메인 취향: ' + course.preferences.map(p => TRANSLATIONS.ko['planner_pref_' + p] || p).join(', ') : 'Preferences: ' + course.preferences.join(', ')}
+              </div>
+              <button class="chat-msg-card-btn" id="${cardId}">${state.lang === 'ko' ? '일정 불러오기' : 'Load Itinerary'}</button>
+            </div>
+          </div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', cardHTML);
+      
+      // Bind load course action
+      const btn = document.getElementById(cardId);
+      if (btn) {
+        btn.addEventListener('click', () => {
+          state.activeCourse = course;
+          state.currentItineraryDay = 1;
+          state.currentView = 'planner';
+          saveToLocalStorage();
+          updateView();
+          renderItinerary(state.activeCourse);
+          showToast(state.lang === 'ko' ? `"${course.cityName}" 공유된 일정을 불러왔습니다.` : `Loaded shared "${course.cityName}" itinerary.`);
+        });
+      }
     } else {
       const isMe = log.sender === state.activeProfile.name;
       const bubbleClass = isMe ? 'outgoing' : 'incoming';
@@ -4128,6 +4543,930 @@ function showToast(message) {
   setTimeout(() => {
     toast.classList.remove('show');
   }, 3000);
+}
+
+// --- WanderSync Enhancements Helper Functions ---
+
+function formatMinutesGlobal(m) {
+  const hrs = Math.floor(m / 60);
+  const mins = m % 60;
+  return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+}
+
+function getAttractionDetails(item, cityId) {
+  const nameKo = item.name_ko || '';
+  const nameEn = item.name_en || '';
+  const name = (nameKo + ' ' + nameEn).toLowerCase();
+  
+  let fee = '';
+  let feeEn = '';
+  let reservation = '';
+  let reservationEn = '';
+  let website = '';
+  
+  // Paris Match
+  if (cityId === 'paris' || name.includes('disney') || name.includes('디즈니')) {
+    if (name.includes('디즈니랜드') || name.includes('disneyland')) {
+      fee = '€105'; feeEn = '€105';
+      reservation = '필수'; reservationEn = 'Required';
+      website = 'https://www.disneylandparis.com/';
+    } else if (name.includes('루브르') || name.includes('louvre')) {
+      fee = '€22'; feeEn = '€22';
+      reservation = '필수'; reservationEn = 'Required';
+      website = 'https://www.louvre.fr/';
+    } else if (name.includes('에펠탑') || name.includes('eiffel')) {
+      fee = '€29'; feeEn = '€29';
+      reservation = '권장'; reservationEn = 'Recommended';
+      website = 'https://www.toureiffel.paris/';
+    } else if (name.includes('베르사유') || name.includes('versailles')) {
+      fee = '€21.50'; feeEn = '€21.50';
+      reservation = '필수'; reservationEn = 'Required';
+      website = 'https://www.chateauversailles.fr/';
+    } else if (name.includes('오르세') || name.includes('orsay')) {
+      fee = '€16'; feeEn = '€16';
+      reservation = '권장'; reservationEn = 'Recommended';
+      website = 'https://www.musee-orsay.fr/';
+    } else if (name.includes('개선문') || name.includes('triomphe')) {
+      fee = '€13'; feeEn = '€13';
+      reservation = '권장'; reservationEn = 'Recommended';
+      website = 'https://www.paris-arc-de-triomphe.fr/';
+    } else if (name.includes('라발레') || name.includes('vallee')) {
+      fee = '무료'; feeEn = 'FREE';
+      reservation = '선택'; reservationEn = 'Optional';
+      website = 'https://www.thebicestercollection.com/la-vallee-village/';
+    }
+  }
+  
+  // Tokyo Match
+  if (cityId === 'tokyo' || name.includes('디즈니씨') || name.includes('disneysea')) {
+    if (name.includes('디즈니씨') || name.includes('disneysea') || name.includes('디즈니랜드') || name.includes('disneyland')) {
+      fee = '¥8,900'; feeEn = '¥8,900';
+      reservation = '필수'; reservationEn = 'Required';
+      website = 'https://www.tokyodisneyresort.jp/';
+    } else if (name.includes('시부야 스카이') || name.includes('shibuya sky')) {
+      fee = '¥2,200'; feeEn = '¥2,200';
+      reservation = '필수'; reservationEn = 'Required';
+      website = 'https://www.shibuya-scramble-square.com/sky/';
+    } else if (name.includes('팀랩') || name.includes('teamlab')) {
+      fee = '¥3,800'; feeEn = '¥3,800';
+      reservation = '필수'; reservationEn = 'Required';
+      website = 'https://planets.teamlab.art/tokyo/';
+    } else if (name.includes('센소지') || name.includes('senso')) {
+      fee = '무료'; feeEn = 'FREE';
+      reservation = '불필요'; reservationEn = 'Walk-in';
+      website = 'https://www.senso-ji.jp/';
+    } else if (name.includes('신주쿠 교엔') || name.includes('shinjuku gyoen')) {
+      fee = '¥500'; feeEn = '¥500';
+      reservation = '불필요'; reservationEn = 'Walk-in';
+      website = 'https://www.env.go.jp/garden/shinjukugyoen/';
+    } else if (name.includes('도쿄 타워') || name.includes('tokyo tower')) {
+      fee = '¥1,200'; feeEn = '¥1,200';
+      reservation = '권장'; reservationEn = 'Recommended';
+      website = 'https://www.tokyotower.co.jp/';
+    }
+  }
+
+  // Seoul Match
+  if (cityId === 'seoul') {
+    if (name.includes('경복궁') || name.includes('gyeongbokgung')) {
+      fee = '3,000원'; feeEn = '₩3,000';
+      reservation = '불필요'; reservationEn = 'Walk-in';
+      website = 'https://royal.khs.go.kr/';
+    } else if (name.includes('창덕궁') || name.includes('changdeokgung')) {
+      fee = '3,000원'; feeEn = '₩3,000';
+      reservation = '후원은 필수'; reservationEn = 'Required for Secret Garden';
+      website = 'https://royal.khs.go.kr/';
+    } else if (name.includes('롯데월드') || name.includes('lotte world')) {
+      fee = '62,000원'; feeEn = '₩62,000';
+      reservation = '권장'; reservationEn = 'Recommended';
+      website = 'https://adventure.lotteworld.com/';
+    } else if (name.includes('더현대') || name.includes('hyundai')) {
+      fee = '무료'; feeEn = 'FREE';
+      reservation = '선택'; reservationEn = 'Optional';
+      website = 'https://www.thehyundaiseoul.com/';
+    } else if (name.includes('국립중앙박물관') || name.includes('national museum')) {
+      fee = '무료'; feeEn = 'FREE';
+      reservation = '불필요'; reservationEn = 'Walk-in';
+      website = 'https://www.museum.go.kr/';
+    }
+  }
+
+  // Osaka Match
+  if (cityId === 'osaka') {
+    if (name.includes('유니버설') || name.includes('universal') || name.includes('usj')) {
+      fee = '¥8,600'; feeEn = '¥8,600';
+      reservation = '필수'; reservationEn = 'Required';
+      website = 'https://www.usj.co.jp/';
+    } else if (name.includes('오사카성') || name.includes('osaka castle')) {
+      fee = '¥600'; feeEn = '¥600';
+      reservation = '불필요'; reservationEn = 'Walk-in';
+      website = 'https://www.osakacastle.net/';
+    } else if (name.includes('하루카스') || name.includes('harukas')) {
+      fee = '¥1,500'; feeEn = '¥1,500';
+      reservation = '권장'; reservationEn = 'Recommended';
+      website = 'https://www.abenoharukas-300.jp/observatory/';
+    } else if (name.includes('가이유칸') || name.includes('kaiyukan')) {
+      fee = '¥2,700'; feeEn = '¥2,700';
+      reservation = '필수'; reservationEn = 'Required';
+      website = 'https://www.kaiyukan.com/';
+    }
+  }
+
+  // Fallback defaults by category keywords
+  if (!fee) {
+    if (name.includes('시장') || name.includes('market') || name.includes('아울렛') || name.includes('outlet') || name.includes('거리') || name.includes('street') || name.includes('숍') || name.includes('shop') || name.includes('몰') || name.includes('mall') || name.includes('백화점') || name.includes('store')) {
+      fee = '무료'; feeEn = 'FREE';
+      reservation = '불필요'; reservationEn = 'Walk-in';
+    } else if (name.includes('공원') || name.includes('park') || name.includes('해변') || name.includes('beach') || name.includes('광장') || name.includes('square') || name.includes('숲') || name.includes('forest') || name.includes('호수') || name.includes('lake') || name.includes('산') || name.includes('mountain') || name.includes('계곡') || name.includes('valley')) {
+      fee = '무료'; feeEn = 'FREE';
+      reservation = '불필요'; reservationEn = 'Walk-in';
+    } else if (name.includes('카페') || name.includes('cafe') || name.includes('찻집') || name.includes('tea') || name.includes('맛집') || name.includes('식당') || name.includes('restaurant') || name.includes('바 ') || name.includes('bar ') || name.includes('펍') || name.includes('pub') || name.includes('요리') || name.includes('food')) {
+      fee = '음료/식사비'; feeEn = 'Pay for food/drinks';
+      reservation = '선택'; reservationEn = 'Optional';
+    } else if (name.includes('박물관') || name.includes('museum') || name.includes('미술관') || name.includes('gallery') || name.includes('전시') || name.includes('exhibit')) {
+      fee = '약 €10 / $10'; feeEn = 'Approx €10 / $10';
+      reservation = '권장'; reservationEn = 'Recommended';
+    } else {
+      fee = '무료 또는 변동'; feeEn = 'Free or variable';
+      reservation = '불필요'; reservationEn = 'Walk-in';
+    }
+  }
+  
+  // Map link generator
+  const isKoreanCity = ['seoul', 'jeju', 'busan'].includes(cityId);
+  const mapsLink = isKoreanCity 
+    ? `https://map.kakao.com/?q=${encodeURIComponent(item.name_ko || item.name_en)}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name_en || item.name_ko)}`;
+    
+  // Website link generator
+  if (!website) {
+    website = `https://www.google.com/search?q=${encodeURIComponent((item.name_en || item.name_ko) + ' official website')}`;
+  }
+  
+  return {
+    fee: state.lang === 'ko' ? fee : feeEn,
+    reservation: state.lang === 'ko' ? reservation : reservationEn,
+    mapsLink,
+    website
+  };
+}
+
+let leafletMap = null;
+let leafletMarkersGroup = null;
+let leafletPolyline = null;
+
+function renderMapForDay(dayIndex) {
+  const mapContainer = document.getElementById('itineraryMapContainer');
+  if (!mapContainer) return;
+  
+  const course = state.activeCourse;
+  if (!course || !course.days || !course.days[dayIndex]) {
+    mapContainer.style.display = 'none';
+    return;
+  }
+  
+  mapContainer.style.display = 'block';
+  
+  const dayPlan = course.days[dayIndex];
+  const points = [];
+  const attractions = [];
+  
+  dayPlan.items.forEach(item => {
+    if (!item.isTransit) {
+      const coords = getAttractionCoords(item);
+      points.push([coords.y, coords.x]); // [lat, lon]
+      attractions.push({ item, coords });
+    }
+  });
+  
+  if (points.length === 0) {
+    mapContainer.style.display = 'none';
+    return;
+  }
+  
+  try {
+    if (typeof L === 'undefined') {
+      document.getElementById('itineraryMap').innerHTML = `
+        <div style="height:100%; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.03); border-radius:16px; color:var(--text-muted); padding: 20px; text-align:center;">
+          <span>지도를 로드할 수 없습니다 (인터넷 연결 확인)</span>
+        </div>
+      `;
+      return;
+    }
+    
+    if (!leafletMap) {
+      leafletMap = L.map('itineraryMap', {
+        zoomControl: true,
+        scrollWheelZoom: true
+      });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(leafletMap);
+    }
+    
+    // Invalidate Leaflet map size to prevent gray panes when container displays
+    setTimeout(() => {
+      leafletMap.invalidateSize();
+    }, 50);
+    
+    if (leafletMarkersGroup) {
+      leafletMap.removeLayer(leafletMarkersGroup);
+    }
+    if (leafletPolyline) {
+      leafletMap.removeLayer(leafletPolyline);
+    }
+    
+    leafletMarkersGroup = L.layerGroup().addTo(leafletMap);
+    
+    points.forEach((pt, idx) => {
+      const { item } = attractions[idx];
+      const name = state.lang === 'ko' ? item.name_ko : item.name_en;
+      const time = item.timeSlot ? item.timeSlot.split(' ')[0] : '';
+      
+      const isLodging = item.isLodging;
+      const pinColor = isLodging ? '#10b981' : '#8a5cf6';
+      
+      const numIcon = L.divIcon({
+        className: 'custom-map-pin',
+        html: `
+          <div class="pin-badge" style="background-color: ${pinColor};">${isLodging ? '🏨' : idx + 1}</div>
+          <div class="pin-title">${name}</div>
+        `,
+        iconSize: [30, 42],
+        iconAnchor: [15, 20]
+      });
+      
+      L.marker(pt, { icon: numIcon })
+        .addTo(leafletMarkersGroup)
+        .bindPopup(`
+          <div style="color: #000; font-family: sans-serif; font-size:12.5px;">
+            <b style="font-size:14px; color:${pinColor}">${isLodging ? '🏨' : (idx + 1) + '.'} ${name}</b><br>
+            <span style="font-weight:600;">시간:</span> ${item.timeSlot}<br>
+            ${item.desc_ko ? `<span style="color:#555;">${state.lang === 'ko' ? item.desc_ko : item.desc_en}</span>` : ''}
+          </div>
+        `);
+    });
+    
+    if (points.length > 1) {
+      leafletPolyline = L.polyline(points, {
+        color: '#8a5cf6',
+        weight: 4,
+        opacity: 0.8,
+        dashArray: '5, 8'
+      }).addTo(leafletMap);
+    }
+    
+    const bounds = L.latLngBounds(points);
+    leafletMap.fitBounds(bounds, { padding: [50, 50] });
+    
+  } catch (err) {
+    console.error("Error rendering map:", err);
+  }
+}
+
+function recalculateDayPlanTimes(dayPlan, cityId) {
+  let attractions = dayPlan.items.filter(item => !item.isTransit);
+  
+  const startLodging = attractions.find(item => item.isLodging && item.isStart);
+  const endLodging = attractions.find(item => item.isLodging && item.isEnd);
+  
+  const actualAttractions = attractions.filter(item => !item.isLodging);
+  
+  if (actualAttractions.length === 0) {
+    dayPlan.items = [];
+    return;
+  }
+  
+  let finalAttractions = [];
+  if (startLodging) finalAttractions.push(startLodging);
+  finalAttractions.push(...actualAttractions);
+  if (endLodging) finalAttractions.push(endLodging);
+  
+  const newItems = [];
+  let currentTime = 570; // 09:30
+  
+  for (let i = 0; i < finalAttractions.length; i++) {
+    const item = finalAttractions[i];
+    
+    if (i > 0) {
+      const prevItem = finalAttractions[i - 1];
+      const transit = calculateTransit(prevItem, item);
+      if (transit.duration > 0) {
+        const transitStart = currentTime;
+        const transitEnd = currentTime + transit.duration;
+        
+        const transitIcon = transit.type_ko === "도보" ? "🚶" : "🚌";
+        const transitNameKo = `${transitIcon} ${transit.type_ko} (${transit.distance}km)`;
+        const transitNameEn = `${transitIcon} ${transit.type_en} (${transit.distance}km)`;
+        
+        newItems.push({
+          isTransit: true,
+          transitType: transit.type_en,
+          timeSlot: `${formatMinutesGlobal(transitStart)} - ${formatMinutesGlobal(transitEnd)}`,
+          name_ko: transitNameKo,
+          name_en: transitNameEn,
+          duration: transit.duration
+        });
+        
+        currentTime += transit.duration;
+      }
+    }
+    
+    const start = currentTime;
+    const duration = item.isLodging ? 0 : (item.duration || 90);
+    const end = start + duration;
+    
+    item.timeSlot = item.isLodging 
+      ? formatMinutesGlobal(start)
+      : `${formatMinutesGlobal(start)} - ${formatMinutesGlobal(end)}`;
+    
+    if (!item.isLodging) {
+      const details = getAttractionDetails(item, cityId || state.activeCourse.cityId);
+      item.fee = details.fee;
+      item.reservation = details.reservation;
+      item.mapsLink = details.mapsLink;
+      item.website = details.website;
+    }
+    
+    newItems.push(item);
+    currentTime = end;
+  }
+  
+  dayPlan.items = newItems;
+}
+
+function saveCurrentItinerary() {
+  const course = state.activeCourse;
+  if (!course) {
+    showToast(state.lang === 'ko' ? '저장할 일정이 없습니다.' : 'No itinerary to save.');
+    return;
+  }
+  
+  const tripName = prompt(
+    state.lang === 'ko' 
+      ? '여행 일정의 이름을 입력해주세요:' 
+      : 'Please enter a name for this itinerary:',
+    `${course.cityName} ${course.days.length}일 여행`
+  );
+  
+  if (tripName === null) return;
+  const name = tripName.trim() || `${course.cityName} ${course.days.length}일 여행`;
+  
+  if (!state.savedCourses) state.savedCourses = [];
+  
+  const newTrip = {
+    id: 'trip-' + Date.now(),
+    name: name,
+    course: course,
+    savedAt: Date.now()
+  };
+  
+  state.savedCourses.push(newTrip);
+  saveToLocalStorage();
+  renderSavedCoursesList();
+  showToast(state.lang === 'ko' ? '여행 일정이 저장되었습니다.' : 'Itinerary saved.');
+}
+
+function renderSavedCoursesList() {
+  const container = document.getElementById('savedTripsContainer');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  const saved = state.savedCourses || [];
+  
+  if (saved.length === 0) {
+    container.innerHTML = `
+      <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin: 8px 0;" data-i18n="saved_trips_empty">
+        ${state.lang === 'ko' ? '저장된 여행이 없습니다.' : 'No saved trips.'}
+      </p>
+    `;
+    return;
+  }
+  
+  saved.forEach(trip => {
+    const formattedDate = new Date(trip.savedAt).toLocaleDateString(state.lang === 'ko' ? 'ko-KR' : 'en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    
+    const item = document.createElement('div');
+    item.className = 'saved-trip-item';
+    item.innerHTML = `
+      <div class="saved-trip-info">
+        <div class="saved-trip-title">${trip.name}</div>
+        <div class="saved-trip-meta">${trip.course.cityName} • ${trip.course.days.length}일 • ${formattedDate}</div>
+      </div>
+      <button class="saved-trip-delete" title="${state.lang === 'ko' ? '삭제' : 'Delete'}">
+        <svg viewBox="0 0 24 24" style="width:14px; height:14px;"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+      </button>
+    `;
+    
+    item.querySelector('.saved-trip-info').addEventListener('click', () => {
+      state.activeCourse = trip.course;
+      state.currentItineraryDay = 1;
+      saveToLocalStorage();
+      renderItinerary(state.activeCourse);
+      showToast(state.lang === 'ko' ? `"${trip.name}" 일정을 불러왔습니다.` : `Loaded "${trip.name}" itinerary.`);
+    });
+    
+    item.querySelector('.saved-trip-delete').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!confirm(state.lang === 'ko' ? '정말 삭제하시겠습니까?' : 'Are you sure you want to delete this trip?')) return;
+      
+      state.savedCourses = state.savedCourses.filter(t => t.id !== trip.id);
+      saveToLocalStorage();
+      renderSavedCoursesList();
+      showToast(state.lang === 'ko' ? '삭제되었습니다.' : 'Deleted.');
+    });
+    
+    container.appendChild(item);
+  });
+}
+
+function copyShareLink() {
+  const course = state.activeCourse;
+  if (!course) {
+    showToast(state.lang === 'ko' ? '공유할 일정이 없습니다.' : 'No itinerary to share.');
+    return;
+  }
+  
+  try {
+    const jsonStr = JSON.stringify(course);
+    const base64Str = btoa(unescape(encodeURIComponent(jsonStr)));
+    const shareUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?share=${base64Str}`;
+    
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      showToast(state.lang === 'ko' ? '공유 링크가 클립보드에 복사되었습니다.' : 'Share link copied to clipboard.');
+    }).catch(err => {
+      console.error(err);
+      prompt(state.lang === 'ko' ? '아래 링크를 복사하여 공유하세요:' : 'Copy this link to share:', shareUrl);
+    });
+  } catch (e) {
+    console.error("Failed to generate share link:", e);
+  }
+}
+
+function exportItineraryToMarkdown() {
+  const course = state.activeCourse;
+  if (!course) {
+    showToast(state.lang === 'ko' ? '다운로드할 일정이 없습니다.' : 'No itinerary to download.');
+    return;
+  }
+  
+  let md = `# WanderSync Travel Itinerary: ${course.cityName}\n\n`;
+  md += `*Generated via WanderSync AI Travel Course Planner*\n`;
+  if (course.lodging) {
+    md += `*Lodging / Start Point: ${course.lodging.name}*\n`;
+  }
+  md += `\n---\n\n`;
+  
+  course.days.forEach(dayPlan => {
+    md += `## Day ${dayPlan.day}\n\n`;
+    
+    dayPlan.items.forEach(item => {
+      const name = state.lang === 'ko' ? item.name_ko : item.name_en;
+      const desc = state.lang === 'ko' ? item.desc_ko : item.desc_en;
+      
+      if (item.isTransit) {
+        md += `* ${item.timeSlot} | **${name}** (Duration: ${item.duration}m)\n`;
+      } else {
+        md += `### 📍 [${item.timeSlot}] ${name}\n`;
+        if (desc) md += `* ${desc}\n`;
+        if (!item.isLodging) {
+          const details = getAttractionDetails(item, course.cityId);
+          md += `* **Entry Fee**: ${details.fee} | **Reservation**: ${details.reservation}\n`;
+          md += `* [View on Google Maps](${details.mapsLink}) | [Official Website](${details.website})\n`;
+        }
+        md += `\n`;
+      }
+    });
+    md += `---\n\n`;
+  });
+  
+  const blob = new Blob([md], { type: 'text/markdown;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `WanderSync_Itinerary_${course.cityId}.md`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast(state.lang === 'ko' ? '마크다운 파일 다운로드가 시작되었습니다.' : 'Markdown file download started.');
+}
+
+function showAddPlaceModal(allAttractions, dayPlan, cityId) {
+  let modal = document.getElementById('timelineAddPlaceModal');
+  if (!modal) {
+    const modalHTML = `
+      <div class="modal-overlay" id="timelineAddPlaceModal" style="z-index: 2000;">
+        <div class="modal-content" style="max-width: 450px;">
+          <div class="modal-header">
+            <h3 style="font-size:18px; font-weight:700;">${state.lang === 'ko' ? '일정에 장소 추가' : 'Add Place to Itinerary'}</h3>
+            <button class="modal-close" onclick="document.getElementById('timelineAddPlaceModal').classList.remove('active')">&times;</button>
+          </div>
+          <div class="form-group">
+            <label class="form-label">${state.lang === 'ko' ? '추가할 관광지 선택' : 'Select Attraction'}</label>
+            <select class="form-control" id="addPlaceSelectField" style="width:100%;">
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">${state.lang === 'ko' ? '소요 시간 (분)' : 'Duration (minutes)'}</label>
+            <input type="number" class="form-control" id="addPlaceDurationField" value="90" min="10" max="600" step="10">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" onclick="document.getElementById('timelineAddPlaceModal').classList.remove('active')">${state.lang === 'ko' ? '취소' : 'Cancel'}</button>
+            <button type="button" class="btn-primary" id="addPlaceModalSubmitBtn">${state.lang === 'ko' ? '추가하기' : 'Add'}</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    modal = document.getElementById('timelineAddPlaceModal');
+  }
+
+  const select = document.getElementById('addPlaceSelectField');
+  select.innerHTML = '';
+  
+  allAttractions.sort((a, b) => {
+    const na = state.lang === 'ko' ? a.name_ko : a.name_en;
+    const nb = state.lang === 'ko' ? b.name_ko : b.name_en;
+    return na.localeCompare(nb);
+  });
+
+  allAttractions.forEach(att => {
+    const name = state.lang === 'ko' ? att.name_ko : att.name_en;
+    const opt = document.createElement('option');
+    opt.value = JSON.stringify(att);
+    opt.textContent = name;
+    select.appendChild(opt);
+  });
+
+  modal.classList.add('active');
+
+  const submitBtn = document.getElementById('addPlaceModalSubmitBtn');
+  const newSubmitBtn = submitBtn.cloneNode(true);
+  submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
+
+  newSubmitBtn.addEventListener('click', () => {
+    const selectedVal = select.value;
+    if (!selectedVal) return;
+
+    const att = JSON.parse(selectedVal);
+    const duration = parseInt(document.getElementById('addPlaceDurationField').value, 10) || 90;
+    
+    const newItem = {
+      ...att,
+      duration: duration,
+      cityId: cityId
+    };
+
+    const attractions = dayPlan.items.filter(it => !it.isTransit);
+    
+    // If ending with lodging, insert right before lodging return
+    const endLodgingIdx = attractions.findIndex(it => it.isLodging && it.isEnd);
+    if (endLodgingIdx !== -1) {
+      attractions.splice(endLodgingIdx, 0, newItem);
+    } else {
+      attractions.push(newItem);
+    }
+
+    dayPlan.items = attractions;
+    recalculateDayPlanTimes(dayPlan, cityId);
+
+    saveToLocalStorage();
+    renderItinerary(state.activeCourse);
+    
+    modal.classList.remove('active');
+    showToast(state.lang === 'ko' ? '장소가 추가되었습니다.' : 'Place added.');
+  });
+}
+
+function handleCustomRegen(requestText) {
+  if (!state.activeCourse) {
+    showToast(state.lang === 'ko' ? '먼저 일정을 생성해주세요.' : 'Please generate an itinerary first.');
+    return;
+  }
+  
+  const text = requestText.toLowerCase();
+  
+  state.regenConfig = {
+    relaxed: false,
+    packed: false,
+    excludeShopping: false,
+    forceCulture: false,
+    customRequestText: requestText
+  };
+  
+  if (text.includes('여유') || text.includes('천천히') || text.includes('relaxed') || text.includes('slow') || text.includes('leisure')) {
+    state.regenConfig.relaxed = true;
+  } else if (text.includes('타이트') || text.includes('빡빡') || text.includes('바쁘게') || text.includes('packed') || text.includes('busy') || text.includes('tight')) {
+    state.regenConfig.packed = true;
+  }
+  
+  if (text.includes('쇼핑 제외') || text.includes('쇼핑 빼') || text.includes('no shopping') || text.includes('exclude shopping') || text.includes('without shopping')) {
+    state.regenConfig.excludeShopping = true;
+  }
+  
+  if (text.includes('관광 위주') || text.includes('관광위주') || text.includes('역사') || text.includes('문화') || text.includes('culture') || text.includes('history') || text.includes('sightseeing')) {
+    state.regenConfig.forceCulture = true;
+  }
+  
+  const loader = document.getElementById('itineraryLoader');
+  const content = document.getElementById('itineraryResultContent');
+  if (loader && content) {
+    loader.style.display = 'flex';
+    content.style.display = 'none';
+    const loaderText = document.querySelector('#itineraryLoader h4');
+    if (loaderText) {
+      loaderText.textContent = state.lang === 'ko' 
+        ? `"${requestText}" 요청을 반영하여 AI가 코스를 재구성하고 있습니다...`
+        : `AI is reconstructing the route reflecting "${requestText}"...`;
+    }
+  }
+  
+  setTimeout(() => {
+    try {
+      const cityId = state.activeCourse.cityId;
+      const days = state.activeCourse.days.length;
+      const selectedPrefs = [];
+      document.querySelectorAll('.pref-chip.selected').forEach(chip => {
+        selectedPrefs.push(chip.getAttribute('data-pref'));
+      });
+      if (selectedPrefs.length === 0) selectedPrefs.push('healing');
+      
+      let filteredPrefs = [...selectedPrefs];
+      if (state.regenConfig.excludeShopping) {
+        filteredPrefs = filteredPrefs.filter(p => p !== 'shopping');
+        if (filteredPrefs.length === 0) filteredPrefs.push('healing');
+      }
+      if (state.regenConfig.forceCulture && !filteredPrefs.includes('culture')) {
+        filteredPrefs.push('culture');
+      }
+      
+      const matchedCity = CITIES.find(city => city.id === cityId);
+      const cityName = matchedCity ? (state.lang === 'ko' ? matchedCity.name_ko : matchedCity.name_en) : cityId;
+      
+      fetchWikiAttractions(cityName, cityId, state.lang)
+        .then(wikiPools => {
+          const itinerary = buildCourseStructure(cityId, days, filteredPrefs, cityName, wikiPools);
+          
+          if (state.activeCourse.lodging) {
+            itinerary.lodging = state.activeCourse.lodging;
+            itinerary.days.forEach(dayPlan => {
+              const attractions = dayPlan.items.filter(it => !it.isTransit && !it.isLodging);
+              const lodging = itinerary.lodging;
+              
+              const lodgingStart = {
+                name_ko: `🏨 숙소 출발 (${lodging.name})`,
+                name_en: `🏨 Depart from Lodging (${lodging.name})`,
+                desc_ko: '숙소에서 오늘의 일정을 시작합니다.',
+                desc_en: 'Start today\'s itinerary from your accommodation.',
+                x: lodging.x,
+                y: lodging.y,
+                isLodging: true,
+                isStart: true,
+                duration: 0,
+                hideDuration: true
+              };
+              
+              const lodgingEnd = {
+                name_ko: `🏨 숙소 복귀 (${lodging.name})`,
+                name_en: `🏨 Return to Lodging (${lodging.name})`,
+                desc_ko: '오늘의 모든 일정을 마치고 숙소로 복귀하여 휴식을 취합니다.',
+                desc_en: 'Finish today\'s activities and return to your accommodation to rest.',
+                x: lodging.x,
+                y: lodging.y,
+                isLodging: true,
+                isEnd: true,
+                duration: 0,
+                hideDuration: true
+              };
+              
+              dayPlan.items = [lodgingStart, ...attractions, lodgingEnd];
+              recalculateDayPlanTimes(dayPlan, cityId);
+            });
+          }
+          
+          state.activeCourse = itinerary;
+          state.currentItineraryDay = 1;
+          saveToLocalStorage();
+          renderItinerary(itinerary);
+          
+          if (loader && content) {
+            loader.style.display = 'none';
+            content.style.display = 'block';
+          }
+          showToast(state.lang === 'ko' ? '일정이 성공적으로 재조정되었습니다.' : 'Itinerary successfully adjusted.');
+        })
+        .catch(err => {
+          console.error(err);
+          const itinerary = buildCourseStructure(cityId, days, filteredPrefs, cityName, null);
+          
+          if (state.activeCourse.lodging) {
+            itinerary.lodging = state.activeCourse.lodging;
+            itinerary.days.forEach(dayPlan => {
+              const attractions = dayPlan.items.filter(it => !it.isTransit && !it.isLodging);
+              const lodging = itinerary.lodging;
+              
+              const lodgingStart = {
+                name_ko: `🏨 숙소 출발 (${lodging.name})`,
+                name_en: `🏨 Depart from Lodging (${lodging.name})`,
+                desc_ko: '숙소에서 오늘의 일정을 시작합니다.',
+                desc_en: 'Start today\'s itinerary from your accommodation.',
+                x: lodging.x,
+                y: lodging.y,
+                isLodging: true,
+                isStart: true,
+                duration: 0,
+                hideDuration: true
+              };
+              
+              const lodgingEnd = {
+                name_ko: `🏨 숙소 복귀 (${lodging.name})`,
+                name_en: `🏨 Return to Lodging (${lodging.name})`,
+                desc_ko: '오늘의 모든 일정을 마치고 숙소로 복귀하여 휴식을 취합니다.',
+                desc_en: 'Finish today\'s activities and return to your accommodation to rest.',
+                x: lodging.x,
+                y: lodging.y,
+                isLodging: true,
+                isEnd: true,
+                duration: 0,
+                hideDuration: true
+              };
+              
+              dayPlan.items = [lodgingStart, ...attractions, lodgingEnd];
+              recalculateDayPlanTimes(dayPlan, cityId);
+            });
+          }
+
+          state.activeCourse = itinerary;
+          state.currentItineraryDay = 1;
+          saveToLocalStorage();
+          renderItinerary(itinerary);
+          
+          if (loader && content) {
+            loader.style.display = 'none';
+            content.style.display = 'block';
+          }
+        });
+    } catch (e) {
+      console.error(e);
+      if (loader && content) {
+        loader.style.display = 'none';
+        content.style.display = 'block';
+      }
+    }
+  }, 1200);
+}
+
+function updateLodgingSelector(cityId) {
+  const select = document.getElementById('plannerLodging');
+  if (!select) return;
+  
+  select.innerHTML = '';
+  const defaultOpt = document.createElement('option');
+  defaultOpt.value = '';
+  defaultOpt.setAttribute('data-i18n', 'planner_lodging_none');
+  defaultOpt.textContent = state.lang === 'ko' ? '선택 안 함 (관광지에서 바로 시작)' : 'None (Start directly at attraction)';
+  select.appendChild(defaultOpt);
+
+  const clusters = CITY_CLUSTERS[cityId];
+  if (clusters && clusters.length > 0) {
+    clusters.forEach(cluster => {
+      const opt = document.createElement('option');
+      opt.value = JSON.stringify({ name: cluster.name, x: cluster.x, y: cluster.y });
+      opt.textContent = cluster.name;
+      select.appendChild(opt);
+    });
+  }
+}
+
+function bindTimelineActions() {
+  const list = document.getElementById('itineraryTimelineList');
+  if (!list) return;
+
+  const dayIndex = state.currentItineraryDay - 1;
+  const dayPlan = state.activeCourse.days[dayIndex];
+  const cityId = state.activeCourse.cityId;
+
+  // Delete button clicks
+  list.querySelectorAll('.timeline-delete-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const attIdx = parseInt(e.currentTarget.getAttribute('data-attraction-index'), 10);
+      
+      const attractions = dayPlan.items.filter(it => !it.isTransit);
+      // Min 1 normal attraction excluding lodging
+      const normalAttractions = attractions.filter(it => !it.isLodging);
+      if (normalAttractions.length <= 1) {
+        showToast(state.lang === 'ko' ? '하루에 최소 1개 이상의 일반 관광지는 있어야 합니다.' : 'You must have at least 1 attraction in a day.');
+        return;
+      }
+
+      const itemToDelete = attractions[attIdx];
+      const attractionsFiltered = attractions.filter((_, idx) => idx !== attIdx);
+      
+      dayPlan.items = attractionsFiltered;
+      recalculateDayPlanTimes(dayPlan, cityId);
+      
+      saveToLocalStorage();
+      renderItinerary(state.activeCourse);
+      showToast(state.lang === 'ko' ? '장소가 삭제되었습니다.' : 'Place deleted.');
+    });
+  });
+
+  // Duration input change
+  list.querySelectorAll('.timeline-duration-input').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const attIdx = parseInt(e.currentTarget.getAttribute('data-attraction-index'), 10);
+      const newDur = Math.max(10, Math.min(600, parseInt(e.currentTarget.value, 10) || 90));
+      
+      const attractions = dayPlan.items.filter(it => !it.isTransit);
+      attractions[attIdx].duration = newDur;
+      
+      dayPlan.items = attractions;
+      recalculateDayPlanTimes(dayPlan, cityId);
+      
+      saveToLocalStorage();
+      renderItinerary(state.activeCourse);
+    });
+  });
+
+  // "Add New Place" button click
+  const addBtn = document.getElementById('timelineAddPlaceBtn');
+  if (addBtn) {
+    addBtn.addEventListener('click', () => {
+      const cityPool = ATTRACTIONS[cityId] || ATTRACTIONS['seoul'];
+      const allAttractions = [];
+      for (const cat in cityPool) {
+        if (Array.isArray(cityPool[cat])) {
+          cityPool[cat].forEach(it => {
+            if (!allAttractions.some(a => a.name_en === it.name_en)) {
+              allAttractions.push(it);
+            }
+          });
+        }
+      }
+
+      showAddPlaceModal(allAttractions, dayPlan, cityId);
+    });
+  }
+
+  // Drag start
+  let draggedItemIndex = null;
+  list.querySelectorAll('.timeline-item[draggable="true"]').forEach(el => {
+    el.addEventListener('dragstart', (e) => {
+      draggedItemIndex = parseInt(el.getAttribute('data-attraction-index'), 10);
+      el.classList.add('dragging');
+    });
+
+    el.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const item = e.target.closest('.timeline-item[draggable="true"]');
+      if (!item || item.classList.contains('dragging')) return;
+      
+      list.querySelectorAll('.timeline-item').forEach(x => x.classList.remove('drag-over'));
+      item.classList.add('drag-over');
+    });
+
+    el.addEventListener('dragleave', (e) => {
+      const item = e.target.closest('.timeline-item');
+      if (item) item.classList.remove('drag-over');
+    });
+
+    el.addEventListener('dragend', () => {
+      list.querySelectorAll('.timeline-item').forEach(x => {
+        x.classList.remove('dragging');
+        x.classList.remove('drag-over');
+      });
+    });
+
+    el.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const item = e.target.closest('.timeline-item[draggable="true"]');
+      if (!item) return;
+
+      const targetIdx = parseInt(item.getAttribute('data-attraction-index'), 10);
+      if (draggedItemIndex === null || draggedItemIndex === targetIdx) return;
+
+      const attractions = dayPlan.items.filter(it => !it.isTransit);
+      
+      const movedItem = attractions.splice(draggedItemIndex, 1)[0];
+      attractions.splice(targetIdx, 0, movedItem);
+
+      dayPlan.items = attractions;
+      recalculateDayPlanTimes(dayPlan, cityId);
+
+      saveToLocalStorage();
+      renderItinerary(state.activeCourse);
+      
+      draggedItemIndex = null;
+      showToast(state.lang === 'ko' ? '일정 순서가 변경되었습니다.' : 'Itinerary reordered.');
+    });
+  });
 }
 
 // Start application
