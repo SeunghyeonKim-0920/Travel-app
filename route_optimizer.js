@@ -878,12 +878,84 @@ function getLegTravelTime(fromId, toId) {
   return Infinity;
 }
 
+function getLegOptimizationCost(fromId, toId) {
+  const verified = getLegTravelTime(fromId, toId);
+  if (Number.isFinite(verified)) return verified;
+
+  const from = getCityCenter(fromId);
+  const to = getCityCenter(toId);
+  if (!from || !to) return 1000000;
+
+  const km = haversineKm(from.lat, from.lon, to.lat, to.lon);
+  if (!Number.isFinite(km) || km <= 0) return 1000000;
+
+  if (areCitiesLandConnected(fromId, toId, km)) {
+    const profile = getLandFallbackTimingProfile(fromId, toId, km);
+    const railCost = profile.trainBuffer + ((km * profile.railFactor) / profile.trainSpeed) * 60;
+    const busCost = profile.busBuffer + ((km * profile.roadFactor) / profile.busSpeed) * 60;
+    return roundRouteMinutes(Math.min(railCost, busCost));
+  }
+
+  // Internal ordering score only. This is never displayed as a travel time.
+  return roundRouteMinutes(270 + (km / 780) * 60);
+}
+
 function calcRouteTime(cityIds) {
   let total = 0;
   for (let i = 0; i < cityIds.length - 1; i++) {
-    total += getLegTravelTime(cityIds[i], cityIds[i + 1]);
+    total += getLegOptimizationCost(cityIds[i], cityIds[i + 1]);
   }
   return total;
+}
+
+function ensureOptimizedRouteIntegrity(optimized, sourceCities, startId = null, endId = null) {
+  const source = uniqueRouteCities(Array.isArray(sourceCities) ? sourceCities : []);
+  if (!source.length) return [];
+
+  const byId = new Map(source.map(city => [city.id, city]));
+  const result = [];
+  const seen = new Set();
+
+  (Array.isArray(optimized) ? optimized : []).forEach(city => {
+    if (!city || !city.id || seen.has(city.id) || !byId.has(city.id)) return;
+    result.push(byId.get(city.id));
+    seen.add(city.id);
+  });
+
+  source.forEach(city => {
+    if (!seen.has(city.id)) {
+      result.push(city);
+      seen.add(city.id);
+    }
+  });
+
+  if (startId && byId.has(startId)) {
+    const startCity = byId.get(startId);
+    const idx = result.findIndex(city => city.id === startId);
+    if (idx > 0) {
+      result.splice(idx, 1);
+      result.unshift(startCity);
+    } else if (idx < 0) {
+      result.unshift(startCity);
+    }
+  }
+
+  if (endId && endId !== startId && byId.has(endId)) {
+    const endCity = byId.get(endId);
+    const idx = result.findIndex(city => city.id === endId);
+    if (idx >= 0 && idx !== result.length - 1) {
+      result.splice(idx, 1);
+      result.push(endCity);
+    } else if (idx < 0) {
+      result.push(endCity);
+    }
+  }
+
+  if (startId && endId && startId === endId && byId.has(startId)) {
+    result.push({ ...byId.get(startId) });
+  }
+
+  return result;
 }
 
 const EXACT_ROUTE_CITY_LIMIT = 18;
@@ -980,7 +1052,7 @@ function connectRouteCitySearch() {
   const datalist = document.getElementById('routeCityDatalist');
   if (!input || !select || input.dataset.boundRouteCitySearch === 'true') return;
   input.dataset.boundRouteCitySearch = 'true';
-  const isKo = state.lang === 'ko';
+  const isKo = typeof state !== 'undefined' && state.lang === 'ko';
   if (datalist && typeof CITIES !== 'undefined') {
     datalist.innerHTML = getRouteSupportedCities().map(city => `<option value="${getRouteCityDisplayName(city)}"></option>`).join('');
   }
@@ -1004,7 +1076,12 @@ function connectRouteCitySearch() {
       if (typeof requestUnsupportedCity === 'function') {
         requestUnsupportedCity('route-planner', 'routeCitySearchInput');
       } else {
-        showToast(isKo ? '도시 추가 요청이 기록되었습니다.' : 'City request recorded.');
+        const message = isKo ? '도시 추가 요청이 기록되었습니다.' : 'City request recorded.';
+        if (typeof showToast === 'function') {
+          showToast(message);
+        } else {
+          window.alert(message);
+        }
       }
     });
   }
@@ -1130,23 +1207,21 @@ function twoOptImproveWithConstraints(cityIds, startId, endId) {
 
 function optimizeRoute(cities, startId = null, endId = null) {
   if (cities.length < 2) return cities;
+  const sourceCities = uniqueRouteCities(cities);
 
-  const cityIds = cities.map(c => c.id);
+  const cityIds = sourceCities.map(c => c.id);
   const exactRouteIds = solveExactShortestRouteIds(cityIds, startId, endId);
   if (exactRouteIds && exactRouteIds.length) {
-    return exactRouteIds.map(id => {
-      const city = cities.find(c => c.id === id);
-      return city || cities.find(c => c.id === startId) || cities[0];
-    });
+    return ensureOptimizedRouteIntegrity(exactRouteIds.map(id => sourceCities.find(c => c.id === id)), sourceCities, startId, endId);
   }
 
   // If both startId and endId are specified and they are the same city (round-trip)
   if (startId && endId && startId === endId) {
     // Round-trip: start and end at the same city
     // Optimize the middle cities, then prepend start and append end
-    const middleCities = cities.filter(c => c.id !== startId);
-    if (middleCities.length === 0) return cities;
-    const startCity = cities.find(c => c.id === startId);
+    const middleCities = sourceCities.filter(c => c.id !== startId);
+    if (middleCities.length === 0) return sourceCities;
+    const startCity = sourceCities.find(c => c.id === startId);
     if (middleCities.length === 1) {
       return [startCity, middleCities[0], { ...startCity }];
     }
@@ -1163,22 +1238,22 @@ function optimizeRoute(cities, startId = null, endId = null) {
           bestOrder = candidateRoute;
         }
       }
-      return bestOrder.map(id => cities.find(c => c.id === id) || startCity);
+      return ensureOptimizedRouteIntegrity(bestOrder.map(id => sourceCities.find(c => c.id === id) || startCity), sourceCities, startId, endId);
     } else {
       // Nearest neighbor for larger sets
       const optimizedMiddle = runOptimizationForFixedStartEnd([startCity, ...middleCities], startId, null);
-      return [...optimizedMiddle, { ...startCity }];
+      return ensureOptimizedRouteIntegrity([...optimizedMiddle, { ...startCity }], sourceCities, startId, endId);
     }
   }
 
   // If both startId and endId are specified
   if (startId && endId) {
-    return runOptimizationForFixedStartEnd(cities, startId, endId);
+    return ensureOptimizedRouteIntegrity(runOptimizationForFixedStartEnd(sourceCities, startId, endId), sourceCities, startId, endId);
   }
   
   // If only startId is specified
   if (startId) {
-    return runOptimizationForFixedStartEnd(cities, startId, null);
+    return ensureOptimizedRouteIntegrity(runOptimizationForFixedStartEnd(sourceCities, startId, null), sourceCities, startId, null);
   }
 
   // If only endId is specified
@@ -1187,28 +1262,28 @@ function optimizeRoute(cities, startId = null, endId = null) {
     let bestTime = Infinity;
     for (const city of cities) {
       if (city.id === endId) continue;
-      const route = runOptimizationForFixedStartEnd(cities, city.id, endId);
+    const route = runOptimizationForFixedStartEnd(sourceCities, city.id, endId);
       const t = calcRouteTime(route.map(c => c.id));
       if (t < bestTime) {
         bestTime = t;
         bestRoute = route;
       }
     }
-    return bestRoute;
+    return ensureOptimizedRouteIntegrity(bestRoute, sourceCities, null, endId);
   }
 
   // If neither is specified (fully automatic start and end)
   let bestRoute = null;
   let bestTime = Infinity;
   for (const city of cities) {
-    const route = runOptimizationForFixedStartEnd(cities, city.id, null);
+    const route = runOptimizationForFixedStartEnd(sourceCities, city.id, null);
     const t = calcRouteTime(route.map(c => c.id));
     if (t < bestTime) {
       bestTime = t;
       bestRoute = route;
     }
   }
-  return bestRoute;
+  return ensureOptimizedRouteIntegrity(bestRoute, sourceCities, null, null);
 }
 
 function runOptimizationForFixedStartEnd(cities, startId, endId) {
@@ -1234,7 +1309,8 @@ function runOptimizationForFixedStartEnd(cities, startId, endId) {
         bestOrder = candidateRoute;
       }
     }
-    return bestOrder.map(id => cities.find(c => c.id === id));
+    if (!bestOrder) bestOrder = finalEndId ? [finalStartId, ...remainingIds, finalEndId] : [finalStartId, ...remainingIds];
+    return bestOrder.map(id => cities.find(c => c.id === id)).filter(Boolean);
   } else {
     // For larger sets: run nearest neighbor starting from finalStartId, applying constraints
     const startIdx = cities.findIndex(c => c.id === finalStartId);
@@ -1244,9 +1320,7 @@ function runOptimizationForFixedStartEnd(cities, startId, endId) {
     const route = [cities[startIdx]];
     visited.add(finalStartId);
 
-    const getTime = (a, b) => {
-      return getLegTravelTime(a, b);
-    };
+    const getTime = (a, b) => getLegOptimizationCost(a, b);
 
     while (route.length < cities.length) {
       const last = route[route.length - 1];
@@ -1273,6 +1347,12 @@ function runOptimizationForFixedStartEnd(cities, startId, endId) {
       }
 
       if (!bestNext) {
+        cities.forEach(c => {
+          if (!visited.has(c.id) && (!finalEndId || c.id !== finalEndId)) {
+            route.push(c);
+            visited.add(c.id);
+          }
+        });
         if (finalEndId && !visited.has(finalEndId)) {
           const endCity = cities.find(c => c.id === finalEndId);
           if (endCity) route.push(endCity);
@@ -1286,7 +1366,7 @@ function runOptimizationForFixedStartEnd(cities, startId, endId) {
 
     const nnIds = route.map(c => c.id);
     const improved = twoOptImproveWithConstraints(nnIds, finalStartId, finalEndId);
-    return improved.map(id => cities.find(c => c.id === id));
+    return ensureOptimizedRouteIntegrity(improved.map(id => cities.find(c => c.id === id)), cities, finalStartId, finalEndId);
   }
 }
 
@@ -1647,6 +1727,7 @@ function renderRouteResult() {
     } else {
       optimized = optimizeRoute([...routeState.cities], startId, endId);
     }
+    optimized = ensureOptimizedRouteIntegrity(optimized, routeState.cities, startId, endId);
 
     for (let i = 0; i < optimized.length - 1; i++) {
       const data = getTravelData(optimized[i].id, optimized[i + 1].id);
@@ -2451,7 +2532,7 @@ function renderRouteOptimizerTabImpl() {
           <option value="__custom__">✏️ ${customEntryText}</option>
         </select>
         <input type="text" id="routeCityCustomInput" class="route-custom-input" placeholder="${customPlaceholder}" style="display:none;" />
-        <button class="route-add-btn" onclick="addCityToRoute()">${addText}</button>
+        <button id="routeAddCityBtn" class="route-add-btn" onclick="addCityToRoute()">${addText}</button>
       </div>
       <div id="routeCityList" class="route-city-list"></div>
       
@@ -2533,6 +2614,9 @@ function renderRouteOptimizerTabImpl() {
 function renderRouteOptimizerTabFallback(error) {
   const container = document.getElementById('routeOptimizerContainer');
   if (!container) return;
+  if (typeof window !== 'undefined') {
+    window.__routeLastRenderError = error && (error.stack || error.message || String(error));
+  }
   console.error('Route optimizer render failed:', error);
   container.innerHTML = `
     <div class="route-optimizer-wrap">
@@ -2544,6 +2628,9 @@ function renderRouteOptimizerTabFallback(error) {
       </div>
     </div>
   `;
+  if (window.__routeLastRenderError) {
+    container.setAttribute('data-route-error', window.__routeLastRenderError);
+  }
 }
 
 function renderRouteOptimizerTab() {

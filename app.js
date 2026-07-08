@@ -592,6 +592,26 @@ const PLACE_TERM_TRANSLATIONS = {
   es: [[/Public Transit/gi, 'Transporte público'], [/Times Square/gi, 'Times Square'], [/Statue of Liberty/gi, 'Estatua de la Libertad'], [/Central Park/gi, 'Central Park'], [/Brooklyn Bridge/gi, 'puente de Brooklyn'], [/Ellis Island/gi, 'Ellis Island'], [/Lunch Time/gi, 'Almuerzo'], [/Dinner Time/gi, 'Cena'], [/Breakfast/gi, 'Desayuno'], [/Museum/gi, 'museo'], [/Palace/gi, 'palacio'], [/Temple/gi, 'templo'], [/Shrine/gi, 'santuario'], [/Garden/gi, 'jardín'], [/Park/gi, 'parque'], [/Market/gi, 'mercado'], [/Beach/gi, 'playa'], [/Tower/gi, 'torre'], [/Bridge/gi, 'puente'], [/Cathedral/gi, 'catedral'], [/Castle/gi, 'castillo'], [/Square/gi, 'plaza'], [/Street/gi, 'calle'], [/Promenade/gi, 'paseo'], [/Observatory/gi, 'mirador'], [/Waterfront/gi, 'zona costera'], [/Old Town/gi, 'casco antiguo'], [/Day Trip/gi, 'excursión de un día'], [/Full-Day Visit/gi, 'visita de día completo'], [/Hike/gi, 'senderismo'], [/Trail/gi, 'sendero'], [/Island/gi, 'isla']]
 };
 
+const ENGLISH_CITY_PLACE_TRANSLATIONS = {
+  fr: [
+    [/Empire State Building/gi, 'Empire State Building'], [/Rockefeller Center/gi, 'Rockefeller Center'], [/One World Observatory/gi, 'Observatoire One World'], [/Wall Street/gi, 'Wall Street'], [/New York Stock Exchange/gi, 'Bourse de New York'], [/High Line/gi, 'High Line'], [/Chelsea Market/gi, 'Chelsea Market'], [/Metropolitan Museum of Art|The Met/gi, 'Metropolitan Museum of Art'], [/Broadway/gi, 'Broadway'], [/Hollywood/gi, 'Hollywood'], [/Griffith Observatory/gi, 'observatoire Griffith'], [/Santa Monica Pier/gi, 'jetée de Santa Monica'], [/Venice Beach/gi, 'plage de Venice'], [/Golden Gate Bridge/gi, 'pont du Golden Gate'], [/Fisherman'?s Wharf/gi, 'Fisherman’s Wharf'], [/Alcatraz/gi, 'Alcatraz'], [/Space Needle/gi, 'Space Needle'], [/Pike Place Market/gi, 'marché Pike Place'], [/Navy Pier/gi, 'Navy Pier'], [/Millennium Park/gi, 'Millennium Park'], [/Freedom Trail/gi, 'Freedom Trail'], [/Harvard/gi, 'Harvard'], [/South Beach/gi, 'South Beach'], [/Walt Disney World/gi, 'Walt Disney World'], [/Universal Orlando/gi, 'Universal Orlando'], [/Buckingham Palace/gi, 'palais de Buckingham'], [/Westminster Abbey/gi, 'abbaye de Westminster'], [/Tower of London/gi, 'tour de Londres'], [/British Museum/gi, 'British Museum'], [/London Eye/gi, 'London Eye'], [/Tower Bridge/gi, 'Tower Bridge'], [/Hyde Park/gi, 'Hyde Park'], [/Sydney Opera House/gi, 'opéra de Sydney'], [/Harbour Bridge/gi, 'pont du port de Sydney'], [/Bondi Beach/gi, 'plage de Bondi'], [/Darling Harbour/gi, 'Darling Harbour'], [/Blue Mountains/gi, 'Blue Mountains'], [/Te Papa/gi, 'Te Papa'], [/Wellington Cable Car/gi, 'funiculaire de Wellington'], [/Mount Victoria/gi, 'mont Victoria'], [/Botanic Garden/gi, 'jardin botanique']
+  ],
+  zh: [
+    [/Empire State Building/gi, '帝国大厦'], [/Rockefeller Center/gi, '洛克菲勒中心'], [/One World Observatory/gi, '世贸一号观景台'], [/Wall Street/gi, '华尔街'], [/New York Stock Exchange/gi, '纽约证券交易所'], [/High Line/gi, '高线公园'], [/Chelsea Market/gi, '切尔西市场'], [/Metropolitan Museum of Art|The Met/gi, '大都会艺术博物馆'], [/Broadway/gi, '百老汇'], [/Hollywood/gi, '好莱坞'], [/Griffith Observatory/gi, '格里菲斯天文台'], [/Santa Monica Pier/gi, '圣莫尼卡码头'], [/Venice Beach/gi, '威尼斯海滩'], [/Golden Gate Bridge/gi, '金门大桥'], [/Fisherman'?s Wharf/gi, '渔人码头'], [/Alcatraz/gi, '恶魔岛'], [/Space Needle/gi, '太空针塔'], [/Pike Place Market/gi, '派克市场'], [/Navy Pier/gi, '海军码头'], [/Millennium Park/gi, '千禧公园'], [/Freedom Trail/gi, '自由之路'], [/Harvard/gi, '哈佛'], [/South Beach/gi, '南海滩'], [/Walt Disney World/gi, '华特迪士尼世界'], [/Universal Orlando/gi, '奥兰多环球影城'], [/Buckingham Palace/gi, '白金汉宫'], [/Westminster Abbey/gi, '威斯敏斯特教堂'], [/Tower of London/gi, '伦敦塔'], [/British Museum/gi, '大英博物馆'], [/London Eye/gi, '伦敦眼'], [/Tower Bridge/gi, '塔桥'], [/Hyde Park/gi, '海德公园'], [/Sydney Opera House/gi, '悉尼歌剧院'], [/Harbour Bridge/gi, '海港大桥'], [/Bondi Beach/gi, '邦迪海滩'], [/Darling Harbour/gi, '达令港'], [/Blue Mountains/gi, '蓝山'], [/Te Papa/gi, '蒂帕帕国家博物馆'], [/Wellington Cable Car/gi, '惠灵顿缆车'], [/Mount Victoria/gi, '维多利亚山'], [/Botanic Garden/gi, '植物园']
+  ],
+  ja: [
+    [/Empire State Building/gi, 'エンパイアステートビル'], [/Rockefeller Center/gi, 'ロックフェラーセンター'], [/One World Observatory/gi, 'ワンワールド展望台'], [/Wall Street/gi, 'ウォール街'], [/New York Stock Exchange/gi, 'ニューヨーク証券取引所'], [/High Line/gi, 'ハイライン'], [/Chelsea Market/gi, 'チェルシーマーケット'], [/Metropolitan Museum of Art|The Met/gi, 'メトロポリタン美術館'], [/Broadway/gi, 'ブロードウェイ'], [/Hollywood/gi, 'ハリウッド'], [/Griffith Observatory/gi, 'グリフィス天文台'], [/Santa Monica Pier/gi, 'サンタモニカ・ピア'], [/Venice Beach/gi, 'ベニスビーチ'], [/Golden Gate Bridge/gi, 'ゴールデンゲートブリッジ'], [/Fisherman'?s Wharf/gi, 'フィッシャーマンズワーフ'], [/Alcatraz/gi, 'アルカトラズ島'], [/Space Needle/gi, 'スペースニードル'], [/Pike Place Market/gi, 'パイクプレイスマーケット'], [/Navy Pier/gi, 'ネイビーピア'], [/Millennium Park/gi, 'ミレニアムパーク'], [/Freedom Trail/gi, 'フリーダムトレイル'], [/Harvard/gi, 'ハーバード'], [/South Beach/gi, 'サウスビーチ'], [/Walt Disney World/gi, 'ウォルト・ディズニー・ワールド'], [/Universal Orlando/gi, 'ユニバーサル・オーランド'], [/Buckingham Palace/gi, 'バッキンガム宮殿'], [/Westminster Abbey/gi, 'ウェストミンスター寺院'], [/Tower of London/gi, 'ロンドン塔'], [/British Museum/gi, '大英博物館'], [/London Eye/gi, 'ロンドン・アイ'], [/Tower Bridge/gi, 'タワーブリッジ'], [/Hyde Park/gi, 'ハイドパーク'], [/Sydney Opera House/gi, 'シドニー・オペラハウス'], [/Harbour Bridge/gi, 'ハーバーブリッジ'], [/Bondi Beach/gi, 'ボンダイビーチ'], [/Darling Harbour/gi, 'ダーリングハーバー'], [/Blue Mountains/gi, 'ブルーマウンテンズ'], [/Te Papa/gi, 'テ・パパ国立博物館'], [/Wellington Cable Car/gi, 'ウェリントン・ケーブルカー'], [/Mount Victoria/gi, 'マウント・ビクトリア'], [/Botanic Garden/gi, '植物園']
+  ],
+  es: [
+    [/Empire State Building/gi, 'Empire State Building'], [/Rockefeller Center/gi, 'Rockefeller Center'], [/One World Observatory/gi, 'mirador One World'], [/Wall Street/gi, 'Wall Street'], [/New York Stock Exchange/gi, 'Bolsa de Nueva York'], [/High Line/gi, 'High Line'], [/Chelsea Market/gi, 'Chelsea Market'], [/Metropolitan Museum of Art|The Met/gi, 'Museo Metropolitano de Arte'], [/Broadway/gi, 'Broadway'], [/Hollywood/gi, 'Hollywood'], [/Griffith Observatory/gi, 'Observatorio Griffith'], [/Santa Monica Pier/gi, 'muelle de Santa Monica'], [/Venice Beach/gi, 'playa Venice'], [/Golden Gate Bridge/gi, 'puente Golden Gate'], [/Fisherman'?s Wharf/gi, 'Fisherman’s Wharf'], [/Alcatraz/gi, 'Alcatraz'], [/Space Needle/gi, 'Space Needle'], [/Pike Place Market/gi, 'mercado Pike Place'], [/Navy Pier/gi, 'Navy Pier'], [/Millennium Park/gi, 'Millennium Park'], [/Freedom Trail/gi, 'Freedom Trail'], [/Harvard/gi, 'Harvard'], [/South Beach/gi, 'South Beach'], [/Walt Disney World/gi, 'Walt Disney World'], [/Universal Orlando/gi, 'Universal Orlando'], [/Buckingham Palace/gi, 'palacio de Buckingham'], [/Westminster Abbey/gi, 'abadía de Westminster'], [/Tower of London/gi, 'Torre de Londres'], [/British Museum/gi, 'Museo Británico'], [/London Eye/gi, 'London Eye'], [/Tower Bridge/gi, 'Tower Bridge'], [/Hyde Park/gi, 'Hyde Park'], [/Sydney Opera House/gi, 'Ópera de Sídney'], [/Harbour Bridge/gi, 'puente del Puerto de Sídney'], [/Bondi Beach/gi, 'playa Bondi'], [/Darling Harbour/gi, 'Darling Harbour'], [/Blue Mountains/gi, 'Montañas Azules'], [/Te Papa/gi, 'Te Papa'], [/Wellington Cable Car/gi, 'teleférico de Wellington'], [/Mount Victoria/gi, 'Monte Victoria'], [/Botanic Garden/gi, 'jardín botánico']
+  ]
+};
+
+Object.entries(ENGLISH_CITY_PLACE_TRANSLATIONS).forEach(([lang, rules]) => {
+  if (!PLACE_TERM_TRANSLATIONS[lang]) PLACE_TERM_TRANSLATIONS[lang] = [];
+  PLACE_TERM_TRANSLATIONS[lang].unshift(...rules);
+});
+
 const PROFILE_LANGUAGE_LABELS = {
   ko: { ko: '한국어', en: '영어', fr: '프랑스어', zh: '중국어', ja: '일본어', es: '스페인어', de: '독일어', it: '이탈리아어', ar: '아랍어' },
   en: { ko: 'Korean', en: 'English', fr: 'French', zh: 'Chinese', ja: 'Japanese', es: 'Spanish', de: 'German', it: 'Italian', ar: 'Arabic' },
@@ -1204,7 +1224,24 @@ function applyEnhancedTranslations() {
     rain_regen_no_course: 'Please generate an itinerary first.',
     rain_regen_no_candidates: 'Not enough indoor candidates for this city.',
     pdf_download_started: 'PDF download started.',
-    btn_download_offline: 'Save PDF Offline'
+    btn_download_offline: 'Save PDF Offline',
+    ai_regen_title: 'AI Course Regeneration',
+    ai_regen_desc: 'Use these buttons to quickly adjust course density and theme.',
+    regen_tag_relaxed: 'Relaxed',
+    regen_tag_packed: 'Packed',
+    regen_tag_noshopping: 'No Shopping',
+    regen_tag_culture: 'More Culture',
+    comp_category_all: 'All',
+    comp_category_country: 'Country',
+    comp_category_city: 'City',
+    comp_category_place: 'Specific Venue',
+    comp_category_restaurant: 'Restaurant',
+    comp_category_taxi: 'Taxi Share',
+    comp_category_rent: 'Car Share',
+    comp_category_activity: 'Activity',
+    profile_verify_btn: 'Unavailable feature',
+    modal_room_gender: 'Preferred Gender',
+    modal_room_desc: 'Details and notes'
   });
 
   const languagePatches = {
@@ -1577,11 +1614,95 @@ function applyEnhancedTranslations() {
   Object.entries(languagePatches).forEach(([lang, patch]) => {
     TRANSLATIONS[lang] = { ...en, ...(TRANSLATIONS[lang] || {}), ...patch };
   });
+  const supplementalLanguagePatches = {
+    fr: {
+      ai_regen_title: 'Régénération du parcours IA',
+      ai_regen_desc: 'Utilisez ces boutons pour ajuster rapidement la densité et le thème du parcours.',
+      regen_tag_relaxed: 'Détendu',
+      regen_tag_packed: 'Soutenu',
+      regen_tag_noshopping: 'Sans shopping',
+      regen_tag_culture: 'Plus de culture',
+      comp_category_all: 'Tout',
+      comp_category_country: 'Pays',
+      comp_category_city: 'Ville',
+      comp_category_place: 'Lieu précis',
+      comp_category_restaurant: 'Restaurant',
+      comp_category_taxi: 'Taxi partagé',
+      comp_category_rent: 'Voiture partagée',
+      comp_category_activity: 'Activité',
+      profile_verify_btn: 'Fonction non disponible',
+      modal_room_gender: 'Genre souhaité',
+      modal_room_desc: 'Détails et consignes'
+    },
+    zh: {
+      ai_regen_title: 'AI行程重新调整',
+      ai_regen_desc: '使用这些按钮快速调整行程密度和主题。',
+      regen_tag_relaxed: '轻松',
+      regen_tag_packed: '紧凑',
+      regen_tag_noshopping: '不安排购物',
+      regen_tag_culture: '更多文化',
+      comp_category_all: '全部',
+      comp_category_country: '按国家',
+      comp_category_city: '按城市',
+      comp_category_place: '指定地点',
+      comp_category_restaurant: '餐厅',
+      comp_category_taxi: '拼出租车',
+      comp_category_rent: '拼车',
+      comp_category_activity: '活动',
+      profile_verify_btn: '暂不提供此功能',
+      modal_room_gender: '期望性别',
+      modal_room_desc: '详细说明'
+    },
+    ja: {
+      ai_regen_title: 'AIコース再調整',
+      ai_regen_desc: 'ボタンでコースの密度やテーマをすばやく調整できます。',
+      regen_tag_relaxed: 'ゆったり',
+      regen_tag_packed: 'しっかり',
+      regen_tag_noshopping: 'ショッピングなし',
+      regen_tag_culture: '文化中心',
+      comp_category_all: 'すべて',
+      comp_category_country: '国別',
+      comp_category_city: '都市別',
+      comp_category_place: '特定の場所',
+      comp_category_restaurant: 'レストラン',
+      comp_category_taxi: 'タクシー相乗り',
+      comp_category_rent: '車シェア',
+      comp_category_activity: 'アクティビティ',
+      profile_verify_btn: '現在利用できない機能',
+      modal_room_gender: '希望する性別',
+      modal_room_desc: '詳細と案内'
+    },
+    es: {
+      ai_regen_title: 'Regeneración de ruta IA',
+      ai_regen_desc: 'Usa estos botones para ajustar rápidamente la densidad y el tema de la ruta.',
+      regen_tag_relaxed: 'Relajado',
+      regen_tag_packed: 'Intenso',
+      regen_tag_noshopping: 'Sin compras',
+      regen_tag_culture: 'Más cultura',
+      comp_category_all: 'Todo',
+      comp_category_country: 'País',
+      comp_category_city: 'Ciudad',
+      comp_category_place: 'Lugar específico',
+      comp_category_restaurant: 'Restaurante',
+      comp_category_taxi: 'Taxi compartido',
+      comp_category_rent: 'Coche compartido',
+      comp_category_activity: 'Actividad',
+      profile_verify_btn: 'Función no disponible',
+      modal_room_gender: 'Género preferido',
+      modal_room_desc: 'Detalles e indicaciones'
+    }
+  };
+  Object.entries(supplementalLanguagePatches).forEach(([lang, patch]) => {
+    TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
+  });
   Object.keys(TRANSLATIONS).forEach(lang => {
     const table = TRANSLATIONS[lang];
     if (!table || typeof table !== 'object') return;
     Object.keys(en).forEach(key => {
       if (table[key] === undefined) table[key] = en[key];
+    });
+    Object.keys(table).forEach(key => {
+      if (typeof table[key] === 'string') table[key] = cleanUiText(table[key]);
     });
   });
 }
@@ -2847,20 +2968,15 @@ function updateLanguageControl() {
 
 function getDurationOptionLabel(days) {
   const count = Number(days) || 1;
-  switch (normalizeLanguageCode(state.lang)) {
-    case 'ko':
-      return `${count}\uC77C`;
-    case 'fr':
-      return count === 1 ? '1 jour' : `${count} jours`;
-    case 'zh':
-      return `${count}天`;
-    case 'ja':
-      return `${count}\u65E5`;
-    case 'es':
-      return count === 1 ? '1 día' : `${count} días`;
-    default:
-      return count === 1 ? '1 Day' : `${count} Days`;
-  }
+  const labels = {
+    ko: `${count}\uC77C`,
+    fr: count === 1 ? '1 jour' : `${count} jours`,
+    zh: `${count}天`,
+    ja: `${count}\u65E5`,
+    es: count === 1 ? '1 día' : `${count} días`,
+    en: count === 1 ? '1 Day' : `${count} Days`
+  };
+  return labels[normalizeLanguageCode(state.lang)] || labels.en;
 }
 
 function updateDurationSelectorOptions() {
