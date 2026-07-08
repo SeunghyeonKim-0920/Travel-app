@@ -5,3 +5,14 @@ verify_night_scheduling.py
 analyze_runner.js
 analyze_runner.py
 download_node.py
+node_modules/
+.git/
+
+project.zip
+mockData_backup.js
+deploy_surge.py
+deploy_surge.js
+extracted_user_request.txt
+extracted_user_request_split.txt
+subagent_step0_content.txt
+qa-artifacts/

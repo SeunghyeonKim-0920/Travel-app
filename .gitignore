@@ -1,0 +1,9 @@
+node_modules/
+node_portable/
+__pycache__/
+*.pyc
+qa-artifacts/
+qa-shots/
+project.zip
+*.webp
+*.log
