@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wandersync-travel-1779355803.surge.sh/sitemap.xml
