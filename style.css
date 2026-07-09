@@ -220,6 +220,7 @@ select.lang-toggle:focus {
   justify-content: center;
   gap: 8px;
   white-space: nowrap;
+  outline: none;
 }
 
 .nav-tab-btn svg {
@@ -230,13 +231,25 @@ select.lang-toggle:focus {
 
 .nav-tab-btn:hover {
   color: var(--text-main);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(8, 145, 178, 0.08);
+  transform: translateY(-1px);
+}
+
+.nav-tab-btn:focus-visible {
+  color: var(--text-main);
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.16);
 }
 
 .nav-tab-btn.active {
   color: #ffffff;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.nav-tab-btn.active:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px var(--primary-glow);
 }
 
 /* Views & Responsive Layouts */
