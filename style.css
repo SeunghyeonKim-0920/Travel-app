@@ -3045,12 +3045,48 @@ textarea:focus-visible {
   body {
     width: 100%;
     max-width: 100%;
+    min-height: 100dvh;
     overflow-x: hidden;
   }
 
   main {
     padding-left: 12px;
     padding-right: 12px;
+    min-height: calc(100dvh - 96px);
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .view-section.active {
+    min-height: calc(100dvh - 120px);
+  }
+
+  .dashboard-grid,
+  .planner-container,
+  .route-optimizer-wrap,
+  .profile-wrap,
+  .companion-layout,
+  .chat-container {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .modal-content,
+  .room-modal,
+  .profile-modal {
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+  }
+
+  #itineraryMap,
+  .planner-map,
+  .route-result-map {
+    height: min(44dvh, 340px);
+    min-height: 220px;
+  }
+
+  .route-map-card {
+    min-width: 0;
+    overflow: hidden;
   }
 
   .route-sidebar {

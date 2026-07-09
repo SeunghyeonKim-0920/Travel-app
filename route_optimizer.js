@@ -378,11 +378,123 @@ function buildFallbackLandOptions(fromId, toId, km, isKo) {
 let routeMixedBuildDepth = 0;
 
 function cloneTravelData(data) {
-  if (!data) return null;
+  if (!data) return {};
   const cloned = {};
   ['flight', 'train', 'bus', 'ferry', 'mixed'].forEach(type => {
     if (data[type]) cloned[type] = { ...data[type] };
   });
+  return cloned;
+}
+
+const ROUTE_MAJOR_AIR_HUBS = new Set([
+  'newyork', 'losangeles', 'sanfrancisco', 'seattle', 'chicago', 'miami', 'boston',
+  'london', 'paris', 'amsterdam', 'madrid', 'barcelona', 'rome', 'milan', 'munich',
+  'berlin', 'istanbul', 'dubai', 'abudhabi', 'seoul', 'tokyo', 'osaka', 'hongkong',
+  'bangkok', 'taipei', 'singapore', 'sydney', 'toronto', 'mexicocity'
+]);
+
+function getRouteDistanceKm(fromId, toId) {
+  const from = getCityCenter(fromId);
+  const to = getCityCenter(toId);
+  if (!from || !to) return Infinity;
+  const km = haversineKm(from.lat, from.lon, to.lat, to.lon);
+  return Number.isFinite(km) ? km : Infinity;
+}
+
+function getEstimatedFlightProfile(fromId, toId, km) {
+  const shortHaul = km < 900;
+  const mediumHaul = km < 4200;
+  const longHaul = km >= 4200;
+  const bothHubs = ROUTE_MAJOR_AIR_HUBS.has(fromId) && ROUTE_MAJOR_AIR_HUBS.has(toId);
+  const direct = km <= 3600 || (bothHubs && km <= 9200);
+  const speed = shortHaul ? 610 : mediumHaul ? 760 : 850;
+  const taxiAndClimb = shortHaul ? 35 : 50;
+  let actualFlightTime = roundRouteMinutes((km / speed) * 60 + taxiAndClimb);
+  let layoverTime = 0;
+  if (!direct) {
+    layoverTime = roundRouteMinutes(longHaul ? 150 : 110);
+    actualFlightTime = roundRouteMinutes(actualFlightTime + 45);
+  }
+  const transferTime = roundRouteMinutes(shortHaul ? 130 : 160);
+  const airportProcessTime = roundRouteMinutes(shortHaul ? 105 : 135);
+  const baggageTime = roundRouteMinutes(shortHaul ? 20 : 30);
+  const waitTime = airportProcessTime + layoverTime;
+  const total = roundRouteMinutes(actualFlightTime + transferTime + waitTime + baggageTime);
+
+  return {
+    time: total,
+    actualFlightTime,
+    waitTime,
+    transferTime,
+    baggageTime,
+    layoverTime,
+    distanceKm: Math.round(km),
+    connectionType: direct ? 'direct' : 'via',
+    estimated: true,
+    note_ko: direct
+      ? '항공편 기준 도어투도어 예상 시간입니다. 시내-공항 이동, 체크인/보안검색, 수하물 시간을 포함합니다.'
+      : '직항이 제한적인 구간으로 경유 항공편 기준 도어투도어 예상 시간입니다. 시내-공항 이동, 체크인/보안검색, 경유 대기, 수하물 시간을 포함합니다.',
+    note_en: direct
+      ? 'Door-to-door flight estimate including city-airport transfers, check-in/security, and baggage time.'
+      : 'Connecting-flight door-to-door estimate including city-airport transfers, check-in/security, layover, and baggage time.'
+  };
+}
+
+function shouldAddEstimatedFlightOption(cloned, fromId, toId, km) {
+  if (!Number.isFinite(km) || km < 280) return false;
+  const landBest = getBestTransport({
+    train: cloned.train,
+    bus: cloned.bus,
+    ferry: cloned.ferry,
+    mixed: cloned.mixed
+  });
+  if (!landBest || !landBest.best) return true;
+  const landTime = Number(landBest.best.time);
+  if (!Number.isFinite(landTime)) return true;
+  return km >= 650 && landTime >= 360;
+}
+
+function addEstimatedFlightFallback(cloned, fromId, toId) {
+  if (!cloned || cloned.flight) return cloned;
+  const km = getRouteDistanceKm(fromId, toId);
+  if (!shouldAddEstimatedFlightOption(cloned, fromId, toId, km)) return cloned;
+  cloned.flight = getEstimatedFlightProfile(fromId, toId, km);
+  return cloned;
+}
+
+function normalizeExplicitFlightTiming(cloned, fromId, toId) {
+  if (!cloned || !cloned.flight || cloned.flight.fixedTime) return cloned;
+  const km = getRouteDistanceKm(fromId, toId);
+  if (!Number.isFinite(km) || km < 1) return cloned;
+  const estimate = getEstimatedFlightProfile(fromId, toId, km);
+  const existing = cloned.flight;
+  const existingTime = Number(existing.time);
+  const looksLikeAirborneOnly = Number.isFinite(existingTime) && existingTime > 0 && existingTime < Math.max(210, estimate.actualFlightTime + 45);
+  cloned.flight = {
+    ...estimate,
+    ...existing,
+    actualFlightTime: Number.isFinite(existing.actualFlightTime)
+      ? roundRouteMinutes(existing.actualFlightTime)
+      : (looksLikeAirborneOnly ? roundRouteMinutes(existingTime) : estimate.actualFlightTime),
+    waitTime: Number.isFinite(existing.waitTime) ? roundRouteMinutes(existing.waitTime) : estimate.waitTime,
+    transferTime: Number.isFinite(existing.transferTime) ? roundRouteMinutes(existing.transferTime) : estimate.transferTime,
+    baggageTime: Number.isFinite(existing.baggageTime) ? roundRouteMinutes(existing.baggageTime) : estimate.baggageTime,
+    layoverTime: Number.isFinite(existing.layoverTime) ? roundRouteMinutes(existing.layoverTime) : estimate.layoverTime,
+    distanceKm: Number.isFinite(existing.distanceKm) ? existing.distanceKm : estimate.distanceKm,
+    connectionType: existing.connectionType || estimate.connectionType,
+    estimated: existing.estimated === false ? false : true
+  };
+  const doorToDoor = roundRouteMinutes(
+    cloned.flight.actualFlightTime +
+    cloned.flight.waitTime +
+    cloned.flight.transferTime +
+    cloned.flight.baggageTime
+  );
+  cloned.flight.time = roundRouteMinutes(Math.max(Number.isFinite(existingTime) ? existingTime : 0, doorToDoor));
+  if (!existing.note && !existing.note_ko && !existing.note_en) {
+    cloned.flight.note_ko = estimate.note_ko;
+    cloned.flight.note_en = estimate.note_en;
+  }
   return cloned;
 }
 
@@ -391,15 +503,13 @@ function getTravelData(fromId, toId) {
   const key1 = `${fromId}|${toId}`;
   const key2 = `${toId}|${fromId}`;
   let data = TRAVEL_DB[key1] || TRAVEL_DB[key2];
-  if (data) {
-    const cloned = cloneTravelData(data);
-    if (routeMixedBuildDepth === 0) {
-      const mixed = buildMixedTransportOption(fromId, toId, cloned);
-      if (mixed) cloned.mixed = mixed;
-    }
-    return cloned;
+  const cloned = addEstimatedFlightFallback(cloneTravelData(data), fromId, toId);
+  normalizeExplicitFlightTiming(cloned, fromId, toId);
+  if (routeMixedBuildDepth === 0) {
+    const mixed = buildMixedTransportOption(fromId, toId, cloned);
+    if (mixed) cloned.mixed = mixed;
   }
-  return null;
+  return Object.keys(cloned).length ? cloned : null;
 }
 
 function getRouteCurrentLang(isKo = null) {
@@ -489,6 +599,8 @@ function getBestTransport(data) {
     if (Number.isFinite(normalized.actualFlightTime)) normalized.actualFlightTime = roundRouteMinutes(normalized.actualFlightTime);
     if (Number.isFinite(normalized.waitTime)) normalized.waitTime = roundRouteMinutes(normalized.waitTime);
     if (Number.isFinite(normalized.transferTime)) normalized.transferTime = roundRouteMinutes(normalized.transferTime);
+    if (Number.isFinite(normalized.baggageTime)) normalized.baggageTime = roundRouteMinutes(normalized.baggageTime);
+    if (Number.isFinite(normalized.layoverTime)) normalized.layoverTime = roundRouteMinutes(normalized.layoverTime);
     options.push(normalized);
   };
   addOption('flight', data.flight);
@@ -1008,7 +1120,7 @@ function getRouteSupportedCities() {
     });
   }
   if (typeof CITIES === 'undefined' || !Array.isArray(CITIES)) return [];
-  const removed = new Set(['quito', 'riyadh', 'addis_ababa', 'addisababa', 'bogota', 'jakarta', 'canberra', 'manila', 'doha', 'luxembourg']);
+  const removed = new Set(['quito', 'riyadh', 'addis_ababa', 'addisababa', 'bogota', 'jakarta', 'canberra', 'manila', 'doha', 'luxembourg', 'sandiego']);
   const locale = typeof getLanguageLocale === 'function' ? getLanguageLocale() : 'en-US';
   return CITIES
     .filter(city => city && !removed.has(String(city.id || '').toLowerCase()))
@@ -1867,6 +1979,7 @@ function renderRouteResult() {
                     <li>${getRouteResultLabel('actualFlight', '실제 비행 시간', 'Actual Flight Time')}: ${formatTime(b.actualFlightTime)}</li>
                     <li>${getRouteResultLabel('airportWait', '공항 대기 시간 (수속 및 보안검색)', 'Airport Waiting Time (Check-in/Security)')}: ${formatTime(b.waitTime)}</li>
                     <li>${getRouteResultLabel('airportTransfer', '시내 ↔ 공항 이동 시간 (왕복)', 'City ↔ Airport Transfer (Roundtrip)')}: ${formatTime(b.transferTime)}</li>
+                    ${Number.isFinite(b.baggageTime) ? `<li>${getRouteResultLabel('baggageTime', '수하물 수취 시간', 'Baggage Claim Time')}: ${formatTime(b.baggageTime)}</li>` : ''}
                     <li style="margin-top:2px;"><strong>${getRouteResultLabel('segmentTravelTime', '구간 소요 시간', 'Segment Travel Time')}: ${formatTime(b.time)}</strong></li>
                   </ul>
                 </div>`;
@@ -2360,11 +2473,14 @@ function getRouteUiText(key, koText, enText) {
   const lang = typeof state !== 'undefined'
     ? (typeof normalizeLanguageCode === 'function' ? normalizeLanguageCode(state.lang) : state.lang)
     : 'en';
+  const clean = (value) => typeof cleanUiText === 'function'
+    ? cleanUiText(value)
+    : (typeof repairMojibakeText === 'function' ? repairMojibakeText(value) : value);
   if (lang === 'ko') {
-    return typeof repairMojibakeText === 'function' ? repairMojibakeText(koText) : koText;
+    return clean(koText);
   }
-  if (lang === 'en') return enText;
-  return (ROUTE_UI_TRANSLATIONS[lang] && ROUTE_UI_TRANSLATIONS[lang][key]) || enText;
+  if (lang === 'en') return clean(enText);
+  return clean((ROUTE_UI_TRANSLATIONS[lang] && ROUTE_UI_TRANSLATIONS[lang][key]) || enText);
 }
 
 const ROUTE_RESULT_LABELS = {
@@ -2391,7 +2507,8 @@ const ROUTE_RESULT_LABELS = {
     actualFlight: 'Temps de vol réel',
     airportWait: 'Temps à l’aéroport (enregistrement/sécurité)',
     airportTransfer: 'Transfert ville ↔ aéroport (aller-retour)',
-    segmentTravelTime: 'Temps du segment'
+    segmentTravelTime: 'Temps du segment',
+    baggageTime: 'Temps de récupération des bagages'
     , best: 'Meilleur'
   },
   zh: {
@@ -2417,7 +2534,8 @@ const ROUTE_RESULT_LABELS = {
     actualFlight: '实际飞行时间',
     airportWait: '机场等待时间（值机/安检）',
     airportTransfer: '市区 ↔ 机场往返',
-    segmentTravelTime: '路段所需时间'
+    segmentTravelTime: '路段所需时间',
+    baggageTime: '行李提取时间'
     , best: '最佳'
   },
   ja: {
@@ -2443,7 +2561,8 @@ const ROUTE_RESULT_LABELS = {
     actualFlight: '実際の飛行時間',
     airportWait: '空港待機時間（チェックイン/保安検査）',
     airportTransfer: '市内 ↔ 空港移動（往復）',
-    segmentTravelTime: '区間所要時間'
+    segmentTravelTime: '区間所要時間',
+    baggageTime: '手荷物受取時間'
     , best: '最適'
   },
   es: {
@@ -2469,18 +2588,22 @@ const ROUTE_RESULT_LABELS = {
     actualFlight: 'Tiempo real de vuelo',
     airportWait: 'Tiempo en aeropuerto (check-in/seguridad)',
     airportTransfer: 'Traslado ciudad ↔ aeropuerto (ida y vuelta)',
-    segmentTravelTime: 'Tiempo del tramo'
+    segmentTravelTime: 'Tiempo del tramo',
+    baggageTime: 'Tiempo de recogida de equipaje'
     , best: 'Mejor'
   }
 };
 
 function getRouteResultLabel(key, koText, enText, ...args) {
   const lang = getRouteCurrentLang();
-  if (lang === 'ko') return typeof repairMojibakeText === 'function' ? repairMojibakeText(koText) : koText;
-  if (lang === 'en') return enText;
+  const clean = (value) => typeof cleanUiText === 'function'
+    ? cleanUiText(value)
+    : (typeof repairMojibakeText === 'function' ? repairMojibakeText(value) : value);
+  if (lang === 'ko') return clean(koText);
+  if (lang === 'en') return clean(enText);
   const value = ROUTE_RESULT_LABELS[lang] && ROUTE_RESULT_LABELS[lang][key];
-  if (typeof value === 'function') return value(...args);
-  return value || enText;
+  if (typeof value === 'function') return clean(value(...args));
+  return clean(value || enText);
 }
 
 let _shareHashProcessed = false;

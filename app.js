@@ -389,7 +389,8 @@ const UNSUPPORTED_DESTINATION_CITY_IDS = new Set([
   'canberra',
   'manila',
   'doha',
-  'luxembourg'
+  'luxembourg',
+  'sandiego'
 ]);
 
 function isSupportedDestinationCity(city) {
@@ -722,7 +723,9 @@ function getLocalizedDataField(item, base, lang = state.lang, options = {}) {
 
   if (base === 'desc') {
     if (codeLang === 'ko') {
-      if (value && !/[\uAC00-\uD7A3]/.test(value) && /[A-Za-z]/.test(value)) return '';
+      if (value && !/[\uAC00-\uD7A3]/.test(value) && /[A-Za-z]/.test(value)) {
+        return buildLocalizedItemDescription(item, codeLang);
+      }
       return value;
     }
     if (codeLang === 'en') {
@@ -1283,6 +1286,13 @@ function applyEnhancedTranslations() {
       planner_lodging_none: 'Aucun (commencer directement aux sites)',
       planner_date_label: 'Durée du voyage (jours)',
       planner_pref_label: 'Préférences de voyage (choix multiple)',
+      planner_pref_healing: 'Détente et repos',
+      planner_pref_gourmet: 'Gastronomie et café',
+      planner_pref_culture: 'Sites touristiques et histoire/culture',
+      planner_pref_activity: 'Activités',
+      planner_pref_sports: 'Matchs sportifs en direct',
+      planner_pref_shopping: 'Achats',
+      planner_pref_photo: 'Spots photo',
       planner_generate_btn: "Générer l'itinéraire IA",
       planner_result_title: 'Itinéraire recommandé',
       planner_result_desc: 'Parcours optimisé selon vos préférences.',
@@ -1374,6 +1384,13 @@ function applyEnhancedTranslations() {
       planner_lodging_none: '不选择（直接从景点开始）',
       planner_date_label: '旅行天数',
       planner_pref_label: '我的旅行偏好（可多选）',
+      planner_pref_healing: '疗愈与休息',
+      planner_pref_gourmet: '美食与咖啡',
+      planner_pref_culture: '观光与历史/文化',
+      planner_pref_activity: '活动体验',
+      planner_pref_sports: '现场观看体育比赛',
+      planner_pref_shopping: '购物',
+      planner_pref_photo: '拍照打卡',
       planner_generate_btn: '生成AI行程',
       planner_result_title: '推荐行程',
       planner_result_desc: '根据偏好优化的时间路线。',
@@ -1465,6 +1482,13 @@ function applyEnhancedTranslations() {
       planner_lodging_none: '選択なし（観光地から直接開始）',
       planner_date_label: '旅行日数',
       planner_pref_label: '旅行の好み（複数選択可）',
+      planner_pref_healing: '癒やしと休息',
+      planner_pref_gourmet: 'グルメとカフェ',
+      planner_pref_culture: '観光と歴史/文化',
+      planner_pref_activity: 'アクティビティ',
+      planner_pref_sports: 'スポーツ観戦',
+      planner_pref_shopping: 'ショッピング',
+      planner_pref_photo: '写真スポット',
       planner_generate_btn: 'AI日程を生成',
       planner_result_title: 'おすすめ日程',
       planner_result_desc: '好みに合わせた時間帯別ルートです。',
@@ -1556,6 +1580,13 @@ function applyEnhancedTranslations() {
       planner_lodging_none: 'Ninguno (empezar directamente en atracciones)',
       planner_date_label: 'Duración del viaje (días)',
       planner_pref_label: 'Preferencias de viaje (selección múltiple)',
+      planner_pref_healing: 'Descanso y bienestar',
+      planner_pref_gourmet: 'Gastronomía y café',
+      planner_pref_culture: 'Turismo e historia/cultura',
+      planner_pref_activity: 'Actividades',
+      planner_pref_sports: 'Deportes en directo',
+      planner_pref_shopping: 'Compras',
+      planner_pref_photo: 'Lugares fotogénicos',
       planner_generate_btn: 'Generar itinerario IA',
       planner_result_title: 'Itinerario recomendado',
       planner_result_desc: 'Ruta optimizada según tus preferencias.',
@@ -3013,13 +3044,23 @@ function updateOnboardingQuickDaysOptions() {
 
 function getText(key) {
   const table = (TRANSLATIONS && TRANSLATIONS[state.lang]) || {};
-  if (table[key] !== undefined) return repairMojibakeText(table[key]);
+  if (table[key] !== undefined) return cleanUiText(table[key]);
   const primaryFallback = isKoreanLanguage() ? (TRANSLATIONS.ko || {}) : (TRANSLATIONS.en || {});
-  if (primaryFallback[key] !== undefined) return repairMojibakeText(primaryFallback[key]);
+  if (primaryFallback[key] !== undefined) {
+    const repaired = cleanUiText(primaryFallback[key]);
+    return normalizeLanguageCode(state.lang) === 'en' || isKoreanLanguage()
+      ? repaired
+      : cleanUiText(localizeRuntimeText(repaired));
+  }
   const secondaryFallback = TRANSLATIONS.en || TRANSLATIONS.ko || {};
-  if (secondaryFallback[key] !== undefined) return repairMojibakeText(secondaryFallback[key]);
+  if (secondaryFallback[key] !== undefined) {
+    const repaired = cleanUiText(secondaryFallback[key]);
+    return normalizeLanguageCode(state.lang) === 'en'
+      ? repaired
+      : cleanUiText(localizeRuntimeText(repaired));
+  }
   const runtimeFallback = localizeRuntimeText(key);
-  if (runtimeFallback !== key) return repairMojibakeText(runtimeFallback);
+  if (runtimeFallback !== key) return cleanUiText(runtimeFallback);
   return key;
 }
 
@@ -11353,7 +11394,7 @@ function renderSavedCoursesList() {
   if (saved.length === 0) {
     container.innerHTML = `
       <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin: 8px 0;" data-i18n="saved_trips_empty">
-        ${state.lang === 'ko' ? '저장된 여행이 없습니다.' : 'No saved trips.'}
+        ${getText('saved_trips_empty')}
       </p>
     `;
     return;
