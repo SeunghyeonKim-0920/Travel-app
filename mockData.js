@@ -2107,3 +2107,15 @@ if (ATTRACTIONS.reykjavik) {
     { name_ko: "스나이펠스네스 키르큐펠 산", name_en: "Kirkjufell Mountain on Snaefellsnes", duration: 180, isLandmark: true, x: -23.3119, y: 64.9417, open: 0, close: 1440, desc_ko: "서부 반도의 대표 산과 폭포를 함께 보는 링로드 후반부 코스", desc_en: "West Iceland peninsula stop pairing Kirkjufell mountain with nearby falls." }
   );
 }
+
+(function exposeMockDataGlobals(root) {
+  if (!root) return;
+  root.TRANSLATIONS = TRANSLATIONS;
+  root.CITIES = CITIES;
+  root.ATTRACTIONS = ATTRACTIONS;
+  root.MOCK_USER_PROFILES = MOCK_USER_PROFILES;
+  root.MOCK_COMPANION_ROOMS = MOCK_COMPANION_ROOMS;
+  root.CHAT_SIMULATOR_RESPONSES = CHAT_SIMULATOR_RESPONSES;
+  root.EXTRA_CITIES_META = EXTRA_CITIES_META;
+  root.REAL_GOURMET_MAPPING = REAL_GOURMET_MAPPING;
+})(typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : null));

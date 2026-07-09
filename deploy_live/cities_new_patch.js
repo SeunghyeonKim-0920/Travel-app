@@ -3,7 +3,7 @@
 // 2. Add 20 new cities with full ATTRACTIONS data
 // 3. Sort CITIES alphabetically (ko: 가나다, en: ABC)
 
-var _CITIES_REMOVE_IDS = ['kyiv','vaduz','andorra_la_vella','kuwait_city','algiers','pretoria','dhaka','brasilia','baghdad','astana','rabat','newdelhi','doha','luxembourg'];
+var _CITIES_REMOVE_IDS = ['kyiv','vaduz','andorra_la_vella','kuwait_city','algiers','pretoria','dhaka','brasilia','baghdad','astana','rabat','newdelhi','doha','luxembourg','sandiego'];
 
 (function () {
   if (typeof CITIES === 'undefined' || typeof ATTRACTIONS === 'undefined') return;
