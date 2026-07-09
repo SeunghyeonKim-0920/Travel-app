@@ -6,4 +6,5 @@ qa-artifacts/
 qa-shots/
 project.zip
 *.webp
-*.log
+*.log.chatgpt2codex/
+/.chatgpt2codex/
