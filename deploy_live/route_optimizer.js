@@ -2057,7 +2057,7 @@ function renderRouteResult() {
 // ===== Save / Share / Download =====
 function saveRouteAsCourse() {
   const result = routeState.lastResult;
-  if (!result) { showToast(state.lang === 'ko' ? '먼저 경로를 분석해주세요.' : 'Please analyze the route first.'); return; }
+  if (!result) { showToast(getText('route_analyze_first')); return; }
   const { optimized, segments, totalTime } = result;
   const isKo = state.lang === 'ko';
   const routeLang = getRouteCurrentLang();
@@ -2174,7 +2174,7 @@ function saveRouteAsCourse() {
 
 function shareRouteLink() {
   const result = routeState.lastResult;
-  if (!result) { showToast(state.lang === 'ko' ? '먼저 경로를 분석해주세요.' : 'Please analyze the route first.'); return; }
+  if (!result) { showToast(getText('route_analyze_first')); return; }
   const isKo = state.lang === 'ko';
   const { optimized, totalTime } = result;
   const payload = {
@@ -2239,7 +2239,7 @@ function fallbackCopyRouteText(text, alertMsg, promptMsg) {
 
 function downloadRouteOffline() {
   const result = routeState.lastResult;
-  if (!result) { showToast(state.lang === 'ko' ? '먼저 경로를 분석해주세요.' : 'Please analyze the route first.'); return; }
+  if (!result) { showToast(getText('route_analyze_first')); return; }
   const isKo = state.lang === 'ko';
   const { optimized, segments, totalTime } = result;
   const routeLang = getRouteCurrentLang();
