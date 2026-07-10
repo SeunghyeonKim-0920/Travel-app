@@ -589,7 +589,7 @@ const DATA_LABELS = {
 const PLACE_TERM_TRANSLATIONS = {
   fr: [[/Public Transit/gi, 'Transport public'], [/Times Square/gi, 'Times Square'], [/Statue of Liberty/gi, 'Statue de la Liberté'], [/Central Park/gi, 'Central Park'], [/Brooklyn Bridge/gi, 'pont de Brooklyn'], [/Ellis Island/gi, 'Ellis Island'], [/Lunch Time/gi, 'Déjeuner'], [/Dinner Time/gi, 'Dîner'], [/Breakfast/gi, 'Petit-déjeuner'], [/Museum/gi, 'musée'], [/Palace/gi, 'palais'], [/Temple/gi, 'temple'], [/Shrine/gi, 'sanctuaire'], [/Garden/gi, 'jardin'], [/Park/gi, 'parc'], [/Market/gi, 'marché'], [/Beach/gi, 'plage'], [/Tower/gi, 'tour'], [/Bridge/gi, 'pont'], [/Cathedral/gi, 'cathédrale'], [/Castle/gi, 'château'], [/Square/gi, 'place'], [/Street/gi, 'rue'], [/Promenade/gi, 'promenade'], [/Observatory/gi, 'observatoire'], [/Waterfront/gi, 'front de mer'], [/Old Town/gi, 'vieille ville'], [/Day Trip/gi, 'excursion d’une journée'], [/Full-Day Visit/gi, 'visite toute la journée'], [/Hike/gi, 'randonnée'], [/Trail/gi, 'sentier'], [/Island/gi, 'île']],
   zh: [[/Public Transit/gi, '公共交通'], [/Times Square Neon Walk/gi, '时代广场霓虹街区漫步'], [/Times Square/gi, '时代广场'], [/Statue of Liberty/gi, '自由女神像'], [/Central Park/gi, '中央公园'], [/Brooklyn Bridge/gi, '布鲁克林大桥'], [/Ellis Island/gi, '埃利斯岛'], [/DUMBO/gi, '丹波区'], [/Lunch Time/gi, '午餐时间'], [/Dinner Time/gi, '晚餐时间'], [/Breakfast/gi, '早餐'], [/Museum/gi, '博物馆'], [/Palace/gi, '宫殿'], [/Temple/gi, '寺庙'], [/Shrine/gi, '神社'], [/Garden/gi, '花园'], [/Park/gi, '公园'], [/Market/gi, '市场'], [/Beach/gi, '海滩'], [/Tower/gi, '塔'], [/Bridge/gi, '桥'], [/Cathedral/gi, '大教堂'], [/Castle/gi, '城堡'], [/Square/gi, '广场'], [/Street/gi, '街'], [/Promenade/gi, '步道'], [/Observatory/gi, '观景台'], [/Waterfront/gi, '滨水区'], [/Old Town/gi, '老城'], [/Day Trip/gi, '一日游'], [/Full-Day Visit/gi, '全天游览'], [/Hike/gi, '徒步'], [/Trail/gi, '步道'], [/Island/gi, '岛']],
-  ja: [[/Public Transit/gi, '公共交通機関'], [/Times Square/gi, 'タイムズスクエア'], [/Statue of Liberty/gi, '自由の女神'], [/Central Park/gi, 'セントラルパーク'], [/Brooklyn Bridge/gi, 'ブルックリン橋'], [/Ellis Island/gi, 'エリス島'], [/DUMBO/gi, 'ダンボ地区'], [/Lunch Time/gi, 'ランチ時間'], [/Dinner Time/gi, '夕食時間'], [/Breakfast/gi, '朝食'], [/Museum/gi, '博物館'], [/Palace/gi, '宮殿'], [/Temple/gi, '寺院'], [/Shrine/gi, '神社'], [/Garden/gi, '庭園'], [/Park/gi, '公園'], [/Market/gi, '市場'], [/Beach/gi, 'ビーチ'], [/Tower/gi, 'タワー'], [/Bridge/gi, '橋'], [/Cathedral/gi, '大聖堂'], [/Castle/gi, '城'], [/Square/gi, '広場'], [/Street/gi, '通り'], [/Promenade/gi, '遊歩道'], [/Observatory/gi, '展望台'], [/Waterfront/gi, 'ウォーターフロント'], [/Old Town/gi, '旧市街'], [/Day Trip/gi, '日帰り旅行'], [/Full-Day Visit/gi, '終日訪問'], [/Hike/gi, 'ハイキング'], [/Trail/gi, 'トレイル'], [/Island/gi, '島']],
+  ja: [[/Public Transit/gi, '公共交通機関'], [/Times Square Neon Walk/gi, 'タイムズスクエアのネオン散策'], [/Times Square/gi, 'タイムズスクエア'], [/Statue of Liberty/gi, '自由の女神'], [/Central Park/gi, 'セントラルパーク'], [/Brooklyn Bridge/gi, 'ブルックリン橋'], [/Ellis Island/gi, 'エリス島'], [/DUMBO/gi, 'ダンボ地区'], [/Lunch Time/gi, 'ランチ時間'], [/Dinner Time/gi, '夕食時間'], [/Breakfast/gi, '朝食'], [/Museum/gi, '博物館'], [/Palace/gi, '宮殿'], [/Temple/gi, '寺院'], [/Shrine/gi, '神社'], [/Garden/gi, '庭園'], [/Park/gi, '公園'], [/Market/gi, '市場'], [/Beach/gi, 'ビーチ'], [/Tower/gi, 'タワー'], [/Bridge/gi, '橋'], [/Cathedral/gi, '大聖堂'], [/Castle/gi, '城'], [/Square/gi, '広場'], [/Street/gi, '通り'], [/Promenade/gi, '遊歩道'], [/Observatory/gi, '展望台'], [/Waterfront/gi, 'ウォーターフロント'], [/Old Town/gi, '旧市街'], [/Day Trip/gi, '日帰り旅行'], [/Full-Day Visit/gi, '終日訪問'], [/Hike/gi, 'ハイキング'], [/Trail/gi, 'トレイル'], [/Island/gi, '島']],
   es: [[/Public Transit/gi, 'Transporte público'], [/Times Square/gi, 'Times Square'], [/Statue of Liberty/gi, 'Estatua de la Libertad'], [/Central Park/gi, 'Central Park'], [/Brooklyn Bridge/gi, 'puente de Brooklyn'], [/Ellis Island/gi, 'Ellis Island'], [/Lunch Time/gi, 'Almuerzo'], [/Dinner Time/gi, 'Cena'], [/Breakfast/gi, 'Desayuno'], [/Museum/gi, 'museo'], [/Palace/gi, 'palacio'], [/Temple/gi, 'templo'], [/Shrine/gi, 'santuario'], [/Garden/gi, 'jardín'], [/Park/gi, 'parque'], [/Market/gi, 'mercado'], [/Beach/gi, 'playa'], [/Tower/gi, 'torre'], [/Bridge/gi, 'puente'], [/Cathedral/gi, 'catedral'], [/Castle/gi, 'castillo'], [/Square/gi, 'plaza'], [/Street/gi, 'calle'], [/Promenade/gi, 'paseo'], [/Observatory/gi, 'mirador'], [/Waterfront/gi, 'zona costera'], [/Old Town/gi, 'casco antiguo'], [/Day Trip/gi, 'excursión de un día'], [/Full-Day Visit/gi, 'visita de día completo'], [/Hike/gi, 'senderismo'], [/Trail/gi, 'sendero'], [/Island/gi, 'isla']]
 };
 
@@ -611,6 +611,14 @@ const ENGLISH_CITY_PLACE_TRANSLATIONS = {
 
 const TARGET_COUNTRY_PLACE_TRANSLATIONS = {
   ko: [
+    [/Oculus Westfield Mall/gi, '오큘러스 웨스트필드 몰'], [/Free Time & Rest before Meal/gi, '식사 전 자유 시간과 휴식'], [/Free Time & Rest in City/gi, '도심 자유 시간과 휴식'],
+    [/Hyde Park Serpentine Lake Walk/gi, '하이드 파크 서펜타인 호수 산책'], [/Bondi to Bronte Coastal Walk/gi, '본다이-브론테 해안 산책'], [/Royal Botanic Garden Walk/gi, '왕립 식물원 산책'],
+    [/Art Gallery of NSW Australian Art/gi, '뉴사우스웨일스 주립 미술관 호주 미술'], [/Queen Victoria Building Shopping/gi, '퀸 빅토리아 빌딩 쇼핑'], [/Blue Mountains Scenic World/gi, '블루마운틴 시닉 월드'],
+    [/Sydney Cafe Dessert Break/gi, '시드니 카페 디저트 휴식'], [/Darling Harbour Jet Boat Spin/gi, '달링하버 제트보트 체험'], [/Wellington Cafe Dessert Break/gi, '웰링턴 카페 디저트 휴식'],
+    [/Arrowtown/gi, '애로타운'], [/Skyline Gondola & Ledge Bungy/gi, '스카이라인 곤돌라와 레지 번지'], [/AJ Hackett Kawarau Gorge Bungy/gi, '에이제이 해킷 카와라우 협곡 번지'],
+    [/Queenstown Central Shopping/gi, '퀸스타운 중심가 쇼핑'], [/The Remarkables Ski Area/gi, '리마커블스 스키장'], [/Queenstown Cafe Dessert Break/gi, '퀸스타운 카페 디저트 휴식']
+  ],
+  ko: [
     [/Empire State Building/gi, '엠파이어 스테이트 빌딩'], [/Buckingham Palace/gi, '버킹엄 궁전'], [/Sydney Opera House/gi, '시드니 오페라 하우스'],
     [/Museum of New Zealand Te Papa Tongarewa/gi, '뉴질랜드 테파파 통가레와 국립박물관'], [/Skyline Queenstown Gondola/gi, '스카이라인 퀸스타운 곤돌라'],
     [/Changing of the Guard/gi, '근위병 교대식'], [/Houses of Parliament/gi, '영국 국회의사당'], [/The National Gallery London/gi, '런던 내셔널 갤러리'],
@@ -620,21 +628,45 @@ const TARGET_COUNTRY_PLACE_TRANSLATIONS = {
     [/Queenstown Gardens/gi, '퀸스타운 가든'], [/Milford Sound Day Tour/gi, '밀퍼드 사운드 당일 투어']
   ],
   fr: [
+    [/Oculus Westfield Mall/gi, 'centre commercial Oculus Westfield'], [/Free Time & Rest before Meal/gi, 'temps libre et repos avant le repas'], [/Free Time & Rest in City/gi, 'temps libre et repos en ville'],
+    [/Hyde Park Serpentine Lake Walk/gi, 'promenade au lac Serpentine de Hyde Park'], [/Bondi to Bronte Coastal Walk/gi, 'promenade côtière de Bondi à Bronte'], [/Royal Botanic Garden Walk/gi, 'promenade au jardin botanique royal'],
+    [/Art Gallery of NSW Australian Art/gi, 'art australien à la Galerie d’art de Nouvelle-Galles du Sud'], [/Queen Victoria Building Shopping/gi, 'shopping au Queen Victoria Building'], [/Blue Mountains Scenic World/gi, 'Scenic World des Montagnes Bleues'],
+    [/Sydney Cafe Dessert Break/gi, 'pause café et dessert à Sydney'], [/Darling Harbour Jet Boat Spin/gi, 'tour en jet boat à Darling Harbour'], [/Wellington Cafe Dessert Break/gi, 'pause café et dessert à Wellington'],
+    [/Arrowtown/gi, 'Arrowtown'], [/Skyline Gondola & Ledge Bungy/gi, 'télécabine Skyline et saut Ledge'], [/AJ Hackett Kawarau Gorge Bungy/gi, 'saut à l’élastique AJ Hackett dans les gorges de Kawarau'],
+    [/Queenstown Central Shopping/gi, 'shopping dans le centre de Queenstown'], [/The Remarkables Ski Area/gi, 'domaine skiable The Remarkables'], [/Queenstown Cafe Dessert Break/gi, 'pause café et dessert à Queenstown'],
     [/Changing of the Guard/gi, 'relève de la garde'], [/Houses of Parliament/gi, 'Palais de Westminster'], [/The National Gallery London/gi, 'National Gallery de Londres'], [/Kensington Gardens/gi, 'jardins de Kensington'], [/Covent Garden/gi, 'Covent Garden'], [/Soho Walk/gi, 'promenade dans Soho'],
     [/9\/11 Memorial/gi, 'Mémorial du 11-Septembre'], [/Museum of New Zealand Te Papa Tongarewa/gi, 'musée de Nouvelle-Zélande Te Papa Tongarewa'], [/Wellington Botanic Garden/gi, 'jardin botanique de Wellington'], [/Mount Victoria Lookout/gi, 'belvédère du mont Victoria'], [/Zealandia Ecosanctuary/gi, 'sanctuaire écologique Zealandia'], [/Cuba Street Wellington/gi, 'rue Cuba à Wellington'],
     [/Skyline Queenstown Gondola/gi, 'télécabine Skyline de Queenstown'], [/Lake Wakatipu Cruise/gi, 'croisière sur le lac Wakatipu'], [/Kawarau Bridge Bungy/gi, 'saut à l’élastique du pont Kawarau'], [/Queenstown Gardens/gi, 'jardins de Queenstown'], [/Milford Sound Day Tour/gi, 'excursion d’une journée à Milford Sound']
   ],
   zh: [
+    [/Oculus Westfield Mall/gi, '欧库鲁斯韦斯特菲尔德购物中心'], [/Free Time & Rest before Meal/gi, '用餐前的自由时间与休息'], [/Free Time & Rest in City/gi, '市区自由活动与休息'],
+    [/Hyde Park Serpentine Lake Walk/gi, '海德公园蛇形湖漫步'], [/Bondi to Bronte Coastal Walk/gi, '邦迪至布朗特海岸步道'], [/Royal Botanic Garden Walk/gi, '皇家植物园漫步'],
+    [/Art Gallery of NSW Australian Art/gi, '新南威尔士州美术馆澳大利亚艺术展'], [/Queen Victoria Building Shopping/gi, '维多利亚女王大厦购物'], [/Blue Mountains Scenic World/gi, '蓝山景观世界'],
+    [/Sydney Cafe Dessert Break/gi, '悉尼咖啡甜点休息'], [/Darling Harbour Jet Boat Spin/gi, '达令港喷射快艇体验'], [/Wellington Cafe Dessert Break/gi, '惠灵顿咖啡甜点休息'],
+    [/Arrowtown/gi, '箭镇'], [/Skyline Gondola & Ledge Bungy/gi, '天空缆车与悬崖蹦极'], [/AJ Hackett Kawarau Gorge Bungy/gi, '哈克特卡瓦劳峡谷蹦极'],
+    [/Queenstown Central Shopping/gi, '皇后镇中心购物'], [/The Remarkables Ski Area/gi, '卓越山滑雪场'], [/Queenstown Cafe Dessert Break/gi, '皇后镇咖啡甜点休息'],
     [/Changing of the Guard/gi, '卫兵换岗仪式'], [/Houses of Parliament/gi, '英国议会大厦'], [/The National Gallery London/gi, '伦敦国家美术馆'], [/Kensington Gardens/gi, '肯辛顿花园'], [/Covent Garden/gi, '科文特花园'], [/Soho Walk/gi, '苏豪区漫步'],
     [/9\/11 Memorial/gi, '九一一国家纪念博物馆'], [/Museum of New Zealand Te Papa Tongarewa/gi, '新西兰蒂帕帕国家博物馆'], [/Wellington Botanic Garden/gi, '惠灵顿植物园'], [/Mount Victoria Lookout/gi, '维多利亚山观景台'], [/Zealandia Ecosanctuary/gi, '西兰蒂亚生态保护区'], [/Cuba Street Wellington/gi, '惠灵顿古巴街'],
     [/Skyline Queenstown Gondola/gi, '皇后镇天空缆车'], [/Lake Wakatipu Cruise/gi, '瓦卡蒂普湖游船'], [/Kawarau Bridge Bungy/gi, '卡瓦劳大桥蹦极'], [/Queenstown Gardens/gi, '皇后镇花园'], [/Milford Sound Day Tour/gi, '米尔福德峡湾一日游']
   ],
   ja: [
+    [/Oculus Westfield Mall/gi, 'オキュラス・ウェストフィールド・モール'], [/Free Time & Rest before Meal/gi, '食事前の自由時間と休憩'], [/Free Time & Rest in City/gi, '市内での自由時間と休憩'],
+    [/Hyde Park Serpentine Lake Walk/gi, 'ハイドパークのサーペンタイン湖散策'], [/Bondi to Bronte Coastal Walk/gi, 'ボンダイからブロンテまでの海岸散策'], [/Royal Botanic Garden Walk/gi, '王立植物園散策'],
+    [/Art Gallery of NSW Australian Art/gi, 'ニューサウスウェールズ州立美術館のオーストラリア美術'], [/Queen Victoria Building Shopping/gi, 'クイーン・ビクトリア・ビルディングでのショッピング'], [/Blue Mountains Scenic World/gi, 'ブルーマウンテンズ・シーニックワールド'],
+    [/Sydney Cafe Dessert Break/gi, 'シドニーのカフェとデザート休憩'], [/Darling Harbour Jet Boat Spin/gi, 'ダーリングハーバーのジェットボート体験'], [/Wellington Cafe Dessert Break/gi, 'ウェリントンのカフェとデザート休憩'],
+    [/Arrowtown/gi, 'アロータウン'], [/Skyline Gondola & Ledge Bungy/gi, 'スカイライン・ゴンドラとレッジ・バンジー'], [/AJ Hackett Kawarau Gorge Bungy/gi, 'AJハケット・カワラウ渓谷バンジー'],
+    [/Queenstown Central Shopping/gi, 'クイーンズタウン中心部でのショッピング'], [/The Remarkables Ski Area/gi, 'リマーカブルズ・スキー場'], [/Queenstown Cafe Dessert Break/gi, 'クイーンズタウンのカフェとデザート休憩'],
     [/Changing of the Guard/gi, '衛兵交代式'], [/Houses of Parliament/gi, '英国国会議事堂'], [/The National Gallery London/gi, 'ロンドン・ナショナル・ギャラリー'], [/Kensington Gardens/gi, 'ケンジントン・ガーデンズ'], [/Covent Garden/gi, 'コヴェント・ガーデン'], [/Soho Walk/gi, 'ソーホー散策'],
     [/9\/11 Memorial/gi, '9.11メモリアル'], [/Museum of New Zealand Te Papa Tongarewa/gi, 'ニュージーランド国立博物館テ・パパ・トンガレワ'], [/Wellington Botanic Garden/gi, 'ウェリントン植物園'], [/Mount Victoria Lookout/gi, 'マウント・ビクトリア展望台'], [/Zealandia Ecosanctuary/gi, 'ジーランディア自然保護区'], [/Cuba Street Wellington/gi, 'ウェリントンのキューバ・ストリート'],
     [/Skyline Queenstown Gondola/gi, 'スカイライン・クイーンズタウン・ゴンドラ'], [/Lake Wakatipu Cruise/gi, 'ワカティプ湖クルーズ'], [/Kawarau Bridge Bungy/gi, 'カワラウ橋バンジー'], [/Queenstown Gardens/gi, 'クイーンズタウン・ガーデンズ'], [/Milford Sound Day Tour/gi, 'ミルフォード・サウンド日帰りツアー']
   ],
   es: [
+    [/Oculus Westfield Mall/gi, 'centro comercial Oculus Westfield'], [/Free Time & Rest before Meal/gi, 'tiempo libre y descanso antes de comer'], [/Free Time & Rest in City/gi, 'tiempo libre y descanso en la ciudad'],
+    [/Hyde Park Serpentine Lake Walk/gi, 'paseo por el lago Serpentine de Hyde Park'], [/Bondi to Bronte Coastal Walk/gi, 'paseo costero de Bondi a Bronte'], [/Royal Botanic Garden Walk/gi, 'paseo por el Real Jardín Botánico'],
+    [/Art Gallery of NSW Australian Art/gi, 'arte australiano en la Galería de Arte de Nueva Gales del Sur'], [/Queen Victoria Building Shopping/gi, 'compras en el edificio Queen Victoria'], [/Blue Mountains Scenic World/gi, 'Scenic World de las Montañas Azules'],
+    [/Sydney Cafe Dessert Break/gi, 'pausa de café y postre en Sídney'], [/Darling Harbour Jet Boat Spin/gi, 'paseo en lancha rápida por Darling Harbour'], [/Wellington Cafe Dessert Break/gi, 'pausa de café y postre en Wellington'],
+    [/Arrowtown/gi, 'Arrowtown'], [/Skyline Gondola & Ledge Bungy/gi, 'teleférico Skyline y salto Ledge'], [/AJ Hackett Kawarau Gorge Bungy/gi, 'puenting AJ Hackett en la garganta de Kawarau'],
+    [/Queenstown Central Shopping/gi, 'compras en el centro de Queenstown'], [/The Remarkables Ski Area/gi, 'estación de esquí The Remarkables'], [/Queenstown Cafe Dessert Break/gi, 'pausa de café y postre en Queenstown'],
     [/Changing of the Guard/gi, 'cambio de guardia'], [/Houses of Parliament/gi, 'Palacio de Westminster'], [/The National Gallery London/gi, 'Galería Nacional de Londres'], [/Kensington Gardens/gi, 'jardines de Kensington'], [/Covent Garden/gi, 'Covent Garden'], [/Soho Walk/gi, 'paseo por Soho'],
     [/9\/11 Memorial/gi, 'Memorial del 11-S'], [/Museum of New Zealand Te Papa Tongarewa/gi, 'Museo de Nueva Zelanda Te Papa Tongarewa'], [/Wellington Botanic Garden/gi, 'Jardín Botánico de Wellington'], [/Mount Victoria Lookout/gi, 'mirador del monte Victoria'], [/Zealandia Ecosanctuary/gi, 'santuario ecológico Zealandia'], [/Cuba Street Wellington/gi, 'calle Cuba de Wellington'],
     [/Skyline Queenstown Gondola/gi, 'teleférico Skyline de Queenstown'], [/Lake Wakatipu Cruise/gi, 'crucero por el lago Wakatipu'], [/Kawarau Bridge Bungy/gi, 'puenting del puente Kawarau'], [/Queenstown Gardens/gi, 'jardines de Queenstown'], [/Milford Sound Day Tour/gi, 'excursión de un día a Milford Sound']
@@ -811,6 +843,64 @@ function localizeProfileLanguageList(value, lang = state.lang) {
     const code = getLanguageCodeFromValue(part);
     return code && labels[code] ? cleanUiText(labels[code]) : cleanUiText(part);
   }).join(', ');
+}
+
+
+function updateProfileLanguageControlLabels(lang = state.lang) {
+  const codeLang = normalizeLanguageCode(lang);
+  const labels = PROFILE_LANGUAGE_LABELS[codeLang] || PROFILE_LANGUAGE_LABELS.en;
+  document.querySelectorAll('#profileLanguages .multi-select-chip').forEach(chip => {
+    const input = chip.querySelector('input');
+    const label = chip.querySelector('span');
+    if (!input || !label) return;
+    const code = getLanguageCodeFromValue(input.value);
+    if (code && labels[code]) label.textContent = cleanUiText(labels[code]);
+  });
+}
+
+const LODGING_LABEL_TRANSLATIONS = {
+  ko: [
+    [/\(Center\)/gi, '(중심부)'], [/\(South\)/gi, '(남부)'], [/\(North\)/gi, '(북부)'],
+    [/\(Southeast\)/gi, '(동남부)'], [/\(Northeast\)/gi, '(북동부)']
+  ],
+  fr: [
+    [/Midtown/gi, 'centre de Manhattan'], [/Lower Manhattan/gi, 'sud de Manhattan'], [/Times Square/gi, 'Times Square'],
+    [/Soho/gi, 'SoHo'], [/Central Park/gi, 'Central Park'], [/Brooklyn Bridge/gi, 'pont de Brooklyn'],
+    [/DUMBO/gi, 'DUMBO'], [/Queens/gi, 'Queens'], [/Astoria/gi, 'Astoria'],
+    [/\(Center\)/gi, '(centre)'], [/\(South\)/gi, '(sud)'], [/\(North\)/gi, '(nord)'],
+    [/\(Southeast\)/gi, '(sud-est)'], [/\(Northeast\)/gi, '(nord-est)']
+  ],
+  es: [
+    [/Midtown/gi, 'centro de Manhattan'], [/Lower Manhattan/gi, 'Bajo Manhattan'], [/Times Square/gi, 'Times Square'],
+    [/Soho/gi, 'SoHo'], [/Central Park/gi, 'Central Park'], [/Brooklyn Bridge/gi, 'puente de Brooklyn'],
+    [/DUMBO/gi, 'DUMBO'], [/Queens/gi, 'Queens'], [/Astoria/gi, 'Astoria'],
+    [/\(Center\)/gi, '(centro)'], [/\(South\)/gi, '(sur)'], [/\(North\)/gi, '(norte)'],
+    [/\(Southeast\)/gi, '(sureste)'], [/\(Northeast\)/gi, '(noreste)']
+  ],
+  ja: [
+    [/Midtown/gi, 'マンハッタン中心部'], [/Lower Manhattan/gi, 'ロウアー・マンハッタン'], [/Times Square/gi, 'タイムズスクエア'],
+    [/Soho/gi, 'ソーホー'], [/Central Park/gi, 'セントラルパーク'], [/Brooklyn Bridge/gi, 'ブルックリン橋'],
+    [/DUMBO/gi, 'ダンボ地区'], [/Queens/gi, 'クイーンズ'], [/Astoria/gi, 'アストリア'],
+    [/\(Center\)/gi, '(中心部)'], [/\(South\)/gi, '(南部)'], [/\(North\)/gi, '(北部)'],
+    [/\(Southeast\)/gi, '(南東部)'], [/\(Northeast\)/gi, '(北東部)']
+  ],
+  zh: [
+    [/Midtown/gi, '曼哈顿中城'], [/Lower Manhattan/gi, '曼哈顿下城'], [/Times Square/gi, '时代广场'],
+    [/Soho/gi, '苏豪区'], [/Central Park/gi, '中央公园'], [/Brooklyn Bridge/gi, '布鲁克林大桥'],
+    [/DUMBO/gi, '丹波区'], [/Queens/gi, '皇后区'], [/Astoria/gi, '阿斯托里亚'],
+    [/\(Center\)/gi, '(中心区)'], [/\(South\)/gi, '(南部)'], [/\(North\)/gi, '(北部)'],
+    [/\(Southeast\)/gi, '(东南部)'], [/\(Northeast\)/gi, '(东北部)']
+  ]
+};
+
+function getLocalizedLodgingLabel(nameKo, nameEn, lang = state.lang) {
+  const codeLang = normalizeLanguageCode(lang);
+  let value = cleanUiText(codeLang === 'ko' ? (nameKo || nameEn) : (nameEn || nameKo));
+  if (codeLang !== 'ko' && codeLang !== 'en') value = localizePlaceName(value, codeLang);
+  (LODGING_LABEL_TRANSLATIONS[codeLang] || []).forEach(([pattern, replacement]) => {
+    value = value.replace(pattern, replacement);
+  });
+  return cleanUiText(value);
 }
 
 function getDataLabel(key, lang = state.lang) {
@@ -1805,6 +1895,7 @@ function applyEnhancedTranslations() {
     ko: {
       room_create_success: '동행 모집방이 생성되었습니다!',
       room_create_failed: '동행방을 저장하지 못했습니다. 입력 내용을 확인한 뒤 다시 시도해주세요.',
+      room_create_local_only: '동행방을 이 기기에 생성했습니다. 서버 연결이 복구되면 자동으로 동기화됩니다.',
       room_update_success: '동행 방 정보가 수정되었습니다!',
       room_update_failed: '동행 방 정보를 저장하지 못했습니다. 다시 시도해주세요.',
       room_deleted: '동행 모집 글이 삭제되었습니다.',
@@ -1845,6 +1936,7 @@ function applyEnhancedTranslations() {
     en: {
       room_create_success: 'Companion room created!',
       room_create_failed: 'The companion room could not be saved. Please review the form and try again.',
+      room_create_local_only: 'The room was created on this device and will sync automatically when the server is available.',
       room_update_success: 'Room updated successfully!',
       room_update_failed: 'The room changes could not be saved. Please try again.',
       room_deleted: 'Companion room deleted.',
@@ -1898,7 +1990,7 @@ function applyEnhancedTranslations() {
       rain_regen_btn: 'Adapter la journée sélectionnée aux lieux couverts', rain_regen_done: 'La journée sélectionnée a été réorganisée avec des lieux couverts.', rain_regen_label: 'Adapter en cas de pluie', rain_regen_no_candidates: 'Il n’y a pas assez de lieux couverts dans cette ville.', rain_regen_no_course: 'Créez d’abord un itinéraire.', regen_input_placeholder: 'Décrivez le changement souhaité…',
       room_max_10: '10 personnes', room_max_2: '2 personnes', room_max_3: '3 personnes', room_max_4: '4 personnes', room_max_6: '6 personnes', room_max_8: '8 personnes', room_max_unlimited: 'Sans limite',
       smoking_no: 'Non-fumeur', smoking_ok: 'Sans préférence', smoking_yes: 'Fumeur',
-      room_create_success: 'Le salon de compagnons a été créé !', room_create_failed: 'Impossible d’enregistrer le salon. Vérifiez le formulaire et réessayez.', room_update_success: 'Le salon a été mis à jour !', room_update_failed: 'Impossible d’enregistrer les modifications. Réessayez.', room_deleted: 'Le salon a été supprimé.', room_full: 'Ce salon est complet.', room_left: 'Vous avez quitté le salon.', room_deleted_by_owner: 'Le créateur a supprimé ce salon.', room_removed_by_owner: 'Le créateur vous a retiré du salon.',
+      room_create_success: 'Le salon de compagnons a été créé !', room_create_failed: 'Impossible d’enregistrer le salon. Vérifiez le formulaire et réessayez.', room_create_local_only: 'Le salon a été créé sur cet appareil et sera synchronisé automatiquement dès que le serveur sera disponible.', room_update_success: 'Le salon a été mis à jour !', room_update_failed: 'Impossible d’enregistrer les modifications. Réessayez.', room_deleted: 'Le salon a été supprimé.', room_full: 'Ce salon est complet.', room_left: 'Vous avez quitté le salon.', room_deleted_by_owner: 'Le créateur a supprimé ce salon.', room_removed_by_owner: 'Le créateur vous a retiré du salon.',
       planner_generate_first: 'Créez d’abord un itinéraire.', planner_select_destination: 'Sélectionnez une ville de destination.', profile_choose_image: 'Choisissez un fichier image.', profile_image_too_large: 'Choisissez une photo de profil de moins de 1 Mo.', profile_photo_reset_toast: 'La photo de profil par défaut a été rétablie.', chat_no_itinerary: 'Aucun itinéraire à partager. Créez d’abord un parcours.', chat_itinerary_shared: 'L’itinéraire a été partagé dans le salon.',
       itinerary_none_to_save: 'Aucun itinéraire à enregistrer.', itinerary_saved: 'Itinéraire enregistré.', itinerary_updated: 'Itinéraire enregistré mis à jour.', itinerary_none_to_share: 'Aucun itinéraire à partager.', itinerary_delete_confirm: 'Voulez-vous vraiment supprimer ce voyage ?', action_deleted: 'Supprimé.', share_link_copied: '🔗 Le lien de partage a été copié !', share_link_failed: 'Impossible de créer le lien de partage.', share_link_prompt: 'Copiez ce lien pour le partager :', itinerary_adjusted: 'L’itinéraire a été réorganisé.', itinerary_min_attraction: 'Chaque journée doit contenir au moins une visite.', itinerary_place_deleted: 'Lieu supprimé.', itinerary_reordered: 'Ordre de l’itinéraire modifié.', route_analyze_first: 'Analysez d’abord le trajet.', shared_route_loaded: 'Trajet partagé chargé.', shared_itinerary_loaded: 'Itinéraire partagé chargé.', kick_member: 'Exclure', shared_course_label: 'Itinéraire partagé', load_itinerary: 'Charger l’itinéraire', preference_label: 'Préférences'
     },
@@ -1918,7 +2010,7 @@ function applyEnhancedTranslations() {
       rain_regen_btn: '将所选日期改为室内行程', rain_regen_done: '所选日期已调整为适合雨天的室内行程。', rain_regen_label: '雨天室内调整', rain_regen_no_candidates: '该城市的室内地点不足。', rain_regen_no_course: '请先生成行程。', regen_input_placeholder: '请输入希望调整的内容…',
       room_max_10: '最多10人', room_max_2: '最多2人', room_max_3: '最多3人', room_max_4: '最多4人', room_max_6: '最多6人', room_max_8: '最多8人', room_max_unlimited: '人数不限',
       smoking_no: '不吸烟', smoking_ok: '不限', smoking_yes: '吸烟',
-      room_create_success: '同行房已创建！', room_create_failed: '无法保存同行房。请检查填写内容后重试。', room_update_success: '同行房已更新！', room_update_failed: '无法保存修改，请重试。', room_deleted: '同行房已删除。', room_full: '该房间人数已满。', room_left: '您已退出同行房。', room_deleted_by_owner: '房主已删除该同行房。', room_removed_by_owner: '房主已将您移出同行房。',
+      room_create_success: '同行房已创建！', room_create_failed: '无法保存同行房。请检查填写内容后重试。', room_create_local_only: '同行房已保存在此设备上，服务器恢复后会自动同步。', room_update_success: '同行房已更新！', room_update_failed: '无法保存修改，请重试。', room_deleted: '同行房已删除。', room_full: '该房间人数已满。', room_left: '您已退出同行房。', room_deleted_by_owner: '房主已删除该同行房。', room_removed_by_owner: '房主已将您移出同行房。',
       planner_generate_first: '请先生成行程。', planner_select_destination: '请选择目的地城市。', profile_choose_image: '请选择图片文件。', profile_image_too_large: '请选择小于1MB的头像图片。', profile_photo_reset_toast: '头像已恢复为默认图片。', chat_no_itinerary: '没有可分享的行程，请先生成路线。', chat_itinerary_shared: '行程已分享到聊天房。',
       itinerary_none_to_save: '没有可保存的行程。', itinerary_saved: '行程已保存。', itinerary_updated: '已更新保存的行程。', itinerary_none_to_share: '没有可分享的行程。', itinerary_delete_confirm: '确定要删除这个行程吗？', action_deleted: '已删除。', share_link_copied: '🔗 分享链接已复制！', share_link_failed: '无法生成分享链接。', share_link_prompt: '复制以下链接进行分享：', itinerary_adjusted: '行程已成功调整。', itinerary_min_attraction: '每天至少需要保留一个普通景点。', itinerary_place_deleted: '地点已删除。', itinerary_reordered: '行程顺序已更新。', route_analyze_first: '请先分析路线。', shared_route_loaded: '已加载分享路线。', shared_itinerary_loaded: '已加载分享行程。', kick_member: '移出', shared_course_label: '分享的旅行行程', load_itinerary: '加载行程', preference_label: '偏好'
     },
@@ -1938,7 +2030,7 @@ function applyEnhancedTranslations() {
       rain_regen_btn: '選択した日を屋内中心に変更', rain_regen_done: '選択した日を雨天向けの屋内コースに調整しました。', rain_regen_label: '雨天時の屋内コース調整', rain_regen_no_candidates: 'この都市には屋内候補が十分ありません。', rain_regen_no_course: '先に旅程を作成してください。', regen_input_placeholder: '変更したい内容を入力してください…',
       room_max_10: '最大10人', room_max_2: '最大2人', room_max_3: '最大3人', room_max_4: '最大4人', room_max_6: '最大6人', room_max_8: '最大8人', room_max_unlimited: '人数制限なし',
       smoking_no: '非喫煙', smoking_ok: '指定なし', smoking_yes: '喫煙',
-      room_create_success: '同行ルームを作成しました！', room_create_failed: '同行ルームを保存できませんでした。入力内容を確認して再試行してください。', room_update_success: '同行ルームを更新しました！', room_update_failed: '変更を保存できませんでした。再試行してください。', room_deleted: '同行ルームを削除しました。', room_full: 'このルームは満員です。', room_left: '同行ルームから退出しました。', room_deleted_by_owner: '作成者が同行ルームを削除しました。', room_removed_by_owner: '作成者によって同行ルームから退出されました。',
+      room_create_success: '同行ルームを作成しました！', room_create_failed: '同行ルームを保存できませんでした。入力内容を確認して再試行してください。', room_create_local_only: '同行ルームをこの端末に作成しました。サーバー復旧後に自動同期されます。', room_update_success: '同行ルームを更新しました！', room_update_failed: '変更を保存できませんでした。再試行してください。', room_deleted: '同行ルームを削除しました。', room_full: 'このルームは満員です。', room_left: '同行ルームから退出しました。', room_deleted_by_owner: '作成者が同行ルームを削除しました。', room_removed_by_owner: '作成者によって同行ルームから退出されました。',
       planner_generate_first: '先に旅程を作成してください。', planner_select_destination: '目的地の都市を選択してください。', profile_choose_image: '画像ファイルを選択してください。', profile_image_too_large: '1MB未満のプロフィール画像を選択してください。', profile_photo_reset_toast: 'プロフィール画像を初期状態に戻しました。', chat_no_itinerary: '共有できる旅程がありません。先にコースを作成してください。', chat_itinerary_shared: '旅程をチャットルームに共有しました。',
       itinerary_none_to_save: '保存できる旅程がありません。', itinerary_saved: '旅程を保存しました。', itinerary_updated: '保存済みの旅程を更新しました。', itinerary_none_to_share: '共有できる旅程がありません。', itinerary_delete_confirm: 'この旅行を削除しますか？', action_deleted: '削除しました。', share_link_copied: '🔗 共有リンクをコピーしました！', share_link_failed: '共有リンクを作成できませんでした。', share_link_prompt: '次のリンクをコピーして共有してください：', itinerary_adjusted: '旅程を再調整しました。', itinerary_min_attraction: '1日につき少なくとも1件の観光地が必要です。', itinerary_place_deleted: '場所を削除しました。', itinerary_reordered: '旅程の順序を変更しました。', route_analyze_first: '先にルートを分析してください。', shared_route_loaded: '共有ルートを読み込みました。', shared_itinerary_loaded: '共有旅程を読み込みました。', kick_member: '退出させる', shared_course_label: '共有された旅行コース', load_itinerary: '旅程を読み込む', preference_label: '好み'
     },
@@ -1958,7 +2050,7 @@ function applyEnhancedTranslations() {
       rain_regen_btn: 'Convertir el día seleccionado en ruta interior', rain_regen_done: 'El día seleccionado se reorganizó con lugares interiores.', rain_regen_label: 'Ajuste para días de lluvia', rain_regen_no_candidates: 'No hay suficientes lugares interiores en esta ciudad.', rain_regen_no_course: 'Primero genera un itinerario.', regen_input_placeholder: 'Describe el cambio que deseas…',
       room_max_10: 'Máximo 10 personas', room_max_2: 'Máximo 2 personas', room_max_3: 'Máximo 3 personas', room_max_4: 'Máximo 4 personas', room_max_6: 'Máximo 6 personas', room_max_8: 'Máximo 8 personas', room_max_unlimited: 'Sin límite',
       smoking_no: 'No fumador', smoking_ok: 'Sin preferencia', smoking_yes: 'Fumador',
-      room_create_success: '¡Sala de compañeros creada!', room_create_failed: 'No se pudo guardar la sala. Revisa el formulario e inténtalo de nuevo.', room_update_success: '¡Sala actualizada!', room_update_failed: 'No se pudieron guardar los cambios. Inténtalo de nuevo.', room_deleted: 'Sala eliminada.', room_full: 'Esta sala está llena.', room_left: 'Has salido de la sala.', room_deleted_by_owner: 'El creador eliminó esta sala.', room_removed_by_owner: 'El creador te retiró de la sala.',
+      room_create_success: '¡Sala de compañeros creada!', room_create_failed: 'No se pudo guardar la sala. Revisa el formulario e inténtalo de nuevo.', room_create_local_only: 'La sala se creó en este dispositivo y se sincronizará automáticamente cuando el servidor esté disponible.', room_update_success: '¡Sala actualizada!', room_update_failed: 'No se pudieron guardar los cambios. Inténtalo de nuevo.', room_deleted: 'Sala eliminada.', room_full: 'Esta sala está llena.', room_left: 'Has salido de la sala.', room_deleted_by_owner: 'El creador eliminó esta sala.', room_removed_by_owner: 'El creador te retiró de la sala.',
       planner_generate_first: 'Primero genera un itinerario.', planner_select_destination: 'Selecciona una ciudad de destino.', profile_choose_image: 'Selecciona un archivo de imagen.', profile_image_too_large: 'Selecciona una foto de perfil de menos de 1 MB.', profile_photo_reset_toast: 'La foto de perfil volvió a la imagen predeterminada.', chat_no_itinerary: 'No hay itinerario para compartir. Primero genera una ruta.', chat_itinerary_shared: 'El itinerario se compartió en el chat.',
       itinerary_none_to_save: 'No hay itinerario para guardar.', itinerary_saved: 'Itinerario guardado.', itinerary_updated: 'Itinerario guardado actualizado.', itinerary_none_to_share: 'No hay itinerario para compartir.', itinerary_delete_confirm: '¿Seguro que quieres eliminar este viaje?', action_deleted: 'Eliminado.', share_link_copied: '🔗 ¡Enlace de compartir copiado!', share_link_failed: 'No se pudo crear el enlace de compartir.', share_link_prompt: 'Copia este enlace para compartir:', itinerary_adjusted: 'El itinerario se ajustó correctamente.', itinerary_min_attraction: 'Cada día debe contener al menos una atracción.', itinerary_place_deleted: 'Lugar eliminado.', itinerary_reordered: 'Orden del itinerario actualizado.', route_analyze_first: 'Primero analiza la ruta.', shared_route_loaded: 'Ruta compartida cargada.', shared_itinerary_loaded: 'Itinerario compartido cargado.', kick_member: 'Expulsar', shared_course_label: 'Ruta compartida', load_itinerary: 'Cargar itinerario', preference_label: 'Preferencias'
     }
@@ -2123,6 +2215,26 @@ function normalizeRoomRecord(room) {
     normalized.memberProfiles[creatorName] = getPublicProfileSnapshot(normalized.creator);
   }
   return normalized;
+}
+
+
+function mergeRemoteRoomsWithPending(remoteRooms, localRooms = state.rooms) {
+  const remoteById = new Map((remoteRooms || []).filter(Boolean).map(room => {
+    const normalized = normalizeRoomRecord(room);
+    normalized.pendingSync = false;
+    return [String(normalized.id), normalized];
+  }));
+  (localRooms || []).filter(room => room && room.pendingSync).forEach(room => {
+    const key = String(room.id);
+    if (!remoteById.has(key)) remoteById.set(key, normalizeRoomRecord(room));
+  });
+  return Array.from(remoteById.values());
+}
+
+function stripRoomSyncMetadata(room) {
+  const cleanRoom = { ...room };
+  delete cleanRoom.pendingSync;
+  return cleanRoom;
 }
 
 function mergeRemotePayload(localPayload, remotePayload, options = {}) {
@@ -2308,7 +2420,7 @@ async function pullFromRemote() {
   try {
     const data = await fetchRemotePayload();
     if (data && Array.isArray(data.rooms)) {
-      state.rooms = data.rooms.map(normalizeRoomRecord);
+      state.rooms = mergeRemoteRoomsWithPending(data.rooms, state.rooms);
       state.chatLogs = mergeChatLogs(state.chatLogs, data.chatLogs || {});
       state.cityRequests = Array.isArray(data.cityRequests) ? data.cityRequests : [];
       repairStateMojibake();
@@ -2357,7 +2469,7 @@ async function pushToRemoteNow(options = {}) {
   try {
     repairStateMojibake();
     const localPayload = {
-      rooms: state.rooms,
+      rooms: state.rooms.map(stripRoomSyncMetadata),
       chatLogs: state.chatLogs,
       cityRequests: state.cityRequests || []
     };
@@ -2379,7 +2491,7 @@ async function pushToRemoteNow(options = {}) {
       })
     });
     if (!res.ok) throw new Error("HTTP error " + res.status);
-    state.rooms = payload.rooms.map(normalizeRoomRecord);
+    state.rooms = payload.rooms.map(room => ({ ...normalizeRoomRecord(room), pendingSync: false }));
     state.chatLogs = mergeChatLogs(state.chatLogs, payload.chatLogs || {});
     state.cityRequests = Array.isArray(payload.cityRequests) ? payload.cityRequests : [];
     repairStateMojibake();
@@ -3165,6 +3277,7 @@ function setupUIStrings() {
   applyEnhancedTranslations();
   state.lang = normalizeLanguageCode(state.lang);
   ensureEnhancedControls();
+  updateProfileLanguageControlLabels(state.lang);
   document.documentElement.lang = state.lang;
   // Update data-i18n elements
   document.querySelectorAll('[data-i18n]').forEach(elem => {
@@ -3187,10 +3300,7 @@ function setupUIStrings() {
   updateLanguageControl();
 
   // Update header widget
-  let displayName = repairMojibakeText(state.activeProfile.name || '');
-  if (state.lang === 'en' && displayName.startsWith('\uC5EC\uD589\uC790_')) {
-    displayName = 'Traveler_' + displayName.replace('\uC5EC\uD589\uC790_', '');
-  }
+  const displayName = getLocalizedProfileDisplayName(state.activeProfile, state.lang);
   document.getElementById('headerProfileName').textContent = displayName;
   updateProfileAvatarUI();
   
@@ -6177,18 +6287,39 @@ function renderCitySelectors() {
   }
 }
 
+
+const DEFAULT_TRAVELER_LABELS = {
+  ko: '여행자',
+  en: 'Traveler',
+  fr: 'Voyageur',
+  es: 'Viajero',
+  ja: '旅行者',
+  zh: '旅行者'
+};
+
+function getLocalizedProfileDisplayName(profileOrName, lang = state.lang) {
+  const rawName = typeof profileOrName === 'string'
+    ? profileOrName
+    : String((profileOrName && profileOrName.name) || '');
+  const name = repairMojibakeText(rawName).trim();
+  const match = name.match(/^(?:여행자|Traveler|Voyageur|Viajero|旅行者)_(\d+)$/i);
+  if (!match) return name;
+  const codeLang = normalizeLanguageCode(lang);
+  return `${DEFAULT_TRAVELER_LABELS[codeLang] || DEFAULT_TRAVELER_LABELS.en}_${match[1]}`;
+}
+
 function getProfileInitial(profile = state.activeProfile) {
-  const name = String((profile && profile.name) || '').trim();
+  const name = getLocalizedProfileDisplayName(profile);
   return name ? name.charAt(0).toUpperCase() : '?';
 }
 
 function renderAvatarMarkup(profile, className) {
   const avatar = profile && profile.avatarDataUrl;
-  const label = profile && profile.name ? profile.name : 'Profile';
+  const label = getLocalizedProfileDisplayName(profile) || getText('profile_photo_label') || '';
   if (avatar) {
-    return `<img class="${className}" src="${avatar}" alt="${label} profile photo">`;
+    return `<img class="${className}" src="${avatar}" alt="${escapeHtml(label)}">`;
   }
-  return `<div class="${className}">${getProfileInitial(profile)}</div>`;
+  return `<div class="${className}">${escapeHtml(getProfileInitial(profile))}</div>`;
 }
 
 function repairCommonMojibakeLiterals(value) {
@@ -10610,7 +10741,7 @@ function renderCompanionRooms() {
         <div class="room-creator">
           ${renderAvatarMarkup(room.creator, 'creator-avatar')}
           <div class="creator-info">
-            <h5>${escapeHtml(room.creator.name)}</h5>
+            <h5>${escapeHtml(getLocalizedProfileDisplayName(room.creator))}</h5>
             <p>${escapeHtml(room.creator.mbti)} · ${escapeHtml(getGenderLabel(room.creator.gender))}</p>
             <p class="creator-profile-line">${escapeHtml(getMemberDetailsText(room.creator))}</p>
           </div>
@@ -10818,7 +10949,8 @@ async function createCompanionRoom(e) {
     desc_ko: desc,
     desc_en: desc,
     [roomDescKey]: desc,
-    status: 'recruiting'
+    status: 'recruiting',
+    pendingSync: true
   };
 
   state.rooms.push(newRoom);
@@ -10828,16 +10960,19 @@ async function createCompanionRoom(e) {
   state.chatLogs[newRoomId] = [
     createMessageObject({ text: welcomeMsg, system: true })
   ];
+  saveToLocalStorage();
 
   const createSaved = await pushToRemote();
-  const createdRoomExists = state.rooms.some(room => room.id === newRoomId);
-  if (!createSaved || !createdRoomExists) {
-    state.rooms = state.rooms.filter(room => room.id !== newRoomId);
-    delete state.chatLogs[newRoomId];
-    saveToLocalStorage();
-    showToast(getText('room_create_failed'));
-    return;
+  let createdRoom = state.rooms.find(room => room.id === newRoomId);
+  if (!createdRoom) {
+    createdRoom = normalizeRoomRecord({ ...newRoom, pendingSync: !createSaved });
+    state.rooms.push(createdRoom);
+    state.chatLogs[newRoomId] = state.chatLogs[newRoomId] || [
+      createMessageObject({ text: welcomeMsg, system: true })
+    ];
   }
+  createdRoom.pendingSync = !createSaved;
+  saveToLocalStorage();
 
   closeCreateModal();
   activateCompanionCategory('all');
@@ -10846,7 +10981,7 @@ async function createCompanionRoom(e) {
   if (createdCard) {
     createdCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
-  showToast(getText('room_create_success'));
+  showToast(getText(createSaved ? 'room_create_success' : 'room_create_local_only'));
 }
 
 async function deleteCompanionRoom(roomId) {
@@ -12788,7 +12923,7 @@ function updateLodgingSelector(cityId, options = {}) {
         x: cluster.x, 
         y: cluster.y 
       });
-      opt.textContent = getLocalizedDataField({ name_ko, name_en }, 'name');
+      opt.textContent = getLocalizedLodgingLabel(name_ko, name_en, state.lang);
       select.appendChild(opt);
     });
   } else if (typeof EXTRA_CITIES_META !== 'undefined' && EXTRA_CITIES_META[cityId]) {
@@ -12824,7 +12959,7 @@ function updateLodgingSelector(cityId, options = {}) {
           x: cluster.x, 
           y: cluster.y 
         });
-        opt.textContent = getLocalizedDataField(cluster, 'name');
+        opt.textContent = getLocalizedLodgingLabel(cluster.name_ko, cluster.name_en, state.lang);
         select.appendChild(opt);
       });
     }
