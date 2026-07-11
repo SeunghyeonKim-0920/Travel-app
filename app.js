@@ -744,13 +744,13 @@ const DATA_LABELS = {
 const PLACE_TERM_TRANSLATIONS = {
   fr: [[/Public Transit/gi, 'Transport public'], [/Times Square/gi, 'Times Square'], [/Statue of Liberty/gi, 'Statue de la Liberté'], [/Central Park/gi, 'Central Park'], [/Brooklyn Bridge/gi, 'pont de Brooklyn'], [/Ellis Island/gi, 'Ellis Island'], [/Lunch Time/gi, 'Déjeuner'], [/Dinner Time/gi, 'Dîner'], [/Breakfast/gi, 'Petit-déjeuner'], [/Museum/gi, 'musée'], [/Palace/gi, 'palais'], [/Temple/gi, 'temple'], [/Shrine/gi, 'sanctuaire'], [/Garden/gi, 'jardin'], [/Park/gi, 'parc'], [/Market/gi, 'marché'], [/Beach/gi, 'plage'], [/Tower/gi, 'tour'], [/Bridge/gi, 'pont'], [/Cathedral/gi, 'cathédrale'], [/Castle/gi, 'château'], [/Square/gi, 'place'], [/Street/gi, 'rue'], [/Promenade/gi, 'promenade'], [/Observatory/gi, 'observatoire'], [/Waterfront/gi, 'front de mer'], [/Old Town/gi, 'vieille ville'], [/Day Trip/gi, 'excursion d’une journée'], [/Full-Day Visit/gi, 'visite toute la journée'], [/Hike/gi, 'randonnée'], [/Trail/gi, 'sentier'], [/Island/gi, 'île']],
   zh: [[/Public Transit/gi, '公共交通'], [/Times Square Neon Walk/gi, '时代广场霓虹街区漫步'], [/Times Square/gi, '时代广场'], [/Statue of Liberty/gi, '自由女神像'], [/Central Park/gi, '中央公园'], [/Brooklyn Bridge/gi, '布鲁克林大桥'], [/Ellis Island/gi, '埃利斯岛'], [/DUMBO/gi, '丹波区'], [/Lunch Time/gi, '午餐时间'], [/Dinner Time/gi, '晚餐时间'], [/Breakfast/gi, '早餐'], [/Museum/gi, '博物馆'], [/Palace/gi, '宫殿'], [/Temple/gi, '寺庙'], [/Shrine/gi, '神社'], [/Garden/gi, '花园'], [/Park/gi, '公园'], [/Market/gi, '市场'], [/Beach/gi, '海滩'], [/Tower/gi, '塔'], [/Bridge/gi, '桥'], [/Cathedral/gi, '大教堂'], [/Castle/gi, '城堡'], [/Square/gi, '广场'], [/Street/gi, '街'], [/Promenade/gi, '步道'], [/Observatory/gi, '观景台'], [/Waterfront/gi, '滨水区'], [/Old Town/gi, '老城'], [/Day Trip/gi, '一日游'], [/Full-Day Visit/gi, '全天游览'], [/Hike/gi, '徒步'], [/Trail/gi, '步道'], [/Island/gi, '岛']],
-  ja: [[/Public Transit/gi, '公共交通機関'], [/Times Square/gi, 'タイムズスクエア'], [/Statue of Liberty/gi, '自由の女神'], [/Central Park/gi, 'セントラルパーク'], [/Brooklyn Bridge/gi, 'ブルックリン橋'], [/Ellis Island/gi, 'エリス島'], [/DUMBO/gi, 'ダンボ地区'], [/Lunch Time/gi, 'ランチ時間'], [/Dinner Time/gi, '夕食時間'], [/Breakfast/gi, '朝食'], [/Museum/gi, '博物館'], [/Palace/gi, '宮殿'], [/Temple/gi, '寺院'], [/Shrine/gi, '神社'], [/Garden/gi, '庭園'], [/Park/gi, '公園'], [/Market/gi, '市場'], [/Beach/gi, 'ビーチ'], [/Tower/gi, 'タワー'], [/Bridge/gi, '橋'], [/Cathedral/gi, '大聖堂'], [/Castle/gi, '城'], [/Square/gi, '広場'], [/Street/gi, '通り'], [/Promenade/gi, '遊歩道'], [/Observatory/gi, '展望台'], [/Waterfront/gi, 'ウォーターフロント'], [/Old Town/gi, '旧市街'], [/Day Trip/gi, '日帰り旅行'], [/Full-Day Visit/gi, '終日訪問'], [/Hike/gi, 'ハイキング'], [/Trail/gi, 'トレイル'], [/Island/gi, '島']],
+  ja: [[/Public Transit/gi, '公共交通機関'], [/Times Square Neon Walk/gi, 'タイムズスクエアのネオン散策'], [/Times Square/gi, 'タイムズスクエア'], [/Statue of Liberty/gi, '自由の女神'], [/Central Park/gi, 'セントラルパーク'], [/Brooklyn Bridge/gi, 'ブルックリン橋'], [/Ellis Island/gi, 'エリス島'], [/DUMBO/gi, 'ダンボ地区'], [/Lunch Time/gi, 'ランチ時間'], [/Dinner Time/gi, '夕食時間'], [/Breakfast/gi, '朝食'], [/Museum/gi, '博物館'], [/Palace/gi, '宮殿'], [/Temple/gi, '寺院'], [/Shrine/gi, '神社'], [/Garden/gi, '庭園'], [/Park/gi, '公園'], [/Market/gi, '市場'], [/Beach/gi, 'ビーチ'], [/Tower/gi, 'タワー'], [/Bridge/gi, '橋'], [/Cathedral/gi, '大聖堂'], [/Castle/gi, '城'], [/Square/gi, '広場'], [/Street/gi, '通り'], [/Promenade/gi, '遊歩道'], [/Observatory/gi, '展望台'], [/Waterfront/gi, 'ウォーターフロント'], [/Old Town/gi, '旧市街'], [/Day Trip/gi, '日帰り旅行'], [/Full-Day Visit/gi, '終日訪問'], [/Hike/gi, 'ハイキング'], [/Trail/gi, 'トレイル'], [/Island/gi, '島']],
   es: [[/Public Transit/gi, 'Transporte público'], [/Times Square/gi, 'Times Square'], [/Statue of Liberty/gi, 'Estatua de la Libertad'], [/Central Park/gi, 'Central Park'], [/Brooklyn Bridge/gi, 'puente de Brooklyn'], [/Ellis Island/gi, 'Ellis Island'], [/Lunch Time/gi, 'Almuerzo'], [/Dinner Time/gi, 'Cena'], [/Breakfast/gi, 'Desayuno'], [/Museum/gi, 'museo'], [/Palace/gi, 'palacio'], [/Temple/gi, 'templo'], [/Shrine/gi, 'santuario'], [/Garden/gi, 'jardín'], [/Park/gi, 'parque'], [/Market/gi, 'mercado'], [/Beach/gi, 'playa'], [/Tower/gi, 'torre'], [/Bridge/gi, 'puente'], [/Cathedral/gi, 'catedral'], [/Castle/gi, 'castillo'], [/Square/gi, 'plaza'], [/Street/gi, 'calle'], [/Promenade/gi, 'paseo'], [/Observatory/gi, 'mirador'], [/Waterfront/gi, 'zona costera'], [/Old Town/gi, 'casco antiguo'], [/Day Trip/gi, 'excursión de un día'], [/Full-Day Visit/gi, 'visita de día completo'], [/Hike/gi, 'senderismo'], [/Trail/gi, 'sendero'], [/Island/gi, 'isla']]
 };
 
 const ENGLISH_CITY_PLACE_TRANSLATIONS = {
   fr: [
-    [/Empire State Building/gi, 'Empire State Building'], [/Rockefeller Center/gi, 'Rockefeller Center'], [/One World Observatory/gi, 'Observatoire One World'], [/Wall Street/gi, 'Wall Street'], [/New York Stock Exchange/gi, 'Bourse de New York'], [/High Line/gi, 'High Line'], [/Chelsea Market/gi, 'Chelsea Market'], [/Metropolitan Museum of Art|The Met/gi, 'Metropolitan Museum of Art'], [/Broadway/gi, 'Broadway'], [/Hollywood/gi, 'Hollywood'], [/Griffith Observatory/gi, 'observatoire Griffith'], [/Santa Monica Pier/gi, 'jetée de Santa Monica'], [/Venice Beach/gi, 'plage de Venice'], [/Golden Gate Bridge/gi, 'pont du Golden Gate'], [/Fisherman'?s Wharf/gi, 'Fisherman’s Wharf'], [/Alcatraz/gi, 'Alcatraz'], [/Space Needle/gi, 'Space Needle'], [/Pike Place Market/gi, 'marché Pike Place'], [/Navy Pier/gi, 'Navy Pier'], [/Millennium Park/gi, 'Millennium Park'], [/Freedom Trail/gi, 'Freedom Trail'], [/Harvard/gi, 'Harvard'], [/South Beach/gi, 'South Beach'], [/Walt Disney World/gi, 'Walt Disney World'], [/Universal Orlando/gi, 'Universal Orlando'], [/Buckingham Palace/gi, 'palais de Buckingham'], [/Westminster Abbey/gi, 'abbaye de Westminster'], [/Tower of London/gi, 'tour de Londres'], [/British Museum/gi, 'British Museum'], [/London Eye/gi, 'London Eye'], [/Tower Bridge/gi, 'Tower Bridge'], [/Hyde Park/gi, 'Hyde Park'], [/Sydney Opera House/gi, 'opéra de Sydney'], [/Harbour Bridge/gi, 'pont du port de Sydney'], [/Bondi Beach/gi, 'plage de Bondi'], [/Darling Harbour/gi, 'Darling Harbour'], [/Blue Mountains/gi, 'Blue Mountains'], [/Te Papa/gi, 'Te Papa'], [/Wellington Cable Car/gi, 'funiculaire de Wellington'], [/Mount Victoria/gi, 'mont Victoria'], [/Botanic Garden/gi, 'jardin botanique']
+    [/Empire State Building/gi, 'gratte-ciel Empire State'], [/Rockefeller Center/gi, 'Rockefeller Center'], [/One World Observatory/gi, 'Observatoire One World'], [/Wall Street/gi, 'Wall Street'], [/New York Stock Exchange/gi, 'Bourse de New York'], [/High Line/gi, 'High Line'], [/Chelsea Market/gi, 'Chelsea Market'], [/Metropolitan Museum of Art|The Met/gi, 'Metropolitan Museum of Art'], [/Broadway/gi, 'Broadway'], [/Hollywood/gi, 'Hollywood'], [/Griffith Observatory/gi, 'observatoire Griffith'], [/Santa Monica Pier/gi, 'jetée de Santa Monica'], [/Venice Beach/gi, 'plage de Venice'], [/Golden Gate Bridge/gi, 'pont du Golden Gate'], [/Fisherman'?s Wharf/gi, 'Fisherman’s Wharf'], [/Alcatraz/gi, 'Alcatraz'], [/Space Needle/gi, 'Space Needle'], [/Pike Place Market/gi, 'marché Pike Place'], [/Navy Pier/gi, 'Navy Pier'], [/Millennium Park/gi, 'Millennium Park'], [/Freedom Trail/gi, 'Freedom Trail'], [/Harvard/gi, 'Harvard'], [/South Beach/gi, 'South Beach'], [/Walt Disney World/gi, 'Walt Disney World'], [/Universal Orlando/gi, 'Universal Orlando'], [/Buckingham Palace/gi, 'palais de Buckingham'], [/Westminster Abbey/gi, 'abbaye de Westminster'], [/Tower of London/gi, 'tour de Londres'], [/British Museum/gi, 'British Museum'], [/London Eye/gi, 'London Eye'], [/Tower Bridge/gi, 'Tower Bridge'], [/Hyde Park/gi, 'Hyde Park'], [/Sydney Opera House/gi, 'opéra de Sydney'], [/Harbour Bridge/gi, 'pont du port de Sydney'], [/Bondi Beach/gi, 'plage de Bondi'], [/Darling Harbour/gi, 'Darling Harbour'], [/Blue Mountains/gi, 'Blue Mountains'], [/Te Papa/gi, 'Te Papa'], [/Wellington Cable Car/gi, 'funiculaire de Wellington'], [/Mount Victoria/gi, 'mont Victoria'], [/Botanic Garden/gi, 'jardin botanique']
   ],
   zh: [
     [/Empire State Building/gi, '帝国大厦'], [/Rockefeller Center/gi, '洛克菲勒中心'], [/One World Observatory/gi, '世贸一号观景台'], [/Wall Street/gi, '华尔街'], [/New York Stock Exchange/gi, '纽约证券交易所'], [/High Line/gi, '高线公园'], [/Chelsea Market/gi, '切尔西市场'], [/Metropolitan Museum of Art|The Met/gi, '大都会艺术博物馆'], [/Broadway/gi, '百老汇'], [/Hollywood/gi, '好莱坞'], [/Griffith Observatory/gi, '格里菲斯天文台'], [/Santa Monica Pier/gi, '圣莫尼卡码头'], [/Venice Beach/gi, '威尼斯海滩'], [/Golden Gate Bridge/gi, '金门大桥'], [/Fisherman'?s Wharf/gi, '渔人码头'], [/Alcatraz/gi, '恶魔岛'], [/Space Needle/gi, '太空针塔'], [/Pike Place Market/gi, '派克市场'], [/Navy Pier/gi, '海军码头'], [/Millennium Park/gi, '千禧公园'], [/Freedom Trail/gi, '自由之路'], [/Harvard/gi, '哈佛'], [/South Beach/gi, '南海滩'], [/Walt Disney World/gi, '华特迪士尼世界'], [/Universal Orlando/gi, '奥兰多环球影城'], [/Buckingham Palace/gi, '白金汉宫'], [/Westminster Abbey/gi, '威斯敏斯特教堂'], [/Tower of London/gi, '伦敦塔'], [/British Museum/gi, '大英博物馆'], [/London Eye/gi, '伦敦眼'], [/Tower Bridge/gi, '塔桥'], [/Hyde Park/gi, '海德公园'], [/Sydney Opera House/gi, '悉尼歌剧院'], [/Harbour Bridge/gi, '海港大桥'], [/Bondi Beach/gi, '邦迪海滩'], [/Darling Harbour/gi, '达令港'], [/Blue Mountains/gi, '蓝山'], [/Te Papa/gi, '蒂帕帕国家博物馆'], [/Wellington Cable Car/gi, '惠灵顿缆车'], [/Mount Victoria/gi, '维多利亚山'], [/Botanic Garden/gi, '植物园']
@@ -759,7 +759,7 @@ const ENGLISH_CITY_PLACE_TRANSLATIONS = {
     [/Empire State Building/gi, 'エンパイアステートビル'], [/Rockefeller Center/gi, 'ロックフェラーセンター'], [/One World Observatory/gi, 'ワンワールド展望台'], [/Wall Street/gi, 'ウォール街'], [/New York Stock Exchange/gi, 'ニューヨーク証券取引所'], [/High Line/gi, 'ハイライン'], [/Chelsea Market/gi, 'チェルシーマーケット'], [/Metropolitan Museum of Art|The Met/gi, 'メトロポリタン美術館'], [/Broadway/gi, 'ブロードウェイ'], [/Hollywood/gi, 'ハリウッド'], [/Griffith Observatory/gi, 'グリフィス天文台'], [/Santa Monica Pier/gi, 'サンタモニカ・ピア'], [/Venice Beach/gi, 'ベニスビーチ'], [/Golden Gate Bridge/gi, 'ゴールデンゲートブリッジ'], [/Fisherman'?s Wharf/gi, 'フィッシャーマンズワーフ'], [/Alcatraz/gi, 'アルカトラズ島'], [/Space Needle/gi, 'スペースニードル'], [/Pike Place Market/gi, 'パイクプレイスマーケット'], [/Navy Pier/gi, 'ネイビーピア'], [/Millennium Park/gi, 'ミレニアムパーク'], [/Freedom Trail/gi, 'フリーダムトレイル'], [/Harvard/gi, 'ハーバード'], [/South Beach/gi, 'サウスビーチ'], [/Walt Disney World/gi, 'ウォルト・ディズニー・ワールド'], [/Universal Orlando/gi, 'ユニバーサル・オーランド'], [/Buckingham Palace/gi, 'バッキンガム宮殿'], [/Westminster Abbey/gi, 'ウェストミンスター寺院'], [/Tower of London/gi, 'ロンドン塔'], [/British Museum/gi, '大英博物館'], [/London Eye/gi, 'ロンドン・アイ'], [/Tower Bridge/gi, 'タワーブリッジ'], [/Hyde Park/gi, 'ハイドパーク'], [/Sydney Opera House/gi, 'シドニー・オペラハウス'], [/Harbour Bridge/gi, 'ハーバーブリッジ'], [/Bondi Beach/gi, 'ボンダイビーチ'], [/Darling Harbour/gi, 'ダーリングハーバー'], [/Blue Mountains/gi, 'ブルーマウンテンズ'], [/Te Papa/gi, 'テ・パパ国立博物館'], [/Wellington Cable Car/gi, 'ウェリントン・ケーブルカー'], [/Mount Victoria/gi, 'マウント・ビクトリア'], [/Botanic Garden/gi, '植物園']
   ],
   es: [
-    [/Empire State Building/gi, 'Empire State Building'], [/Rockefeller Center/gi, 'Rockefeller Center'], [/One World Observatory/gi, 'mirador One World'], [/Wall Street/gi, 'Wall Street'], [/New York Stock Exchange/gi, 'Bolsa de Nueva York'], [/High Line/gi, 'High Line'], [/Chelsea Market/gi, 'Chelsea Market'], [/Metropolitan Museum of Art|The Met/gi, 'Museo Metropolitano de Arte'], [/Broadway/gi, 'Broadway'], [/Hollywood/gi, 'Hollywood'], [/Griffith Observatory/gi, 'Observatorio Griffith'], [/Santa Monica Pier/gi, 'muelle de Santa Monica'], [/Venice Beach/gi, 'playa Venice'], [/Golden Gate Bridge/gi, 'puente Golden Gate'], [/Fisherman'?s Wharf/gi, 'Fisherman’s Wharf'], [/Alcatraz/gi, 'Alcatraz'], [/Space Needle/gi, 'Space Needle'], [/Pike Place Market/gi, 'mercado Pike Place'], [/Navy Pier/gi, 'Navy Pier'], [/Millennium Park/gi, 'Millennium Park'], [/Freedom Trail/gi, 'Freedom Trail'], [/Harvard/gi, 'Harvard'], [/South Beach/gi, 'South Beach'], [/Walt Disney World/gi, 'Walt Disney World'], [/Universal Orlando/gi, 'Universal Orlando'], [/Buckingham Palace/gi, 'palacio de Buckingham'], [/Westminster Abbey/gi, 'abadía de Westminster'], [/Tower of London/gi, 'Torre de Londres'], [/British Museum/gi, 'Museo Británico'], [/London Eye/gi, 'London Eye'], [/Tower Bridge/gi, 'Tower Bridge'], [/Hyde Park/gi, 'Hyde Park'], [/Sydney Opera House/gi, 'Ópera de Sídney'], [/Harbour Bridge/gi, 'puente del Puerto de Sídney'], [/Bondi Beach/gi, 'playa Bondi'], [/Darling Harbour/gi, 'Darling Harbour'], [/Blue Mountains/gi, 'Montañas Azules'], [/Te Papa/gi, 'Te Papa'], [/Wellington Cable Car/gi, 'teleférico de Wellington'], [/Mount Victoria/gi, 'Monte Victoria'], [/Botanic Garden/gi, 'jardín botánico']
+    [/Empire State Building/gi, 'edificio Empire State'], [/Rockefeller Center/gi, 'Rockefeller Center'], [/One World Observatory/gi, 'mirador One World'], [/Wall Street/gi, 'Wall Street'], [/New York Stock Exchange/gi, 'Bolsa de Nueva York'], [/High Line/gi, 'High Line'], [/Chelsea Market/gi, 'Chelsea Market'], [/Metropolitan Museum of Art|The Met/gi, 'Museo Metropolitano de Arte'], [/Broadway/gi, 'Broadway'], [/Hollywood/gi, 'Hollywood'], [/Griffith Observatory/gi, 'Observatorio Griffith'], [/Santa Monica Pier/gi, 'muelle de Santa Monica'], [/Venice Beach/gi, 'playa Venice'], [/Golden Gate Bridge/gi, 'puente Golden Gate'], [/Fisherman'?s Wharf/gi, 'Fisherman’s Wharf'], [/Alcatraz/gi, 'Alcatraz'], [/Space Needle/gi, 'Space Needle'], [/Pike Place Market/gi, 'mercado Pike Place'], [/Navy Pier/gi, 'Navy Pier'], [/Millennium Park/gi, 'Millennium Park'], [/Freedom Trail/gi, 'Freedom Trail'], [/Harvard/gi, 'Harvard'], [/South Beach/gi, 'South Beach'], [/Walt Disney World/gi, 'Walt Disney World'], [/Universal Orlando/gi, 'Universal Orlando'], [/Buckingham Palace/gi, 'palacio de Buckingham'], [/Westminster Abbey/gi, 'abadía de Westminster'], [/Tower of London/gi, 'Torre de Londres'], [/British Museum/gi, 'Museo Británico'], [/London Eye/gi, 'London Eye'], [/Tower Bridge/gi, 'Tower Bridge'], [/Hyde Park/gi, 'Hyde Park'], [/Sydney Opera House/gi, 'Ópera de Sídney'], [/Harbour Bridge/gi, 'puente del Puerto de Sídney'], [/Bondi Beach/gi, 'playa Bondi'], [/Darling Harbour/gi, 'Darling Harbour'], [/Blue Mountains/gi, 'Montañas Azules'], [/Te Papa/gi, 'Te Papa'], [/Wellington Cable Car/gi, 'teleférico de Wellington'], [/Mount Victoria/gi, 'Monte Victoria'], [/Botanic Garden/gi, 'jardín botánico']
   ]
 };
 
@@ -812,7 +812,73 @@ const CURATED_PLACE_NAME_TRANSLATIONS = {
   'area15 las vegas': { ko: '에어리어15 라스베이거스', fr: 'AREA15 Las Vegas', zh: '拉斯维加斯AREA15', ja: 'AREA15ラスベガス', es: 'AREA15 Las Vegas' }
 };
 
+const TARGET_COUNTRY_PLACE_TRANSLATIONS = {
+  ko: [
+    [/Oculus Westfield Mall/gi, '오큘러스 웨스트필드 몰'], [/Free Time & Rest before Meal/gi, '식사 전 자유 시간과 휴식'], [/Free Time & Rest in City/gi, '도심 자유 시간과 휴식'],
+    [/Hyde Park Serpentine Lake Walk/gi, '하이드 파크 서펜타인 호수 산책'], [/Bondi to Bronte Coastal Walk/gi, '본다이-브론테 해안 산책'], [/Royal Botanic Garden Walk/gi, '왕립 식물원 산책'],
+    [/Art Gallery of NSW Australian Art/gi, '뉴사우스웨일스 주립 미술관 호주 미술'], [/Queen Victoria Building Shopping/gi, '퀸 빅토리아 빌딩 쇼핑'], [/Blue Mountains Scenic World/gi, '블루마운틴 시닉 월드'],
+    [/Sydney Cafe Dessert Break/gi, '시드니 카페 디저트 휴식'], [/Darling Harbour Jet Boat Spin/gi, '달링하버 제트보트 체험'], [/Wellington Cafe Dessert Break/gi, '웰링턴 카페 디저트 휴식'],
+    [/Arrowtown/gi, '애로타운'], [/Skyline Gondola & Ledge Bungy/gi, '스카이라인 곤돌라와 레지 번지'], [/AJ Hackett Kawarau Gorge Bungy/gi, '에이제이 해킷 카와라우 협곡 번지'],
+    [/Queenstown Central Shopping/gi, '퀸스타운 중심가 쇼핑'], [/The Remarkables Ski Area/gi, '리마커블스 스키장'], [/Queenstown Cafe Dessert Break/gi, '퀸스타운 카페 디저트 휴식'],
+    [/Empire State Building/gi, '엠파이어 스테이트 빌딩'], [/Buckingham Palace/gi, '버킹엄 궁전'], [/Sydney Opera House/gi, '시드니 오페라 하우스'],
+    [/Museum of New Zealand Te Papa Tongarewa/gi, '뉴질랜드 테파파 통가레와 국립박물관'], [/Skyline Queenstown Gondola/gi, '스카이라인 퀸스타운 곤돌라'],
+    [/Changing of the Guard/gi, '근위병 교대식'], [/Houses of Parliament/gi, '영국 국회의사당'], [/The National Gallery London/gi, '런던 내셔널 갤러리'],
+    [/Kensington Gardens/gi, '켄싱턴 가든'], [/Covent Garden/gi, '코번트 가든'], [/Soho Walk/gi, '소호 산책'], [/9\/11 Memorial/gi, '9·11 메모리얼'],
+    [/Wellington Botanic Garden/gi, '웰링턴 식물원'], [/Mount Victoria Lookout/gi, '마운트 빅토리아 전망대'], [/Zealandia Ecosanctuary/gi, '질랜디아 생태보호구역'],
+    [/Cuba Street Wellington/gi, '웰링턴 쿠바 스트리트'], [/Lake Wakatipu Cruise/gi, '와카티푸호 크루즈'], [/Kawarau Bridge Bungy/gi, '카와라우 다리 번지점프'],
+    [/Queenstown Gardens/gi, '퀸스타운 가든'], [/Milford Sound Day Tour/gi, '밀퍼드 사운드 당일 투어']
+  ],
+  fr: [
+    [/Oculus Westfield Mall/gi, 'centre commercial Oculus Westfield'], [/Free Time & Rest before Meal/gi, 'temps libre et repos avant le repas'], [/Free Time & Rest in City/gi, 'temps libre et repos en ville'],
+    [/Hyde Park Serpentine Lake Walk/gi, 'promenade au lac Serpentine de Hyde Park'], [/Bondi to Bronte Coastal Walk/gi, 'promenade côtière de Bondi à Bronte'], [/Royal Botanic Garden Walk/gi, 'promenade au jardin botanique royal'],
+    [/Art Gallery of NSW Australian Art/gi, 'art australien à la Galerie d’art de Nouvelle-Galles du Sud'], [/Queen Victoria Building Shopping/gi, 'shopping au Queen Victoria Building'], [/Blue Mountains Scenic World/gi, 'Scenic World des Montagnes Bleues'],
+    [/Sydney Cafe Dessert Break/gi, 'pause café et dessert à Sydney'], [/Darling Harbour Jet Boat Spin/gi, 'tour en jet boat à Darling Harbour'], [/Wellington Cafe Dessert Break/gi, 'pause café et dessert à Wellington'],
+    [/Arrowtown/gi, 'Arrowtown'], [/Skyline Gondola & Ledge Bungy/gi, 'télécabine Skyline et saut Ledge'], [/AJ Hackett Kawarau Gorge Bungy/gi, 'saut à l’élastique AJ Hackett dans les gorges de Kawarau'],
+    [/Queenstown Central Shopping/gi, 'shopping dans le centre de Queenstown'], [/The Remarkables Ski Area/gi, 'domaine skiable The Remarkables'], [/Queenstown Cafe Dessert Break/gi, 'pause café et dessert à Queenstown'],
+    [/Changing of the Guard/gi, 'relève de la garde'], [/Houses of Parliament/gi, 'Palais de Westminster'], [/The National Gallery London/gi, 'National Gallery de Londres'], [/Kensington Gardens/gi, 'jardins de Kensington'], [/Covent Garden/gi, 'Covent Garden'], [/Soho Walk/gi, 'promenade dans Soho'],
+    [/9\/11 Memorial/gi, 'Mémorial du 11-Septembre'], [/Museum of New Zealand Te Papa Tongarewa/gi, 'musée de Nouvelle-Zélande Te Papa Tongarewa'], [/Wellington Botanic Garden/gi, 'jardin botanique de Wellington'], [/Mount Victoria Lookout/gi, 'belvédère du mont Victoria'], [/Zealandia Ecosanctuary/gi, 'sanctuaire écologique Zealandia'], [/Cuba Street Wellington/gi, 'rue Cuba à Wellington'],
+    [/Skyline Queenstown Gondola/gi, 'télécabine Skyline de Queenstown'], [/Lake Wakatipu Cruise/gi, 'croisière sur le lac Wakatipu'], [/Kawarau Bridge Bungy/gi, 'saut à l’élastique du pont Kawarau'], [/Queenstown Gardens/gi, 'jardins de Queenstown'], [/Milford Sound Day Tour/gi, 'excursion d’une journée à Milford Sound']
+  ],
+  zh: [
+    [/Oculus Westfield Mall/gi, '欧库鲁斯韦斯特菲尔德购物中心'], [/Free Time & Rest before Meal/gi, '用餐前的自由时间与休息'], [/Free Time & Rest in City/gi, '市区自由活动与休息'],
+    [/Hyde Park Serpentine Lake Walk/gi, '海德公园蛇形湖漫步'], [/Bondi to Bronte Coastal Walk/gi, '邦迪至布朗特海岸步道'], [/Royal Botanic Garden Walk/gi, '皇家植物园漫步'],
+    [/Art Gallery of NSW Australian Art/gi, '新南威尔士州美术馆澳大利亚艺术展'], [/Queen Victoria Building Shopping/gi, '维多利亚女王大厦购物'], [/Blue Mountains Scenic World/gi, '蓝山景观世界'],
+    [/Sydney Cafe Dessert Break/gi, '悉尼咖啡甜点休息'], [/Darling Harbour Jet Boat Spin/gi, '达令港喷射快艇体验'], [/Wellington Cafe Dessert Break/gi, '惠灵顿咖啡甜点休息'],
+    [/Arrowtown/gi, '箭镇'], [/Skyline Gondola & Ledge Bungy/gi, '天空缆车与悬崖蹦极'], [/AJ Hackett Kawarau Gorge Bungy/gi, '哈克特卡瓦劳峡谷蹦极'],
+    [/Queenstown Central Shopping/gi, '皇后镇中心购物'], [/The Remarkables Ski Area/gi, '卓越山滑雪场'], [/Queenstown Cafe Dessert Break/gi, '皇后镇咖啡甜点休息'],
+    [/Changing of the Guard/gi, '卫兵换岗仪式'], [/Houses of Parliament/gi, '英国议会大厦'], [/The National Gallery London/gi, '伦敦国家美术馆'], [/Kensington Gardens/gi, '肯辛顿花园'], [/Covent Garden/gi, '科文特花园'], [/Soho Walk/gi, '苏豪区漫步'],
+    [/9\/11 Memorial/gi, '九一一国家纪念博物馆'], [/Museum of New Zealand Te Papa Tongarewa/gi, '新西兰蒂帕帕国家博物馆'], [/Wellington Botanic Garden/gi, '惠灵顿植物园'], [/Mount Victoria Lookout/gi, '维多利亚山观景台'], [/Zealandia Ecosanctuary/gi, '西兰蒂亚生态保护区'], [/Cuba Street Wellington/gi, '惠灵顿古巴街'],
+    [/Skyline Queenstown Gondola/gi, '皇后镇天空缆车'], [/Lake Wakatipu Cruise/gi, '瓦卡蒂普湖游船'], [/Kawarau Bridge Bungy/gi, '卡瓦劳大桥蹦极'], [/Queenstown Gardens/gi, '皇后镇花园'], [/Milford Sound Day Tour/gi, '米尔福德峡湾一日游']
+  ],
+  ja: [
+    [/Oculus Westfield Mall/gi, 'オキュラス・ウェストフィールド・モール'], [/Free Time & Rest before Meal/gi, '食事前の自由時間と休憩'], [/Free Time & Rest in City/gi, '市内での自由時間と休憩'],
+    [/Hyde Park Serpentine Lake Walk/gi, 'ハイドパークのサーペンタイン湖散策'], [/Bondi to Bronte Coastal Walk/gi, 'ボンダイからブロンテまでの海岸散策'], [/Royal Botanic Garden Walk/gi, '王立植物園散策'],
+    [/Art Gallery of NSW Australian Art/gi, 'ニューサウスウェールズ州立美術館のオーストラリア美術'], [/Queen Victoria Building Shopping/gi, 'クイーン・ビクトリア・ビルディングでのショッピング'], [/Blue Mountains Scenic World/gi, 'ブルーマウンテンズ・シーニックワールド'],
+    [/Sydney Cafe Dessert Break/gi, 'シドニーのカフェとデザート休憩'], [/Darling Harbour Jet Boat Spin/gi, 'ダーリングハーバーのジェットボート体験'], [/Wellington Cafe Dessert Break/gi, 'ウェリントンのカフェとデザート休憩'],
+    [/Arrowtown/gi, 'アロータウン'], [/Skyline Gondola & Ledge Bungy/gi, 'スカイライン・ゴンドラとレッジ・バンジー'], [/AJ Hackett Kawarau Gorge Bungy/gi, 'AJハケット・カワラウ渓谷バンジー'],
+    [/Queenstown Central Shopping/gi, 'クイーンズタウン中心部でのショッピング'], [/The Remarkables Ski Area/gi, 'リマーカブルズ・スキー場'], [/Queenstown Cafe Dessert Break/gi, 'クイーンズタウンのカフェとデザート休憩'],
+    [/Changing of the Guard/gi, '衛兵交代式'], [/Houses of Parliament/gi, '英国国会議事堂'], [/The National Gallery London/gi, 'ロンドン・ナショナル・ギャラリー'], [/Kensington Gardens/gi, 'ケンジントン・ガーデンズ'], [/Covent Garden/gi, 'コヴェント・ガーデン'], [/Soho Walk/gi, 'ソーホー散策'],
+    [/9\/11 Memorial/gi, '9.11メモリアル'], [/Museum of New Zealand Te Papa Tongarewa/gi, 'ニュージーランド国立博物館テ・パパ・トンガレワ'], [/Wellington Botanic Garden/gi, 'ウェリントン植物園'], [/Mount Victoria Lookout/gi, 'マウント・ビクトリア展望台'], [/Zealandia Ecosanctuary/gi, 'ジーランディア自然保護区'], [/Cuba Street Wellington/gi, 'ウェリントンのキューバ・ストリート'],
+    [/Skyline Queenstown Gondola/gi, 'スカイライン・クイーンズタウン・ゴンドラ'], [/Lake Wakatipu Cruise/gi, 'ワカティプ湖クルーズ'], [/Kawarau Bridge Bungy/gi, 'カワラウ橋バンジー'], [/Queenstown Gardens/gi, 'クイーンズタウン・ガーデンズ'], [/Milford Sound Day Tour/gi, 'ミルフォード・サウンド日帰りツアー']
+  ],
+  es: [
+    [/Oculus Westfield Mall/gi, 'centro comercial Oculus Westfield'], [/Free Time & Rest before Meal/gi, 'tiempo libre y descanso antes de comer'], [/Free Time & Rest in City/gi, 'tiempo libre y descanso en la ciudad'],
+    [/Hyde Park Serpentine Lake Walk/gi, 'paseo por el lago Serpentine de Hyde Park'], [/Bondi to Bronte Coastal Walk/gi, 'paseo costero de Bondi a Bronte'], [/Royal Botanic Garden Walk/gi, 'paseo por el Real Jardín Botánico'],
+    [/Art Gallery of NSW Australian Art/gi, 'arte australiano en la Galería de Arte de Nueva Gales del Sur'], [/Queen Victoria Building Shopping/gi, 'compras en el edificio Queen Victoria'], [/Blue Mountains Scenic World/gi, 'Scenic World de las Montañas Azules'],
+    [/Sydney Cafe Dessert Break/gi, 'pausa de café y postre en Sídney'], [/Darling Harbour Jet Boat Spin/gi, 'paseo en lancha rápida por Darling Harbour'], [/Wellington Cafe Dessert Break/gi, 'pausa de café y postre en Wellington'],
+    [/Arrowtown/gi, 'Arrowtown'], [/Skyline Gondola & Ledge Bungy/gi, 'teleférico Skyline y salto Ledge'], [/AJ Hackett Kawarau Gorge Bungy/gi, 'puenting AJ Hackett en la garganta de Kawarau'],
+    [/Queenstown Central Shopping/gi, 'compras en el centro de Queenstown'], [/The Remarkables Ski Area/gi, 'estación de esquí The Remarkables'], [/Queenstown Cafe Dessert Break/gi, 'pausa de café y postre en Queenstown'],
+    [/Changing of the Guard/gi, 'cambio de guardia'], [/Houses of Parliament/gi, 'Palacio de Westminster'], [/The National Gallery London/gi, 'Galería Nacional de Londres'], [/Kensington Gardens/gi, 'jardines de Kensington'], [/Covent Garden/gi, 'Covent Garden'], [/Soho Walk/gi, 'paseo por Soho'],
+    [/9\/11 Memorial/gi, 'Memorial del 11-S'], [/Museum of New Zealand Te Papa Tongarewa/gi, 'Museo de Nueva Zelanda Te Papa Tongarewa'], [/Wellington Botanic Garden/gi, 'Jardín Botánico de Wellington'], [/Mount Victoria Lookout/gi, 'mirador del monte Victoria'], [/Zealandia Ecosanctuary/gi, 'santuario ecológico Zealandia'], [/Cuba Street Wellington/gi, 'calle Cuba de Wellington'],
+    [/Skyline Queenstown Gondola/gi, 'teleférico Skyline de Queenstown'], [/Lake Wakatipu Cruise/gi, 'crucero por el lago Wakatipu'], [/Kawarau Bridge Bungy/gi, 'puenting del puente Kawarau'], [/Queenstown Gardens/gi, 'jardines de Queenstown'], [/Milford Sound Day Tour/gi, 'excursión de un día a Milford Sound']
+  ]
+};
 Object.entries(ENGLISH_CITY_PLACE_TRANSLATIONS).forEach(([lang, rules]) => {
+  if (!PLACE_TERM_TRANSLATIONS[lang]) PLACE_TERM_TRANSLATIONS[lang] = [];
+  PLACE_TERM_TRANSLATIONS[lang].unshift(...rules);
+});
+
+Object.entries(TARGET_COUNTRY_PLACE_TRANSLATIONS).forEach(([lang, rules]) => {
   if (!PLACE_TERM_TRANSLATIONS[lang]) PLACE_TERM_TRANSLATIONS[lang] = [];
   PLACE_TERM_TRANSLATIONS[lang].unshift(...rules);
 });
@@ -885,7 +951,10 @@ function localizePlaceName(value, lang = state.lang) {
   const exactKey = text.toLowerCase().replace(/\s+/g, ' ').trim();
   const curated = CURATED_PLACE_NAME_TRANSLATIONS[exactKey];
   if (curated && curated[codeLang]) return cleanUiText(curated[codeLang]);
-  if (codeLang === 'ko' || codeLang === 'en') return text;
+  if (codeLang === 'en') return text;
+  (PLACE_TERM_TRANSLATIONS[codeLang] || []).forEach(([pattern, replacement]) => {
+    text = text.replace(pattern, cleanUiText(replacement));
+  });
   Object.entries(CITY_LOCALIZED_NAMES).forEach(([cityId, names]) => {
     const city = (typeof CITIES !== 'undefined' && Array.isArray(CITIES))
       ? CITIES.find(c => c && c.id === cityId)
@@ -895,9 +964,9 @@ function localizePlaceName(value, lang = state.lang) {
       text = text.replace(new RegExp(`\\b${escapeRegExpLiteral(enName)}\\b`, 'gi'), cleanUiText(names[codeLang]));
     }
   });
-  (PLACE_TERM_TRANSLATIONS[codeLang] || []).forEach(([pattern, replacement]) => {
-    text = text.replace(pattern, cleanUiText(replacement));
-  });
+  if (codeLang === 'ko' && /[A-Za-z]{3}/.test(text)) {
+    text = translateKnownPlaceNameToKorean(text) || text;
+  }
   return cleanUiText(text);
 }
 
@@ -996,6 +1065,63 @@ function localizeLanguageChoiceChips(lang = state.lang) {
   });
 }
 
+function updateProfileLanguageControlLabels(lang = state.lang) {
+  const codeLang = normalizeLanguageCode(lang);
+  const labels = PROFILE_LANGUAGE_LABELS[codeLang] || PROFILE_LANGUAGE_LABELS.en;
+  document.querySelectorAll('#profileLanguages .multi-select-chip').forEach(chip => {
+    const input = chip.querySelector('input');
+    const label = chip.querySelector('span');
+    if (!input || !label) return;
+    const code = getLanguageCodeFromValue(input.value);
+    if (code && labels[code]) label.textContent = cleanUiText(labels[code]);
+  });
+}
+
+const LODGING_LABEL_TRANSLATIONS = {
+  ko: [
+    [/\(Center\)/gi, '(중심부)'], [/\(South\)/gi, '(남부)'], [/\(North\)/gi, '(북부)'],
+    [/\(Southeast\)/gi, '(동남부)'], [/\(Northeast\)/gi, '(북동부)']
+  ],
+  fr: [
+    [/Midtown/gi, 'centre de Manhattan'], [/Lower Manhattan/gi, 'sud de Manhattan'], [/Times Square/gi, 'Times Square'],
+    [/Soho/gi, 'SoHo'], [/Central Park/gi, 'Central Park'], [/Brooklyn Bridge/gi, 'pont de Brooklyn'],
+    [/DUMBO/gi, 'DUMBO'], [/Queens/gi, 'Queens'], [/Astoria/gi, 'Astoria'],
+    [/\(Center\)/gi, '(centre)'], [/\(South\)/gi, '(sud)'], [/\(North\)/gi, '(nord)'],
+    [/\(Southeast\)/gi, '(sud-est)'], [/\(Northeast\)/gi, '(nord-est)']
+  ],
+  es: [
+    [/Midtown/gi, 'centro de Manhattan'], [/Lower Manhattan/gi, 'Bajo Manhattan'], [/Times Square/gi, 'Times Square'],
+    [/Soho/gi, 'SoHo'], [/Central Park/gi, 'Central Park'], [/Brooklyn Bridge/gi, 'puente de Brooklyn'],
+    [/DUMBO/gi, 'DUMBO'], [/Queens/gi, 'Queens'], [/Astoria/gi, 'Astoria'],
+    [/\(Center\)/gi, '(centro)'], [/\(South\)/gi, '(sur)'], [/\(North\)/gi, '(norte)'],
+    [/\(Southeast\)/gi, '(sureste)'], [/\(Northeast\)/gi, '(noreste)']
+  ],
+  ja: [
+    [/Midtown/gi, 'マンハッタン中心部'], [/Lower Manhattan/gi, 'ロウアー・マンハッタン'], [/Times Square/gi, 'タイムズスクエア'],
+    [/Soho/gi, 'ソーホー'], [/Central Park/gi, 'セントラルパーク'], [/Brooklyn Bridge/gi, 'ブルックリン橋'],
+    [/DUMBO/gi, 'ダンボ地区'], [/Queens/gi, 'クイーンズ'], [/Astoria/gi, 'アストリア'],
+    [/\(Center\)/gi, '(中心部)'], [/\(South\)/gi, '(南部)'], [/\(North\)/gi, '(北部)'],
+    [/\(Southeast\)/gi, '(南東部)'], [/\(Northeast\)/gi, '(北東部)']
+  ],
+  zh: [
+    [/Midtown/gi, '曼哈顿中城'], [/Lower Manhattan/gi, '曼哈顿下城'], [/Times Square/gi, '时代广场'],
+    [/Soho/gi, '苏豪区'], [/Central Park/gi, '中央公园'], [/Brooklyn Bridge/gi, '布鲁克林大桥'],
+    [/DUMBO/gi, '丹波区'], [/Queens/gi, '皇后区'], [/Astoria/gi, '阿斯托里亚'],
+    [/\(Center\)/gi, '(中心区)'], [/\(South\)/gi, '(南部)'], [/\(North\)/gi, '(北部)'],
+    [/\(Southeast\)/gi, '(东南部)'], [/\(Northeast\)/gi, '(东北部)']
+  ]
+};
+
+function getLocalizedLodgingLabel(nameKo, nameEn, lang = state.lang) {
+  const codeLang = normalizeLanguageCode(lang);
+  let value = cleanUiText(codeLang === 'ko' ? (nameKo || nameEn) : (nameEn || nameKo));
+  if (codeLang !== 'ko' && codeLang !== 'en') value = localizePlaceName(value, codeLang);
+  (LODGING_LABEL_TRANSLATIONS[codeLang] || []).forEach(([pattern, replacement]) => {
+    value = value.replace(pattern, replacement);
+  });
+  return cleanUiText(value);
+}
+
 function getDataLabel(key, lang = state.lang) {
   const labels = DATA_LABELS[normalizeLanguageCode(lang)] || DATA_LABELS.en;
   return cleanUiText(labels[key] || DATA_LABELS.en[key] || key);
@@ -1005,14 +1131,6 @@ function getInlineText(values, lang = state.lang) {
   const codeLang = normalizeLanguageCode(lang);
   if (!values || typeof values !== 'object') return '';
   return cleanUiText(values[codeLang] || values.en || values.ko || '');
-}
-
-function getLocalizedProfileDisplayName(value, lang = state.lang) {
-  const clean = cleanUiText(value || '');
-  const match = clean.match(/^(?:여행자|Traveler|Voyageur|旅行者|Viajero)_(\d+)$/i);
-  if (!match) return clean;
-  const prefix = getInlineText({ ko: '여행자', en: 'Traveler', fr: 'Voyageur', zh: '旅行者', ja: '旅行者', es: 'Viajero' }, lang);
-  return `${prefix}_${match[1]}`;
 }
 
 function localizeLeafletMapControls(map) {
@@ -1031,6 +1149,40 @@ function localizeLeafletMapControls(map) {
     zoomOut.title = zoomOutLabel;
     zoomOut.setAttribute('aria-label', zoomOutLabel);
   }
+}
+
+function formatInlineText(values, replacements = {}, lang = state.lang) {
+  let text = getInlineText(values, lang);
+  Object.entries(replacements).forEach(([key, value]) => {
+    text = text.replaceAll(`{${key}}`, cleanUiText(value));
+  });
+  return cleanUiText(text);
+}
+
+function getRoomSystemMessage(kind, values = {}) {
+  const messages = {
+    welcome: {
+      ko: "[안내] '{name}'님이 만든 동행방입니다. 매너 있는 대화를 부탁드립니다.",
+      en: "[System] Room created by '{name}'. Please be respectful in chat.",
+      fr: "[Système] Salon créé par « {name} ». Merci de rester respectueux.",
+      zh: "[系统] 该同行房由“{name}”创建，请文明交流。",
+      ja: "[システム] 「{name}」さんが作成した同行ルームです。マナーを守って会話してください。",
+      es: "[Sistema] Sala creada por « {name} ». Mantén una conversación respetuosa."
+    },
+    joined: {
+      ko: "{name}님이 동행방에 입장하셨습니다.", en: "{name} joined the companion room.", fr: "{name} a rejoint le salon.", zh: "{name}已加入同行房。", ja: "{name}さんが同行ルームに参加しました。", es: "{name} se unió a la sala."
+    },
+    left: {
+      ko: "[안내] '{name}'님이 퇴장하셨습니다.", en: "[System] '{name}' left the room.", fr: "[Système] « {name} » a quitté le salon.", zh: "[系统]“{name}”已退出房间。", ja: "[システム] 「{name}」さんが退出しました。", es: "[Sistema] « {name} » salió de la sala."
+    },
+    kicked: {
+      ko: "[안내] '{name}'님이 방장에 의해 퇴장되었습니다.", en: "[System] '{name}' was removed by the room creator.", fr: "[Système] « {name} » a été exclu par le créateur.", zh: "[系统]“{name}”已被房主移出。", ja: "[システム] 「{name}」さんが作成者によって退出されました。", es: "[Sistema] El creador retiró a « {name} » de la sala."
+    },
+    sharedCourse: {
+      ko: "[일정 공유] {name}님이 만든 {city} {days}일 코스", en: "[Shared Course] {name}'s {days}-day course for {city}", fr: "[Itinéraire partagé] Parcours de {days} jours à {city}, créé par {name}", zh: "[分享行程] {name}创建的{city}{days}日路线", ja: "[旅程共有] {name}さんが作成した{city}の{days}日コース", es: "[Ruta compartida] Ruta de {days} días por {city}, creada por {name}"
+    }
+  };
+  return formatInlineText(messages[kind] || {}, values);
 }
 
 function formatDayLabel(dayNumber, lang = state.lang) {
@@ -1898,7 +2050,7 @@ function applyEnhancedTranslations() {
   };
 
   Object.entries(languagePatches).forEach(([lang, patch]) => {
-    TRANSLATIONS[lang] = { ...en, ...(TRANSLATIONS[lang] || {}), ...patch };
+    TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
   });
   const supplementalLanguagePatches = {
     fr: {
@@ -1981,11 +2133,203 @@ function applyEnhancedTranslations() {
   Object.entries(supplementalLanguagePatches).forEach(([lang, patch]) => {
     TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
   });
+
+  const strictLanguagePatches = {
+    ko: {
+      room_create_success: '동행 모집방이 생성되었습니다!',
+      room_create_failed: '동행방을 저장하지 못했습니다. 입력 내용을 확인한 뒤 다시 시도해주세요.',
+      room_create_local_only: '동행방을 이 기기에 생성했습니다. 서버 연결이 복구되면 자동으로 동기화됩니다.',
+      room_update_success: '동행 방 정보가 수정되었습니다!',
+      room_update_failed: '동행 방 정보를 저장하지 못했습니다. 다시 시도해주세요.',
+      room_deleted: '동행 모집 글이 삭제되었습니다.',
+      room_full: '정원이 가득 찬 방입니다.',
+      room_left: '동행방을 퇴장했습니다.',
+      room_deleted_by_owner: '방장이 동행 방을 삭제하였습니다.',
+      room_removed_by_owner: '방장에 의해 퇴장되었습니다.',
+      planner_generate_first: '일정을 먼저 생성해주세요.',
+      planner_select_destination: '목적지 도시를 선택해주세요.',
+      profile_choose_image: '이미지 파일을 선택해주세요.',
+      profile_image_too_large: '프로필 사진은 1MB 이하로 선택해주세요.',
+      profile_photo_reset_toast: '프로필 사진을 기본으로 되돌렸습니다.',
+      chat_no_itinerary: '공유할 일정이 없습니다. 코스를 먼저 생성해주세요.',
+      chat_itinerary_shared: '채팅방에 일정이 공유되었습니다.',
+      itinerary_none_to_save: '저장할 일정이 없습니다.',
+      itinerary_saved: '여행 일정이 저장되었습니다.',
+      itinerary_updated: '기존 여행 일정이 업데이트되었습니다.',
+      itinerary_none_to_share: '공유할 일정이 없습니다.',
+      itinerary_delete_confirm: '정말 삭제하시겠습니까?',
+      action_deleted: '삭제되었습니다.',
+      share_link_copied: '🔗 공유 링크가 클립보드에 복사되었습니다!',
+      share_link_failed: '공유 링크 생성에 실패했습니다.',
+      share_link_prompt: '아래 링크를 복사하여 공유하세요:',
+      itinerary_adjusted: '일정이 성공적으로 재조정되었습니다.',
+      itinerary_min_attraction: '하루에 최소 1개 이상의 일반 관광지는 있어야 합니다.',
+      itinerary_place_deleted: '장소가 삭제되었습니다.',
+      itinerary_reordered: '일정 순서가 변경되었습니다.',
+      route_desc: '방문할 도시를 추가하세요. AI가 항공편의 문 앞에서 문 앞까지 걸리는 시간을 포함해 가장 짧은 순서와 교통수단을 추천합니다.',
+      route_add_city: '도시 선택...',
+      route_add_btn: '+ 추가',
+      route_empty_hint: '도시를 2개 이상 추가하세요',
+      route_result_placeholder: '최적 경로를 확인할 수 있습니다',
+      opt_custom_input: '✏️ 직접 입력...',
+      route_analyze_first: '먼저 경로를 분석해주세요.',
+      shared_route_loaded: '공유받은 경로를 불러왔습니다.',
+      shared_itinerary_loaded: '공유받은 일정을 불러왔습니다.',
+      kick_member: '강퇴',
+      shared_course_label: '공유된 여행 코스',
+      load_itinerary: '일정 불러오기',
+      preference_label: '메인 취향',
+      nav_logo: 'WanderSync',
+      profile_mbti: 'MBTI'
+    },
+    en: {
+      room_create_success: 'Companion room created!',
+      room_create_failed: 'The companion room could not be saved. Please review the form and try again.',
+      room_create_local_only: 'The room was created on this device and will sync automatically when the server is available.',
+      room_update_success: 'Room updated successfully!',
+      room_update_failed: 'The room changes could not be saved. Please try again.',
+      room_deleted: 'Companion room deleted.',
+      room_full: 'This room is full.',
+      room_left: 'Left the companion room.',
+      room_deleted_by_owner: 'The room creator has deleted this companion room.',
+      room_removed_by_owner: 'You have been removed from the room by the creator.',
+      planner_generate_first: 'Please generate an itinerary first.',
+      planner_select_destination: 'Please select a destination city.',
+      profile_choose_image: 'Please choose an image file.',
+      profile_image_too_large: 'Please choose a profile photo under 1 MB.',
+      profile_photo_reset_toast: 'Profile photo reset to default.',
+      chat_no_itinerary: 'No itinerary to share. Please generate a course first.',
+      chat_itinerary_shared: 'Itinerary shared in chat.',
+      itinerary_none_to_save: 'No itinerary to save.',
+      itinerary_saved: 'Itinerary saved.',
+      itinerary_updated: 'Saved itinerary updated.',
+      itinerary_none_to_share: 'No itinerary to share.',
+      itinerary_delete_confirm: 'Are you sure you want to delete this trip?',
+      action_deleted: 'Deleted.',
+      share_link_copied: '🔗 Share link copied to clipboard!',
+      share_link_failed: 'Failed to generate share link.',
+      share_link_prompt: 'Copy this link to share:',
+      itinerary_adjusted: 'Itinerary successfully adjusted.',
+      itinerary_min_attraction: 'You must have at least 1 attraction in a day.',
+      itinerary_place_deleted: 'Place deleted.',
+      itinerary_reordered: 'Itinerary reordered.',
+      route_desc: 'Add the cities you plan to visit. AI recommends the fastest order and transport, including door-to-door flight time.',
+      route_add_city: 'Select a city...',
+      route_add_btn: '+ Add',
+      route_empty_hint: 'Add at least 2 cities',
+      route_result_placeholder: 'to get the optimal route',
+      opt_custom_input: '✏️ Enter directly...',
+      route_analyze_first: 'Please analyze the route first.',
+      shared_route_loaded: 'Shared route loaded.',
+      shared_itinerary_loaded: 'Shared itinerary loaded.',
+      kick_member: 'Kick',
+      shared_course_label: 'Shared Course',
+      load_itinerary: 'Load Itinerary',
+      preference_label: 'Preferences',
+      nav_logo: 'WanderSync',
+      profile_mbti: 'MBTI'
+    },
+    fr: {
+      age_20s: '20–29 ans', age_30s: '30–39 ans', age_40s: '40–49 ans', age_50s: '50–59 ans', age_60s: '60 ans et plus', age_any: 'Tous les âges',
+      alcohol_none: 'Sans alcool', alcohol_social: 'Occasionnellement', alcohol_yes: 'Apprécie boire',
+      btn_apply: 'Appliquer', chat_joined_notice: 'A rejoint le salon.', chat_room_default_title: 'Discussion entre compagnons', chat_share_course_title: 'Partager mon itinéraire', chat_title: 'Salon de discussion', city_request_sent: 'La demande d’ajout de ville a été envoyée.',
+      comp_room_age_limit: 'Âge souhaité', comp_room_closed: 'Fermée', comp_room_details: 'Détails', comp_room_filters: 'Filtres', comp_room_gender_limit: 'Genre souhaité', comp_room_joined: 'Participant', comp_room_nat_limit: 'Nationalité souhaitée', comp_room_time: 'Horaire', comp_room_verify_badge: 'Profil vérifié',
+      dash_ref_desc: 'Des méthodes de mise en relation éprouvées sont utilisées pour proposer des compagnons adaptés.', dash_ref_title: 'Communauté de voyage', dash_stat_matches: 'Taux de mise en relation : 94,2 %', dash_stat_users: '124 000 utilisateurs cumulés', dash_stat_verified: 'Profil prêt',
+      duration_1: '1 jour', duration_2: '2 jours', duration_3: '3 jours', duration_4: '4 jours', duration_5: '5 jours', duration_6: '6 jours', duration_7: '7 jours',
+      gender_any: 'Sans préférence', gender_female: 'Femme', gender_male: 'Homme',
+      member_no_info: 'Aucune information supplémentaire', member_profile_btn: 'Voir le profil', member_profile_title: 'Profil du participant',
+      modal_any: 'Sans préférence', modal_room_age: 'Tranche d’âge souhaitée', modal_room_alcohol: 'Préférence pour l’alcool', modal_room_any: 'Sans préférence', modal_room_language: 'Langues souhaitées', modal_room_nationality: 'Nationalité souhaitée', modal_room_pref: 'Style de voyage', modal_room_smoking: 'Compatibilité tabac',
+      nat_any: 'Toute nationalité', nat_foreign: 'Voyageur international', nat_korean: 'Coréen', nav_logo: 'WanderSync', pdf_download_started: 'Le téléchargement du PDF a commencé.',
+      planner_day: 'Jour', planner_dest_placeholder: 'Sélectionnez une ville', planner_generating: 'L’IA prépare le meilleur itinéraire…',
+      profile_gender: 'Genre', profile_mbti: 'MBTI', profile_nationality: 'Nationalité', profile_saved_toast: 'Profil enregistré.', profile_sns: 'Réseau social', profile_unverified: 'Non vérifié', profile_verified: 'Vérifié',
+      rain_regen_btn: 'Adapter la journée sélectionnée aux lieux couverts', rain_regen_done: 'La journée sélectionnée a été réorganisée avec des lieux couverts.', rain_regen_label: 'Adapter en cas de pluie', rain_regen_no_candidates: 'Il n’y a pas assez de lieux couverts dans cette ville.', rain_regen_no_course: 'Créez d’abord un itinéraire.', regen_input_placeholder: 'Décrivez le changement souhaité…',
+      room_max_10: '10 personnes', room_max_2: '2 personnes', room_max_3: '3 personnes', room_max_4: '4 personnes', room_max_6: '6 personnes', room_max_8: '8 personnes', room_max_unlimited: 'Sans limite',
+      smoking_no: 'Non-fumeur', smoking_ok: 'Sans préférence', smoking_yes: 'Fumeur',
+      room_create_success: 'Le salon de compagnons a été créé !', room_create_failed: 'Impossible d’enregistrer le salon. Vérifiez le formulaire et réessayez.', room_create_local_only: 'Le salon a été créé sur cet appareil et sera synchronisé automatiquement dès que le serveur sera disponible.', room_update_success: 'Le salon a été mis à jour !', room_update_failed: 'Impossible d’enregistrer les modifications. Réessayez.', room_deleted: 'Le salon a été supprimé.', room_full: 'Ce salon est complet.', room_left: 'Vous avez quitté le salon.', room_deleted_by_owner: 'Le créateur a supprimé ce salon.', room_removed_by_owner: 'Le créateur vous a retiré du salon.',
+      planner_generate_first: 'Créez d’abord un itinéraire.', planner_select_destination: 'Sélectionnez une ville de destination.', profile_choose_image: 'Choisissez un fichier image.', profile_image_too_large: 'Choisissez une photo de profil de moins de 1 Mo.', profile_photo_reset_toast: 'La photo de profil par défaut a été rétablie.', chat_no_itinerary: 'Aucun itinéraire à partager. Créez d’abord un parcours.', chat_itinerary_shared: 'L’itinéraire a été partagé dans le salon.',
+      itinerary_none_to_save: 'Aucun itinéraire à enregistrer.', itinerary_saved: 'Itinéraire enregistré.', itinerary_updated: 'Itinéraire enregistré mis à jour.', itinerary_none_to_share: 'Aucun itinéraire à partager.', itinerary_delete_confirm: 'Voulez-vous vraiment supprimer ce voyage ?', action_deleted: 'Supprimé.', share_link_copied: '🔗 Le lien de partage a été copié !', share_link_failed: 'Impossible de créer le lien de partage.', share_link_prompt: 'Copiez ce lien pour le partager :', itinerary_adjusted: 'L’itinéraire a été réorganisé.', itinerary_min_attraction: 'Chaque journée doit contenir au moins une visite.', itinerary_place_deleted: 'Lieu supprimé.', itinerary_reordered: 'Ordre de l’itinéraire modifié.', route_desc: "Ajoutez les villes à visiter. L'IA recommande l'ordre le plus court et les transports, avec les temps de vol porte-à-porte.", route_add_city: 'Choisir une ville...', route_add_btn: '+ Ajouter', route_empty_hint: 'Ajoutez au moins 2 villes', route_result_placeholder: 'pour obtenir le trajet optimal', opt_custom_input: '✏️ Saisie directe...', route_analyze_first: 'Analysez d’abord le trajet.', shared_route_loaded: 'Trajet partagé chargé.', shared_itinerary_loaded: 'Itinéraire partagé chargé.', kick_member: 'Exclure', shared_course_label: 'Itinéraire partagé', load_itinerary: 'Charger l’itinéraire', preference_label: 'Préférences'
+    },
+    zh: {
+      age_20s: '20多岁', age_30s: '30多岁', age_40s: '40多岁', age_50s: '50多岁', age_60s: '60岁以上', age_any: '年龄不限',
+      alcohol_none: '不饮酒', alcohol_social: '偶尔饮酒', alcohol_yes: '喜欢饮酒',
+      btn_apply: '应用', chat_joined_notice: '已加入聊天房。', chat_room_default_title: '同行聊天房', chat_share_course_title: '分享我的行程', chat_title: '同行聊天房', city_request_sent: '城市添加请求已发送。',
+      comp_room_age_limit: '期望年龄', comp_room_closed: '已结束', comp_room_details: '详细信息', comp_room_filters: '筛选', comp_room_gender_limit: '期望性别', comp_room_joined: '已参加', comp_room_nat_limit: '期望国籍', comp_room_time: '时间', comp_room_verify_badge: '资料已验证',
+      dash_ref_desc: '结合成熟的旅行同行匹配经验，为您推荐合适的同行者。', dash_ref_title: '旅行社区', dash_stat_matches: '匹配成功率 94.2%', dash_stat_users: '累计用户 12.4 万', dash_stat_verified: '资料已准备',
+      duration_1: '1天', duration_2: '2天', duration_3: '3天', duration_4: '4天', duration_5: '5天', duration_6: '6天', duration_7: '7天',
+      gender_any: '性别不限', gender_female: '女性', gender_male: '男性',
+      member_no_info: '暂无更多资料', member_profile_btn: '查看资料', member_profile_title: '参与者资料',
+      modal_any: '不限', modal_room_age: '期望年龄段', modal_room_alcohol: '饮酒偏好', modal_room_any: '不限', modal_room_language: '期望语言', modal_room_nationality: '期望国籍', modal_room_pref: '旅行风格', modal_room_smoking: '吸烟偏好',
+      nat_any: '国籍不限', nat_foreign: '国际旅行者', nat_korean: '韩国人', nav_logo: 'WanderSync', pdf_download_started: 'PDF下载已开始。',
+      planner_day: '第几天', planner_dest_placeholder: '请选择城市', planner_generating: 'AI正在生成最佳路线…',
+      profile_gender: '性别', profile_mbti: 'MBTI', profile_nationality: '国籍', profile_saved_toast: '资料已保存。', profile_sns: '社交账号', profile_unverified: '未验证', profile_verified: '已验证',
+      rain_regen_btn: '将所选日期改为室内行程', rain_regen_done: '所选日期已调整为适合雨天的室内行程。', rain_regen_label: '雨天室内调整', rain_regen_no_candidates: '该城市的室内地点不足。', rain_regen_no_course: '请先生成行程。', regen_input_placeholder: '请输入希望调整的内容…',
+      room_max_10: '最多10人', room_max_2: '最多2人', room_max_3: '最多3人', room_max_4: '最多4人', room_max_6: '最多6人', room_max_8: '最多8人', room_max_unlimited: '人数不限',
+      smoking_no: '不吸烟', smoking_ok: '不限', smoking_yes: '吸烟',
+      room_create_success: '同行房已创建！', room_create_failed: '无法保存同行房。请检查填写内容后重试。', room_create_local_only: '同行房已保存在此设备上，服务器恢复后会自动同步。', room_update_success: '同行房已更新！', room_update_failed: '无法保存修改，请重试。', room_deleted: '同行房已删除。', room_full: '该房间人数已满。', room_left: '您已退出同行房。', room_deleted_by_owner: '房主已删除该同行房。', room_removed_by_owner: '房主已将您移出同行房。',
+      planner_generate_first: '请先生成行程。', planner_select_destination: '请选择目的地城市。', profile_choose_image: '请选择图片文件。', profile_image_too_large: '请选择小于1MB的头像图片。', profile_photo_reset_toast: '头像已恢复为默认图片。', chat_no_itinerary: '没有可分享的行程，请先生成路线。', chat_itinerary_shared: '行程已分享到聊天房。',
+      itinerary_none_to_save: '没有可保存的行程。', itinerary_saved: '行程已保存。', itinerary_updated: '已更新保存的行程。', itinerary_none_to_share: '没有可分享的行程。', itinerary_delete_confirm: '确定要删除这个行程吗？', action_deleted: '已删除。', share_link_copied: '🔗 分享链接已复制！', share_link_failed: '无法生成分享链接。', share_link_prompt: '复制以下链接进行分享：', itinerary_adjusted: '行程已成功调整。', itinerary_min_attraction: '每天至少需要保留一个普通景点。', itinerary_place_deleted: '地点已删除。', itinerary_reordered: '行程顺序已更新。', route_desc: '添加要访问的城市。AI会推荐用时最短的顺序和交通方式，并计算航班门到门总时间。', route_add_city: '选择城市...', route_add_btn: '+ 添加', route_empty_hint: '请至少添加2个城市', route_result_placeholder: '以生成最佳路线', opt_custom_input: '✏️ 直接输入...', route_analyze_first: '请先分析路线。', shared_route_loaded: '已加载分享路线。', shared_itinerary_loaded: '已加载分享行程。', kick_member: '移出', shared_course_label: '分享的旅行行程', load_itinerary: '加载行程', preference_label: '偏好'
+    },
+    ja: {
+      age_20s: '20代', age_30s: '30代', age_40s: '40代', age_50s: '50代', age_60s: '60代以上', age_any: '年齢不問',
+      alcohol_none: '飲まない', alcohol_social: '時々飲む', alcohol_yes: 'お酒が好き',
+      btn_apply: '適用', chat_joined_notice: 'チャットルームに参加しました。', chat_room_default_title: '同行チャットルーム', chat_share_course_title: '自分の旅程を共有', chat_title: '同行チャットルーム', city_request_sent: '都市追加のリクエストを送信しました。',
+      comp_room_age_limit: '希望年齢', comp_room_closed: '募集終了', comp_room_details: '詳細', comp_room_filters: '絞り込み', comp_room_gender_limit: '希望する性別', comp_room_joined: '参加済み', comp_room_nat_limit: '希望する国籍', comp_room_time: '時間', comp_room_verify_badge: 'プロフィール確認済み',
+      dash_ref_desc: '旅行同行サービスの実績あるマッチング方法を活用し、相性のよい同行者を提案します。', dash_ref_title: '旅行コミュニティ', dash_stat_matches: 'マッチング成功率 94.2%', dash_stat_users: '累計利用者 12.4万人', dash_stat_verified: 'プロフィール準備完了',
+      duration_1: '1日', duration_2: '2日', duration_3: '3日', duration_4: '4日', duration_5: '5日', duration_6: '6日', duration_7: '7日',
+      gender_any: '性別不問', gender_female: '女性', gender_male: '男性',
+      member_no_info: '追加プロフィール情報なし', member_profile_btn: 'プロフィールを見る', member_profile_title: '参加者プロフィール',
+      modal_any: '指定なし', modal_room_age: '希望年齢層', modal_room_alcohol: '飲酒の希望', modal_room_any: '指定なし', modal_room_language: '希望言語', modal_room_nationality: '希望する国籍', modal_room_pref: '旅行スタイル', modal_room_smoking: '喫煙の相性',
+      nat_any: '国籍不問', nat_foreign: '海外旅行者', nat_korean: '韓国人', nav_logo: 'WanderSync', pdf_download_started: 'PDFのダウンロードを開始しました。',
+      planner_day: '日目', planner_dest_placeholder: '都市を選択', planner_generating: 'AIが最適なルートを作成しています…',
+      profile_gender: '性別', profile_mbti: 'MBTI', profile_nationality: '国籍', profile_saved_toast: 'プロフィールを保存しました。', profile_sns: 'SNS', profile_unverified: '未確認', profile_verified: '確認済み',
+      rain_regen_btn: '選択した日を屋内中心に変更', rain_regen_done: '選択した日を雨天向けの屋内コースに調整しました。', rain_regen_label: '雨天時の屋内コース調整', rain_regen_no_candidates: 'この都市には屋内候補が十分ありません。', rain_regen_no_course: '先に旅程を作成してください。', regen_input_placeholder: '変更したい内容を入力してください…',
+      room_max_10: '最大10人', room_max_2: '最大2人', room_max_3: '最大3人', room_max_4: '最大4人', room_max_6: '最大6人', room_max_8: '最大8人', room_max_unlimited: '人数制限なし',
+      smoking_no: '非喫煙', smoking_ok: '指定なし', smoking_yes: '喫煙',
+      room_create_success: '同行ルームを作成しました！', room_create_failed: '同行ルームを保存できませんでした。入力内容を確認して再試行してください。', room_create_local_only: '同行ルームをこの端末に作成しました。サーバー復旧後に自動同期されます。', room_update_success: '同行ルームを更新しました！', room_update_failed: '変更を保存できませんでした。再試行してください。', room_deleted: '同行ルームを削除しました。', room_full: 'このルームは満員です。', room_left: '同行ルームから退出しました。', room_deleted_by_owner: '作成者が同行ルームを削除しました。', room_removed_by_owner: '作成者によって同行ルームから退出されました。',
+      planner_generate_first: '先に旅程を作成してください。', planner_select_destination: '目的地の都市を選択してください。', profile_choose_image: '画像ファイルを選択してください。', profile_image_too_large: '1MB未満のプロフィール画像を選択してください。', profile_photo_reset_toast: 'プロフィール画像を初期状態に戻しました。', chat_no_itinerary: '共有できる旅程がありません。先にコースを作成してください。', chat_itinerary_shared: '旅程をチャットルームに共有しました。',
+      itinerary_none_to_save: '保存できる旅程がありません。', itinerary_saved: '旅程を保存しました。', itinerary_updated: '保存済みの旅程を更新しました。', itinerary_none_to_share: '共有できる旅程がありません。', itinerary_delete_confirm: 'この旅行を削除しますか？', action_deleted: '削除しました。', share_link_copied: '🔗 共有リンクをコピーしました！', share_link_failed: '共有リンクを作成できませんでした。', share_link_prompt: '次のリンクをコピーして共有してください：', itinerary_adjusted: '旅程を再調整しました。', itinerary_min_attraction: '1日につき少なくとも1件の観光地が必要です。', itinerary_place_deleted: '場所を削除しました。', itinerary_reordered: '旅程の順序を変更しました。', route_desc: '訪問する都市を追加してください。AIが最短時間の順序と交通手段を、航空便のドアツードア時間を含めて提案します。', route_add_city: '都市を選択...', route_add_btn: '+ 追加', route_empty_hint: '2都市以上を追加してください', route_result_placeholder: '最適ルートを生成します', opt_custom_input: '✏️ 直接入力...', route_analyze_first: '先にルートを分析してください。', shared_route_loaded: '共有ルートを読み込みました。', shared_itinerary_loaded: '共有旅程を読み込みました。', kick_member: '退出させる', shared_course_label: '共有された旅行コース', load_itinerary: '旅程を読み込む', preference_label: '好み'
+    },
+    es: {
+      age_20s: '20–29 años', age_30s: '30–39 años', age_40s: '40–49 años', age_50s: '50–59 años', age_60s: '60 años o más', age_any: 'Cualquier edad',
+      alcohol_none: 'Sin alcohol', alcohol_social: 'Ocasionalmente', alcohol_yes: 'Le gusta beber',
+      btn_apply: 'Aplicar', chat_joined_notice: 'Se unió a la sala.', chat_room_default_title: 'Chat de compañeros', chat_share_course_title: 'Compartir mi itinerario', chat_title: 'Sala de chat', city_request_sent: 'La solicitud para añadir la ciudad fue enviada.',
+      comp_room_age_limit: 'Edad preferida', comp_room_closed: 'Cerrada', comp_room_details: 'Detalles', comp_room_filters: 'Filtros', comp_room_gender_limit: 'Género preferido', comp_room_joined: 'Participando', comp_room_nat_limit: 'Nacionalidad preferida', comp_room_time: 'Horario', comp_room_verify_badge: 'Perfil verificado',
+      dash_ref_desc: 'Usamos métodos contrastados de comunidades de viaje para recomendar compañeros compatibles.', dash_ref_title: 'Comunidad de viajes', dash_stat_matches: 'Tasa de coincidencia: 94,2 %', dash_stat_users: '124 000 usuarios acumulados', dash_stat_verified: 'Perfil preparado',
+      duration_1: '1 día', duration_2: '2 días', duration_3: '3 días', duration_4: '4 días', duration_5: '5 días', duration_6: '6 días', duration_7: '7 días',
+      gender_any: 'Cualquier género', gender_female: 'Mujer', gender_male: 'Hombre',
+      member_no_info: 'Sin información adicional', member_profile_btn: 'Ver perfil', member_profile_title: 'Perfil del participante',
+      modal_any: 'Sin preferencia', modal_room_age: 'Rango de edad preferido', modal_room_alcohol: 'Preferencia de alcohol', modal_room_any: 'Sin preferencia', modal_room_language: 'Idiomas preferidos', modal_room_nationality: 'Nacionalidad preferida', modal_room_pref: 'Estilo de viaje', modal_room_smoking: 'Compatibilidad con tabaco',
+      nat_any: 'Cualquier nacionalidad', nat_foreign: 'Viajero internacional', nat_korean: 'Coreano', nav_logo: 'WanderSync', pdf_download_started: 'La descarga del PDF ha comenzado.',
+      planner_day: 'Día', planner_dest_placeholder: 'Selecciona una ciudad', planner_generating: 'La IA está creando la mejor ruta…',
+      profile_gender: 'Género', profile_mbti: 'MBTI', profile_nationality: 'Nacionalidad', profile_saved_toast: 'Perfil guardado.', profile_sns: 'Red social', profile_unverified: 'Sin verificar', profile_verified: 'Verificado',
+      rain_regen_btn: 'Convertir el día seleccionado en ruta interior', rain_regen_done: 'El día seleccionado se reorganizó con lugares interiores.', rain_regen_label: 'Ajuste para días de lluvia', rain_regen_no_candidates: 'No hay suficientes lugares interiores en esta ciudad.', rain_regen_no_course: 'Primero genera un itinerario.', regen_input_placeholder: 'Describe el cambio que deseas…',
+      room_max_10: 'Máximo 10 personas', room_max_2: 'Máximo 2 personas', room_max_3: 'Máximo 3 personas', room_max_4: 'Máximo 4 personas', room_max_6: 'Máximo 6 personas', room_max_8: 'Máximo 8 personas', room_max_unlimited: 'Sin límite',
+      smoking_no: 'No fumador', smoking_ok: 'Sin preferencia', smoking_yes: 'Fumador',
+      room_create_success: '¡Sala de compañeros creada!', room_create_failed: 'No se pudo guardar la sala. Revisa el formulario e inténtalo de nuevo.', room_create_local_only: 'La sala se creó en este dispositivo y se sincronizará automáticamente cuando el servidor esté disponible.', room_update_success: '¡Sala actualizada!', room_update_failed: 'No se pudieron guardar los cambios. Inténtalo de nuevo.', room_deleted: 'Sala eliminada.', room_full: 'Esta sala está llena.', room_left: 'Has salido de la sala.', room_deleted_by_owner: 'El creador eliminó esta sala.', room_removed_by_owner: 'El creador te retiró de la sala.',
+      planner_generate_first: 'Primero genera un itinerario.', planner_select_destination: 'Selecciona una ciudad de destino.', profile_choose_image: 'Selecciona un archivo de imagen.', profile_image_too_large: 'Selecciona una foto de perfil de menos de 1 MB.', profile_photo_reset_toast: 'La foto de perfil volvió a la imagen predeterminada.', chat_no_itinerary: 'No hay itinerario para compartir. Primero genera una ruta.', chat_itinerary_shared: 'El itinerario se compartió en el chat.',
+      itinerary_none_to_save: 'No hay itinerario para guardar.', itinerary_saved: 'Itinerario guardado.', itinerary_updated: 'Itinerario guardado actualizado.', itinerary_none_to_share: 'No hay itinerario para compartir.', itinerary_delete_confirm: '¿Seguro que quieres eliminar este viaje?', action_deleted: 'Eliminado.', share_link_copied: '🔗 ¡Enlace de compartir copiado!', share_link_failed: 'No se pudo crear el enlace de compartir.', share_link_prompt: 'Copia este enlace para compartir:', itinerary_adjusted: 'El itinerario se ajustó correctamente.', itinerary_min_attraction: 'Cada día debe contener al menos una atracción.', itinerary_place_deleted: 'Lugar eliminado.', itinerary_reordered: 'Orden del itinerario actualizado.', route_desc: 'Añade las ciudades que visitarás. La IA recomienda el orden más rápido y los transportes, incluido el tiempo total puerta a puerta de los vuelos.', route_add_city: 'Seleccionar ciudad...', route_add_btn: '+ Añadir', route_empty_hint: 'Añade al menos 2 ciudades', route_result_placeholder: 'para obtener la ruta óptima', opt_custom_input: '✏️ Entrada directa...', route_analyze_first: 'Primero analiza la ruta.', shared_route_loaded: 'Ruta compartida cargada.', shared_itinerary_loaded: 'Itinerario compartido cargado.', kick_member: 'Expulsar', shared_course_label: 'Ruta compartida', load_itinerary: 'Cargar itinerario', preference_label: 'Preferencias'
+    }
+  };
+  Object.entries(strictLanguagePatches).forEach(([lang, patch]) => {
+    TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
+  });
   Object.keys(TRANSLATIONS).forEach(lang => {
     const table = TRANSLATIONS[lang];
     if (!table || typeof table !== 'object') return;
     Object.keys(en).forEach(key => {
-      if (table[key] === undefined) table[key] = en[key];
+      if (table[key] !== undefined) return;
+      if (lang === 'en') {
+        table[key] = en[key];
+        return;
+      }
+      const localized = localizeRuntimeText(en[key]);
+      if (localized !== en[key]) {
+        table[key] = localized;
+        return;
+      }
+      const missingLabels = { ko: '표시할 수 없는 문구', fr: 'Libellé indisponible', zh: '文本暂不可用', ja: '表示できない文言', es: 'Texto no disponible' };
+      table[key] = missingLabels[lang] || key;
+      console.warn(`Missing ${lang} translation for key: ${key}`);
     });
     Object.keys(table).forEach(key => {
       if (typeof table[key] === 'string') table[key] = cleanUiText(table[key]);
@@ -2126,6 +2470,26 @@ function normalizeRoomRecord(room) {
     normalized.memberProfiles[creatorName] = getPublicProfileSnapshot(normalized.creator);
   }
   return normalized;
+}
+
+
+function mergeRemoteRoomsWithPending(remoteRooms, localRooms = state.rooms) {
+  const remoteById = new Map((remoteRooms || []).filter(Boolean).map(room => {
+    const normalized = normalizeRoomRecord(room);
+    normalized.pendingSync = false;
+    return [String(normalized.id), normalized];
+  }));
+  (localRooms || []).filter(room => room && room.pendingSync).forEach(room => {
+    const key = String(room.id);
+    if (!remoteById.has(key)) remoteById.set(key, normalizeRoomRecord(room));
+  });
+  return Array.from(remoteById.values());
+}
+
+function stripRoomSyncMetadata(room) {
+  const cleanRoom = { ...room };
+  delete cleanRoom.pendingSync;
+  return cleanRoom;
 }
 
 function mergeRemotePayload(localPayload, remotePayload, options = {}) {
@@ -2311,7 +2675,7 @@ async function pullFromRemote() {
   try {
     const data = await fetchRemotePayload();
     if (data && Array.isArray(data.rooms)) {
-      state.rooms = data.rooms.map(normalizeRoomRecord);
+      state.rooms = mergeRemoteRoomsWithPending(data.rooms, state.rooms);
       state.chatLogs = mergeChatLogs(state.chatLogs, data.chatLogs || {});
       state.cityRequests = Array.isArray(data.cityRequests) ? data.cityRequests : [];
       repairStateMojibake();
@@ -2325,7 +2689,7 @@ async function pullFromRemote() {
           if (state.currentView === 'chat') {
             state.currentView = 'companions';
             updateView();
-            showToast(state.lang === 'ko' ? '방장이 동행 방을 삭제하였습니다.' : 'The room creator has deleted this companion room.');
+            showToast(getText('room_deleted_by_owner'));
           }
         } else if (joinedRoom.joinedUsers && !joinedRoom.joinedUsers.includes(state.activeProfile.name)) {
           // User was kicked from the room
@@ -2333,7 +2697,7 @@ async function pullFromRemote() {
           if (state.currentView === 'chat') {
             state.currentView = 'companions';
             updateView();
-            showToast(state.lang === 'ko' ? '방장에 의해 퇴장되었습니다.' : 'You have been removed from the room by the creator.');
+            showToast(getText('room_removed_by_owner'));
           }
         }
       }
@@ -2360,7 +2724,7 @@ async function pushToRemoteNow(options = {}) {
   try {
     repairStateMojibake();
     const localPayload = {
-      rooms: state.rooms,
+      rooms: state.rooms.map(stripRoomSyncMetadata),
       chatLogs: state.chatLogs,
       cityRequests: state.cityRequests || []
     };
@@ -2382,7 +2746,7 @@ async function pushToRemoteNow(options = {}) {
       })
     });
     if (!res.ok) throw new Error("HTTP error " + res.status);
-    state.rooms = payload.rooms.map(normalizeRoomRecord);
+    state.rooms = payload.rooms.map(room => ({ ...normalizeRoomRecord(room), pendingSync: false }));
     state.chatLogs = mergeChatLogs(state.chatLogs, payload.chatLogs || {});
     state.cityRequests = Array.isArray(payload.cityRequests) ? payload.cityRequests : [];
     repairStateMojibake();
@@ -2605,7 +2969,7 @@ function init() {
         saveToLocalStorage();
         updateView();
         
-        showToast(state.lang === 'ko' ? '공유받은 경로를 불러왔습니다.' : 'Shared route loaded.');
+        showToast(getText('shared_route_loaded'));
       } else if (sharedCourse && sharedCourse.days && (sharedCourse.cityName || sharedCourse.cityId)) {
         normalizeCourseMetadata(sharedCourse);
         state.activeCourse = sharedCourse;
@@ -2622,7 +2986,7 @@ function init() {
         updateView();
         renderItinerary(state.activeCourse);
         
-        showToast(state.lang === 'ko' ? '공유받은 일정을 로드했습니다.' : 'Shared itinerary loaded.');
+        showToast(getText('shared_itinerary_loaded'));
       }
     } catch (e) {
       console.error("Failed to decode shared itinerary:", e);
@@ -2670,7 +3034,7 @@ function init() {
           saveToLocalStorage();
           // Render the shared itinerary immediately
           renderItinerary(state.activeCourse);
-          showToast(state.lang === 'ko' ? '공유받은 일정을 로드했습니다.' : 'Shared itinerary loaded.');
+          showToast(getText('shared_itinerary_loaded'));
         }
       } catch(e) {
         console.error('Failed to parse itinerary hash in init:', e);
@@ -2704,9 +3068,7 @@ function init() {
       state.rooms = [...MOCK_COMPANION_ROOMS];
       state.chatLogs = {};
       state.rooms.forEach(room => {
-        const welcomeMsg = state.lang === 'ko' 
-          ? `[안내] '${room.creator.name}'님이 만든 동행방입니다. 매너 있는 대화를 부탁드립니다.`
-          : `[System] Room created by '${room.creator.name}'. Please be respectful in chat.`;
+        const welcomeMsg = getRoomSystemMessage('welcome', { name: room.creator.name });
         
         state.chatLogs[room.id] = [
           createMessageObject({ text: welcomeMsg, system: true })
@@ -3017,9 +3379,7 @@ function loadFromLocalStorage() {
     // Populate default chat logs
     state.chatLogs = {};
     state.rooms.forEach(room => {
-      const welcomeMsg = state.lang === 'ko' 
-        ? `[안내] '${room.creator.name}'님이 만든 동행방입니다. 매너 있는 대화를 부탁드립니다.`
-        : `[System] Room created by '${room.creator.name}'. Please be respectful in chat.`;
+      const welcomeMsg = getRoomSystemMessage('welcome', { name: room.creator.name });
       
       state.chatLogs[room.id] = [
         createMessageObject({ text: welcomeMsg, system: true })
@@ -3173,6 +3533,7 @@ function setupUIStrings() {
   state.lang = normalizeLanguageCode(state.lang);
   ensureEnhancedControls();
   localizeLanguageChoiceChips();
+  updateProfileLanguageControlLabels(state.lang);
   document.documentElement.lang = state.lang;
   document.title = getInlineText({
     ko: 'Together - AI 여행 코스 및 동행 매칭',
@@ -3208,7 +3569,7 @@ function setupUIStrings() {
   updateLanguageControl();
 
   // Update header widget
-  const displayName = getLocalizedProfileDisplayName(state.activeProfile.name);
+  const displayName = getLocalizedProfileDisplayName(state.activeProfile, state.lang);
   document.getElementById('headerProfileName').textContent = displayName;
   const profileNameInput = document.getElementById('profileName');
   if (profileNameInput && /^(?:여행자|Traveler|Voyageur|旅行者|Viajero)_\d+$/i.test(profileNameInput.value || '')) {
@@ -3527,9 +3888,14 @@ function notifyAdminCityRequest(request) {
   };
   notifications.unshift(record);
   safeSetLocalStorage('wander_admin_city_notifications', JSON.stringify(notifications.slice(0, 100)));
-  const message = state.lang === 'ko'
-    ? `\uAD00\uB9AC\uC790 \uC54C\uB9BC: ${request.cityName} \uB3C4\uC2DC \uCD94\uAC00 \uC694\uCCAD\uC774 \uB4E4\uC5B4\uC654\uC2B5\uB2C8\uB2E4.`
-    : `Admin alert: ${request.cityName} city support was requested.`;
+  const message = formatInlineText({
+    ko: '관리자 알림: {city} 도시 추가 요청이 들어왔습니다.',
+    en: 'Admin alert: city support was requested for {city}.',
+    fr: 'Alerte administrateur : une demande a été envoyée pour {city}.',
+    zh: '管理员提醒：收到添加{city}的请求。',
+    ja: '管理者通知：{city}の追加リクエストが届きました。',
+    es: 'Aviso de administración: se solicitó añadir {city}.'
+  }, { city: request.cityName });
   showToast(message);
   window.dispatchEvent(new CustomEvent('wander:admin-city-request', { detail: record }));
   if (!window.__wanderSuppressAdminRequestAlert) {
@@ -3780,7 +4146,7 @@ function updateRainyDaySelector() {
   if (!days.length) {
     const opt = document.createElement('option');
     opt.value = '';
-    opt.textContent = state.lang === 'ko' ? '\uC77C\uC815 \uC0DD\uC131 \uD6C4 \uC120\uD0DD' : 'Generate an itinerary first';
+    opt.textContent = getText('planner_generate_first');
     select.appendChild(opt);
     select.disabled = true;
     return;
@@ -4088,7 +4454,7 @@ function clearPlannerResultForDraft() {
   if (timeline) {
     timeline.innerHTML = `
       <div style="padding: 24px; text-align: center; color: var(--text-muted); border: 1px dashed var(--border-color); border-radius: 12px;">
-        ${state.lang === 'ko' ? '도시와 여행 조건을 선택한 뒤 AI 맞춤 코스를 생성해주세요.' : 'Choose a city and travel settings, then generate an AI itinerary.'}
+        ${getInlineText({ ko: '도시와 여행 조건을 선택한 뒤 AI 맞춤 코스를 생성해주세요.', en: 'Choose a city and travel settings, then generate an AI itinerary.', fr: 'Choisissez une ville et vos préférences, puis créez un itinéraire IA.', zh: '请选择城市和旅行条件，然后生成AI行程。', ja: '都市と旅行条件を選び、AI旅程を作成してください。', es: 'Elige una ciudad y las condiciones del viaje, y genera un itinerario con IA.' })}
       </div>
     `;
   }
@@ -5806,7 +6172,7 @@ function setupEventListeners() {
   document.getElementById('profileForm').addEventListener('submit', (e) => {
     e.preventDefault();
     syncProfileFromInputs(true);
-    showToast(TRANSLATIONS[state.lang].profile_saved_toast);
+    showToast(getText('profile_saved_toast'));
   });
 
   // Auto-save listeners
@@ -5823,12 +6189,12 @@ function setupEventListeners() {
       const file = profilePhotoInput.files && profilePhotoInput.files[0];
       if (!file) return;
       if (!file.type.startsWith('image/')) {
-        showToast(state.lang === 'ko' ? '이미지 파일을 선택해주세요.' : 'Please choose an image file.');
+        showToast(getText('profile_choose_image'));
         profilePhotoInput.value = '';
         return;
       }
       if (file.size > 1024 * 1024) {
-        showToast(state.lang === 'ko' ? '프로필 사진은 1MB 이하로 선택해주세요.' : 'Please choose a profile photo under 1 MB.');
+        showToast(getText('profile_image_too_large'));
         profilePhotoInput.value = '';
         return;
       }
@@ -5851,7 +6217,7 @@ function setupEventListeners() {
       saveToLocalStorage();
       updateProfileAvatarUI();
       syncProfileFromInputs(true);
-      showToast(state.lang === 'ko' ? '\uD504\uB85C\uD544 \uC0AC\uC9C4\uC744 \uAE30\uBCF8\uC73C\uB85C \uB418\uB3CC\uB838\uC2B5\uB2C8\uB2E4.' : 'Profile photo reset to default.');
+      showToast(getText('profile_photo_reset_toast'));
     });
   }
 
@@ -5954,9 +6320,7 @@ function setupEventListeners() {
       }
 
       // Add a system leave notice locally
-      const leaveNotice = state.lang === 'ko'
-        ? `[안내] '${state.activeProfile.name}'님이 퇴장하셨습니다.`
-        : `[System] '${state.activeProfile.name}' has left the room.`;
+      const leaveNotice = getRoomSystemMessage('left', { name: state.activeProfile.name });
       
       if (!state.chatLogs[leavingRoomId]) {
         state.chatLogs[leavingRoomId] = [];
@@ -5968,7 +6332,7 @@ function setupEventListeners() {
     await pushToRemote({ replaceMembershipRoomIds: [leavingRoomId] });
     state.currentView = 'companions';
     updateView();
-    showToast(state.lang === 'ko' ? '동행방을 퇴장했습니다.' : 'Left the companion room.');
+    showToast(getText('room_left'));
   });
 
   // Send message events
@@ -6023,16 +6387,18 @@ function setupEventListeners() {
   if (chatShareBtn) {
     chatShareBtn.addEventListener('click', () => {
       if (!state.activeCourse) {
-        showToast(state.lang === 'ko' ? '공유할 일정이 없습니다. 코스를 먼저 생성해주세요.' : 'No itinerary to share. Please generate a course first.');
+        showToast(getText('chat_no_itinerary'));
         return;
       }
       if (!state.joinedRoomId) return;
       
       const course = normalizeCourseMetadata(state.activeCourse, true);
       const courseDays = getCourseDurationDays(course);
-      const text = state.lang === 'ko'
-        ? `[일정 공유] ${state.activeProfile.name}님이 짠 ${course.cityName} ${courseDays}일 코스`
-        : `[Shared Course] ${state.activeProfile.name}'s ${courseDays}-day course for ${course.cityName}`;
+      const text = getRoomSystemMessage('sharedCourse', {
+        name: state.activeProfile.name,
+        city: course.cityName,
+        days: courseDays
+      });
         
       const msgObj = createMessageObject({
         sender: state.activeProfile.name,
@@ -6052,7 +6418,7 @@ function setupEventListeners() {
         renderChatRoom();
       });
       
-      showToast(state.lang === 'ko' ? '채팅방에 일정이 공유되었습니다.' : 'Itinerary shared in chat.');
+      showToast(getText('chat_itinerary_shared'));
     });
   }
 }
@@ -6253,19 +6619,40 @@ function renderCitySelectors() {
   }
 }
 
+
+const DEFAULT_TRAVELER_LABELS = {
+  ko: '여행자',
+  en: 'Traveler',
+  fr: 'Voyageur',
+  es: 'Viajero',
+  ja: '旅行者',
+  zh: '旅行者'
+};
+
+function getLocalizedProfileDisplayName(profileOrName, lang = state.lang) {
+  const rawName = typeof profileOrName === 'string'
+    ? profileOrName
+    : String((profileOrName && profileOrName.name) || '');
+  const name = repairMojibakeText(rawName).trim();
+  const match = name.match(/^(?:여행자|Traveler|Voyageur|Viajero|旅行者)_(\d+)$/i);
+  if (!match) return name;
+  const codeLang = normalizeLanguageCode(lang);
+  return `${DEFAULT_TRAVELER_LABELS[codeLang] || DEFAULT_TRAVELER_LABELS.en}_${match[1]}`;
+}
+
 function getProfileInitial(profile = state.activeProfile) {
-  const name = getLocalizedProfileDisplayName((profile && profile.name) || '');
+  const name = getLocalizedProfileDisplayName(profile);
   return name ? name.charAt(0).toUpperCase() : '?';
 }
 
 function renderAvatarMarkup(profile, className) {
   const avatar = profile && profile.avatarDataUrl;
-  const label = profile && profile.name ? getLocalizedProfileDisplayName(profile.name) : getText('profile_title');
+  const label = getLocalizedProfileDisplayName(profile) || getText('profile_title');
   const photoLabel = getInlineText({ ko: '프로필 사진', en: 'profile photo', fr: 'photo de profil', zh: '头像', ja: 'プロフィール写真', es: 'foto de perfil' });
   if (avatar) {
-    return `<img class="${className}" src="${avatar}" alt="${label} ${photoLabel}">`;
+    return `<img class="${className}" src="${avatar}" alt="${escapeHtml(`${label} ${photoLabel}`.trim())}">`;
   }
-  return `<div class="${className}">${getProfileInitial(profile)}</div>`;
+  return `<div class="${className}">${escapeHtml(getProfileInitial(profile))}</div>`;
 }
 
 function repairCommonMojibakeLiterals(value) {
@@ -6342,7 +6729,7 @@ function getLocalizedRoomField(room, base) {
       ? [`${base}_en`, base, `${base}_ko`]
       : [`${base}_en`, base, `${base}_ko`];
   for (const key of fallbackKeys) {
-    if (room && room[key]) return localizePlaceName(cleanUiText(room[key]), lang);
+    if (room && room[key]) return cleanUiText(room[key]);
   }
   return '';
 }
@@ -6914,7 +7301,7 @@ function fetchWikiAttractions(cityName, cityId, lang) {
 function generateItinerary() {
   const cityId = document.getElementById('plannerDest').value;
   if (!cityId) {
-    showToast(state.lang === 'ko' ? '목적지 도시를 선택해주세요.' : 'Please select a destination city.');
+    showToast(getText('planner_select_destination'));
     return;
   }
 
@@ -6948,8 +7335,8 @@ function generateItinerary() {
   content.style.display = 'none';
 
   // Use stable city names for external lookup; display uses the localized cityName above.
-  const searchName = matchedCity 
-    ? (state.lang === 'ko' ? matchedCity.name_ko : matchedCity.name_en) 
+  const searchName = matchedCity
+    ? getLocalizedCityField(matchedCity, 'name')
     : cityName;
 
   // Fetch lodging selection
@@ -10620,6 +11007,16 @@ function renderItineraryTimeline(items) {
 }
 
 // --- Companion Board Engine ---
+function activateCompanionCategory(category = 'all') {
+  const buttons = Array.from(document.querySelectorAll('#companionCategoryFilterList .category-tab-btn'));
+  if (!buttons.length) return null;
+  const target = buttons.find(button => button.getAttribute('data-category') === category)
+    || buttons.find(button => button.getAttribute('data-category') === 'all')
+    || buttons[0];
+  buttons.forEach(button => button.classList.toggle('active', button === target));
+  return target ? target.getAttribute('data-category') : null;
+}
+
 function renderCompanionRooms() {
   const grid = document.getElementById('companionRoomCardsGrid');
   grid.innerHTML = '';
@@ -10672,7 +11069,7 @@ function renderCompanionRooms() {
       actionButtonsHTML = `
         <div class="room-actions-grid">
           <button class="btn-primary join-chat-btn" data-room-id="${room.id}" style="flex: 1; justify-content: center; padding: 10px;">
-            <span data-i18n="comp_room_joined">${TRANSLATIONS[state.lang].comp_room_join_btn}</span>
+            <span data-i18n="comp_room_joined">${getText('comp_room_join_btn')}</span>
           </button>
           <button class="edit-room-btn" data-room-id="${room.id}" title="${getText('Edit')}">
             <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
@@ -10685,18 +11082,19 @@ function renderCompanionRooms() {
     } else {
       actionButtonsHTML = `
         <button class="btn-primary join-chat-btn" data-room-id="${room.id}" style="width: 100%; justify-content: center; padding: 10px;">
-          <span data-i18n="comp_room_joined">${TRANSLATIONS[state.lang].comp_room_join_btn}</span>
+          <span data-i18n="comp_room_joined">${getText('comp_room_join_btn')}</span>
         </button>
       `;
     }
 
     const card = document.createElement('div');
     card.className = 'room-card';
+    card.dataset.roomId = String(room.id);
     card.innerHTML = `
       <div>
         <div class="room-header">
           <span class="room-badge">${categoryLabel} (${cityName})</span>
-          <span class="room-status" data-i18n="comp_room_recruiting">${TRANSLATIONS[state.lang].comp_room_recruiting}</span>
+          <span class="room-status" data-i18n="comp_room_recruiting">${getText('comp_room_recruiting')}</span>
         </div>
         
         <h4 class="room-title">${escapeHtml(title)}</h4>
@@ -10708,7 +11106,7 @@ function renderCompanionRooms() {
         <div class="room-creator">
           ${renderAvatarMarkup(room.creator, 'creator-avatar')}
           <div class="creator-info">
-            <h5>${escapeHtml(room.creator.name)}</h5>
+            <h5>${escapeHtml(getLocalizedProfileDisplayName(room.creator))}</h5>
             <p>${escapeHtml(room.creator.mbti)} · ${escapeHtml(getGenderLabel(room.creator.gender))}</p>
             <p class="creator-profile-line">${escapeHtml(getMemberDetailsText(room.creator))}</p>
           </div>
@@ -10717,8 +11115,8 @@ function renderCompanionRooms() {
         <p style="font-size:12px; color:var(--text-muted); margin-bottom: 12px; line-height: 1.4; height: 36px; overflow: hidden;">${escapeHtml(desc)}</p>
         
         <div class="room-tags">
-          <span class="room-tag match">${TRANSLATIONS[state.lang].comp_room_pref_match} ${matchPercentage}%</span>
-          <span class="room-tag">${TRANSLATIONS[state.lang].comp_room_people}: ${room.joinedCount}/${room.maxPeople >= 9999 ? '∞' : room.maxPeople}</span>
+          <span class="room-tag match">${getText('comp_room_pref_match')} ${matchPercentage}%</span>
+          <span class="room-tag">${getText('comp_room_people')}: ${room.joinedCount}/${room.maxPeople >= 9999 ? '∞' : room.maxPeople}</span>
           ${getRoomConditionTagsHTML(room)}
         </div>
       </div>
@@ -10774,9 +11172,7 @@ async function joinCompanionRoom(roomId) {
       room.joinedCount = room.joinedUsers.length;
       
       // Add join notification to chat log
-      const joinMsg = state.lang === 'ko'
-        ? `${state.activeProfile.name}님이 동행방에 입장하셨습니다.`
-        : `${state.activeProfile.name} has joined the chat.`;
+      const joinMsg = getRoomSystemMessage('joined', { name: state.activeProfile.name });
       
       if (!state.chatLogs[roomId]) {
         state.chatLogs[roomId] = [];
@@ -10784,7 +11180,7 @@ async function joinCompanionRoom(roomId) {
       state.chatLogs[roomId].push(createMessageObject({ text: joinMsg, system: true }));
       await pushToRemote();
     } else {
-      showToast(state.lang === 'ko' ? '정원이 가득 찬 방입니다.' : 'This room is full.');
+      showToast(getText('room_full'));
       return;
     }
   }
@@ -10815,7 +11211,7 @@ async function createCompanionRoom(e) {
   const targetLanguage = getMultiSelectValues('modalRoomLanguage') || '';
   const targetSmoking = document.getElementById('modalRoomSmoking')?.value || 'ok';
   const targetAlcohol = document.getElementById('modalRoomAlcohol')?.value || 'ok';
-  const targetNationality = localizeRuntimeText('Any Nationality');
+  const targetNationality = getText('nat_any');
   const preferenceCode = 'healing';
   const desc = document.getElementById('modalRoomDesc').value;
   const roomLang = normalizeLanguageCode(state.lang);
@@ -10863,10 +11259,16 @@ async function createCompanionRoom(e) {
         room.desc_ko = cleanUiText(room.desc_ko) || desc;
       }
 
-      await pushToRemote();
+      const updateSaved = await pushToRemote();
+      const updatedRoomExists = state.rooms.some(candidate => candidate.id === room.id);
+      if (!updateSaved || !updatedRoomExists) {
+        showToast(getText('room_update_failed'));
+        return;
+      }
       closeCreateModal();
+      activateCompanionCategory('all');
       renderCompanionRooms();
-      showToast(state.lang === 'ko' ? '\uB3D9\uD589 \uBC29 \uC815\uBCF4\uAC00 \uC218\uC815\uB418\uC5C8\uC2B5\uB2C8\uB2E4!' : 'Room updated successfully!');
+      showToast(getText('room_update_success'));
     }
     return;
   }
@@ -10912,30 +11314,50 @@ async function createCompanionRoom(e) {
     desc_ko: desc,
     desc_en: desc,
     [roomDescKey]: desc,
-    status: 'recruiting'
+    status: 'recruiting',
+    pendingSync: true
   };
 
   state.rooms.push(newRoom);
   
   // Set up empty chat log for new room
-  const welcomeMsg = state.lang === 'ko'
-    ? `[안내] '${state.activeProfile.name}'님이 만든 동행방입니다. 매너 있는 대화를 부탁드립니다.`
-    : `[System] Room created by '${state.activeProfile.name}'. Please be respectful in chat.`;
+  const welcomeMsg = getRoomSystemMessage('welcome', { name: state.activeProfile.name });
   state.chatLogs[newRoomId] = [
     createMessageObject({ text: welcomeMsg, system: true })
   ];
+  saveToLocalStorage();
 
-  await pushToRemote();
+  const createSaved = await pushToRemote();
+  let createdRoom = state.rooms.find(room => room.id === newRoomId);
+  if (!createdRoom) {
+    createdRoom = normalizeRoomRecord({ ...newRoom, pendingSync: !createSaved });
+    state.rooms.push(createdRoom);
+    state.chatLogs[newRoomId] = state.chatLogs[newRoomId] || [
+      createMessageObject({ text: welcomeMsg, system: true })
+    ];
+  }
+  createdRoom.pendingSync = !createSaved;
+  saveToLocalStorage();
+
   closeCreateModal();
+  activateCompanionCategory('all');
   renderCompanionRooms();
-  
-  showToast(state.lang === 'ko' ? '동행 모집방이 생성되었습니다!' : 'Companion room created!');
+  const createdCard = document.querySelector(`.room-card[data-room-id="${newRoomId}"]`);
+  if (createdCard) {
+    createdCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  showToast(getText(createSaved ? 'room_create_success' : 'room_create_local_only'));
 }
 
 async function deleteCompanionRoom(roomId) {
-  const confirmMsg = state.lang === 'ko' 
-    ? '\uC815\uB9D0\uB85C \uC774 \uB3D9\uD589 \uBAA8\uC9D1 \uAE00\uC744 \uC0AD\uC81C\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?'
-    : 'Are you sure you want to delete this companion room?';
+  const confirmMsg = getInlineText({
+    ko: '정말로 이 동행 모집 글을 삭제하시겠습니까?',
+    en: 'Are you sure you want to delete this companion room?',
+    fr: 'Voulez-vous vraiment supprimer ce salon de compagnons ?',
+    zh: '确定要删除这个同行房吗？',
+    ja: 'この同行募集を削除しますか？',
+    es: '¿Seguro que quieres eliminar esta sala de compañeros?'
+  });
   if (!confirm(confirmMsg)) return;
 
   await pullFromRemote();
@@ -10948,7 +11370,7 @@ async function deleteCompanionRoom(roomId) {
   await pushToRemote({ deletedRoomIds: [roomId] });
   renderCompanionRooms();
   
-  showToast(state.lang === 'ko' ? '동행 모집 글이 삭제되었습니다.' : 'Companion room deleted.');
+  showToast(getText('room_deleted'));
 }
 
 // --- Live Chat Room Simulation ---
@@ -11010,7 +11432,7 @@ function renderChatRoom() {
     const showKick = isCreator && !isMe && !isRoomCreator;
 
     const kickBtn = showKick ? `
-      <button class="kick-member-btn" data-username="${m.name}" title="${localizeRuntimeText('Kick')}">
+      <button class="kick-member-btn" data-username="${m.name}" title="${getText('kick_member')}">
         <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
       </button>` : '';
 
@@ -11114,7 +11536,7 @@ function renderChatMessages(forceScrollToBottom = false) {
             state.currentView = 'routeplanner';
             saveToLocalStorage();
             updateView();
-            showToast(state.lang === 'ko' ? `"${course.cityName}" 공유된 경로를 불러왔습니다.` : `Loaded shared route "${course.cityName}".`);
+            showToast(formatInlineText({ ko: '"{name}" 공유 경로를 불러왔습니다.', en: 'Loaded shared route "{name}".', fr: 'Trajet partagé « {name} » chargé.', zh: '已加载分享路线“{name}”。', ja: '共有ルート「{name}」を読み込みました。', es: 'Ruta compartida « {name} » cargada.' }, { name: course.cityName }));
           } else {
             normalizeCourseMetadata(course);
             state.activeCourse = course;
@@ -11124,7 +11546,7 @@ function renderChatMessages(forceScrollToBottom = false) {
             saveToLocalStorage();
             updateView();
             renderItinerary(state.activeCourse);
-            showToast(state.lang === 'ko' ? `"${course.cityName}" 공유된 일정을 불러왔습니다.` : `Loaded shared "${course.cityName}" itinerary.`);
+            showToast(formatInlineText({ ko: '"{name}" 공유 일정을 불러왔습니다.', en: 'Loaded shared itinerary "{name}".', fr: 'Itinéraire partagé « {name} » chargé.', zh: '已加载分享行程“{name}”。', ja: '共有旅程「{name}」を読み込みました。', es: 'Itinerario compartido « {name} » cargado.' }, { name: course.cityName }));
           }
         });
       }
@@ -11192,7 +11614,7 @@ function triggerSimulatedReply(userText) {
       // Check if user is still in the same room
       if (state.joinedRoomId !== roomId) return;
 
-      const replyText = state.lang === 'ko' ? resp.message_ko : resp.message_en;
+      const replyText = state.lang === 'ko' ? resp.message_ko : localizeRuntimeText(resp.message_en);
       
       await pullFromRemote();
 
@@ -11225,9 +11647,9 @@ function scrollChatToBottom() {
 }
 
 async function kickMember(username) {
-  const confirmMsg = state.lang === 'ko'
-    ? `'${username}'\uB2D8\uC744 \uAC15\uD1F4\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?`
-    : `Are you sure you want to kick '${username}'?`;
+  const confirmMsg = formatInlineText({
+    ko: "'{name}'님을 강퇴하시겠습니까?", en: "Are you sure you want to remove '{name}'?", fr: "Voulez-vous exclure « {name} » ?", zh: '确定要移出“{name}”吗？', ja: '「{name}」さんを退出させますか？', es: '¿Quieres expulsar a « {name} »?'
+  }, { name: username });
   if (!confirm(confirmMsg)) return;
 
   await pullFromRemote();
@@ -11242,9 +11664,7 @@ async function kickMember(username) {
     room.joinedCount = room.joinedUsers.length;
   }
 
-  const kickMsg = state.lang === 'ko'
-    ? `[안내] '${username}'님이 방장에 의해 퇴장되었습니다.`
-    : `[System] '${username}' was removed by the room creator.`;
+  const kickMsg = getRoomSystemMessage('kicked', { name: username });
 
   if (!state.chatLogs[state.joinedRoomId]) {
     state.chatLogs[state.joinedRoomId] = [];
@@ -11253,7 +11673,7 @@ async function kickMember(username) {
 
   await pushToRemote({ replaceMembershipRoomIds: [state.joinedRoomId] });
   renderChatRoom();
-  showToast(state.lang === 'ko' ? `'${username}'님을 강퇴했습니다.` : `'${username}' has been kicked.`);
+  showToast(formatInlineText({ ko: "'{name}'님을 강퇴했습니다.", en: "'{name}' was removed.", fr: '« {name} » a été exclu.', zh: '已移出“{name}”。', ja: '「{name}」さんを退出させました。', es: 'Se expulsó a « {name} ».' }, { name: username }));
 }
 
 // --- Toast and Feedback ---
@@ -11657,7 +12077,7 @@ function cloneSavedCoursePayload(course) {
 function saveCurrentItinerary() {
   const course = state.activeCourse;
   if (!course) {
-    showToast(state.lang === 'ko' ? '저장할 일정이 없습니다.' : 'No itinerary to save.');
+    showToast(getText('itinerary_none_to_save'));
     return;
   }
 
@@ -11674,9 +12094,14 @@ function saveCurrentItinerary() {
     : `${course.cityName} ${formatExportDurationDays(course.days.length)}`;
 
   const tripName = prompt(
-    state.lang === 'ko'
-      ? '\uC5EC\uD589 \uC77C\uC815\uC758 \uC774\uB984\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694:'
-      : 'Please enter a name for this itinerary:',
+    getInlineText({
+      ko: '여행 일정의 이름을 입력해주세요:',
+      en: 'Please enter a name for this itinerary:',
+      fr: 'Saisissez un nom pour cet itinéraire :',
+      zh: '请输入此行程的名称：',
+      ja: 'この旅程の名前を入力してください：',
+      es: 'Introduce un nombre para este itinerario:'
+    }),
     defaultName
   );
 
@@ -11694,7 +12119,7 @@ function saveCurrentItinerary() {
     state.editingSavedCourseId = existingTrip.id;
     saveToLocalStorage();
     renderSavedCoursesList();
-    showToast(state.lang === 'ko' ? '기존 여행 일정이 업데이트되었습니다.' : 'Saved itinerary updated.');
+    showToast(getText('itinerary_updated'));
     return;
   }
 
@@ -11710,21 +12135,26 @@ function saveCurrentItinerary() {
   state.editingSavedCourseId = newTrip.id;
   saveToLocalStorage();
   renderSavedCoursesList();
-  showToast(state.lang === 'ko' ? '여행 일정이 저장되었습니다.' : 'Itinerary saved.');
+  showToast(getText('itinerary_saved'));
 }
 
 function saveCurrentItineraryLegacy() {
   const course = state.activeCourse;
   if (!course) {
-    showToast(state.lang === 'ko' ? '저장할 일정이 없습니다.' : 'No itinerary to save.');
+    showToast(getText('itinerary_none_to_save'));
     return;
   }
   normalizeCourseMetadata(course, true);
   
   const tripName = prompt(
-    state.lang === 'ko' 
-      ? '\uC5EC\uD589 \uC77C\uC815\uC758 \uC774\uB984\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694:'
-      : 'Please enter a name for this itinerary:',
+    getInlineText({
+      ko: '여행 일정의 이름을 입력해주세요:',
+      en: 'Please enter a name for this itinerary:',
+      fr: 'Saisissez un nom pour cet itinéraire :',
+      zh: '请输入此行程的名称：',
+      ja: 'この旅程の名前を入力してください：',
+      es: 'Introduce un nombre para este itinerario:'
+    }),
     `${course.cityName} ${formatExportDurationDays(course.days.length)}`
   );
   
@@ -11745,7 +12175,7 @@ function saveCurrentItineraryLegacy() {
   state.savedCourses.push(newTrip);
   saveToLocalStorage();
   renderSavedCoursesList();
-  showToast(state.lang === 'ko' ? '여행 일정이 저장되었습니다.' : 'Itinerary saved.');
+  showToast(getText('itinerary_saved'));
 }
 
 function renderSavedCoursesList() {
@@ -11807,7 +12237,7 @@ function renderSavedCoursesList() {
         state.editingSavedCourseId = trip.id;
         saveToLocalStorage();
         updateView();
-        showToast(state.lang === 'ko' ? `"${trip.name}" 경로를 불러왔습니다.` : `Loaded "${trip.name}" route.`);
+        showToast(formatInlineText({ ko: '"{name}" 경로를 불러왔습니다.', en: 'Loaded route "{name}".', fr: 'Trajet « {name} » chargé.', zh: '已加载路线“{name}”。', ja: 'ルート「{name}」を読み込みました。', es: 'Ruta « {name} » cargada.' }, { name: trip.name }));
       } else {
         // Regular itinerary trip
         const editableCourse = cloneSavedCoursePayload(trip.course);
@@ -11820,13 +12250,13 @@ function renderSavedCoursesList() {
         saveToLocalStorage();
         updateView();
         renderItinerary(state.activeCourse);
-        showToast(state.lang === 'ko' ? `"${trip.name}" 일정을 불러왔습니다.` : `Loaded "${trip.name}" itinerary.`);
+        showToast(formatInlineText({ ko: '"{name}" 일정을 불러왔습니다.', en: 'Loaded itinerary "{name}".', fr: 'Itinéraire « {name} » chargé.', zh: '已加载行程“{name}”。', ja: '旅程「{name}」を読み込みました。', es: 'Itinerario « {name} » cargado.' }, { name: trip.name }));
       }
     });
     
     item.querySelector('.saved-trip-delete').addEventListener('click', (e) => {
       e.stopPropagation();
-      if (!confirm(state.lang === 'ko' ? '\uC815\uB9D0 \uC0AD\uC81C\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?' : 'Are you sure you want to delete this trip?')) return;
+      if (!confirm(getText('itinerary_delete_confirm'))) return;
       
       state.savedCourses = state.savedCourses.filter(t => t.id !== trip.id);
       if (String(state.editingSavedCourseId || '') === String(trip.id)) {
@@ -11834,7 +12264,7 @@ function renderSavedCoursesList() {
       }
       saveToLocalStorage();
       renderSavedCoursesList();
-      showToast(state.lang === 'ko' ? '삭제되었습니다.' : 'Deleted.');
+      showToast(getText('action_deleted'));
     });
     
     container.appendChild(item);
@@ -11844,7 +12274,7 @@ function renderSavedCoursesList() {
 function copyShareLink() {
   const course = state.activeCourse;
   if (!course) {
-    showToast(state.lang === 'ko' ? '공유할 일정이 없습니다.' : 'No itinerary to share.');
+    showToast(getText('itinerary_none_to_share'));
     return;
   }
   
@@ -11890,7 +12320,7 @@ function copyShareLink() {
     
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(shareUrl).then(() => {
-        showToast(state.lang === 'ko' ? '🔗 공유 링크가 클립보드에 복사되었습니다!' : '🔗 Share link copied to clipboard!');
+        showToast(getText('share_link_copied'));
       }).catch(err => {
         console.error(err);
         fallbackCopyText(shareUrl);
@@ -11900,7 +12330,7 @@ function copyShareLink() {
     }
   } catch (e) {
     console.error("Failed to generate share link:", e);
-    showToast(state.lang === 'ko' ? '공유 링크 생성에 실패했습니다.' : 'Failed to generate share link.');
+    showToast(getText('share_link_failed'));
   }
 }
 
@@ -11916,13 +12346,13 @@ function fallbackCopyText(text) {
     const ok = document.execCommand('copy');
     document.body.removeChild(textArea);
     if (ok) {
-      showToast(state.lang === 'ko' ? '🔗 공유 링크가 클립보드에 복사되었습니다!' : '🔗 Share link copied to clipboard!');
+      showToast(getText('share_link_copied'));
     } else {
-      prompt(state.lang === 'ko' ? '\uC544\uB798 \uB9C1\uD06C\uB97C \uBCF5\uC0AC\uD558\uC5EC \uACF5\uC720\uD558\uC138\uC694:' : 'Copy this link to share:', text);
+      prompt(getText('share_link_prompt'), text);
     }
   } catch(e) {
     if (document.body.contains(textArea)) document.body.removeChild(textArea);
-    prompt(state.lang === 'ko' ? '\uC544\uB798 \uB9C1\uD06C\uB97C \uBCF5\uC0AC\uD558\uC5EC \uACF5\uC720\uD558\uC138\uC694:' : 'Copy this link to share:', text);
+    prompt(getText('share_link_prompt'), text);
   }
 }
 
@@ -12619,7 +13049,7 @@ function showAddPlaceModal(allAttractions, dayPlan, cityId) {
 
 function handleCustomRegen(requestText) {
   if (!state.activeCourse) {
-    showToast(state.lang === 'ko' ? '먼저 일정을 생성해주세요.' : 'Please generate an itinerary first.');
+    showToast(getText('planner_generate_first'));
     return;
   }
   
@@ -12660,9 +13090,14 @@ function handleCustomRegen(requestText) {
     content.style.display = 'none';
     const loaderText = document.querySelector('#itineraryLoader h4');
     if (loaderText) {
-      loaderText.textContent = state.lang === 'ko' 
-        ? 'AI가 선택한 모드를 반영해 코스를 재구성하고 있습니다...'
-        : 'AI is rebuilding the route with the selected mode...';
+      loaderText.textContent = getInlineText({
+        ko: 'AI가 선택한 모드를 반영해 코스를 재구성하고 있습니다...',
+        en: 'AI is rebuilding the route with the selected mode...',
+        fr: 'L’IA reconstruit l’itinéraire selon le mode sélectionné…',
+        zh: 'AI正在根据所选模式重新规划路线…',
+        ja: 'AIが選択したモードを反映してコースを再構成しています…',
+        es: 'La IA está reconstruyendo la ruta con el modo seleccionado…'
+      });
     }
   }
   
@@ -12688,7 +13123,7 @@ function handleCustomRegen(requestText) {
       const matchedCity = CITIES.find(city => city.id === cityId);
       const cityName = matchedCity ? getLocalizedCityField(matchedCity, 'name') : cityId;
       const searchName = matchedCity
-        ? (state.lang === 'ko' ? matchedCity.name_ko : matchedCity.name_en)
+        ? getLocalizedCityField(matchedCity, 'name')
         : cityName;
       
       fetchWikiAttractions(searchName, cityId, state.lang)
@@ -12757,7 +13192,7 @@ function handleCustomRegen(requestText) {
             loader.style.display = 'none';
             content.style.display = 'block';
           }
-          showToast(state.lang === 'ko' ? '일정이 성공적으로 재조정되었습니다.' : 'Itinerary successfully adjusted.');
+          showToast(getText('itinerary_adjusted'));
         })
         .catch(err => {
           console.error(err);
@@ -12862,7 +13297,7 @@ function updateLodgingSelector(cityId, options = {}) {
         x: cluster.x, 
         y: cluster.y 
       });
-      opt.textContent = getLocalizedDataField({ name_ko, name_en }, 'name');
+      opt.textContent = getLocalizedLodgingLabel(name_ko, name_en, state.lang);
       select.appendChild(opt);
     });
   } else if (typeof EXTRA_CITIES_META !== 'undefined' && EXTRA_CITIES_META[cityId]) {
@@ -12898,7 +13333,7 @@ function updateLodgingSelector(cityId, options = {}) {
           x: cluster.x, 
           y: cluster.y 
         });
-        opt.textContent = getLocalizedDataField(cluster, 'name');
+        opt.textContent = getLocalizedLodgingLabel(cluster.name_ko, cluster.name_en, state.lang);
         select.appendChild(opt);
       });
     }
@@ -12943,7 +13378,7 @@ function bindTimelineActions() {
       // Min 1 normal attraction excluding lodging
       const normalAttractions = attractions.filter(it => !it.isLodging);
       if (normalAttractions.length <= 1) {
-        showToast(state.lang === 'ko' ? '하루에 최소 1개 이상의 일반 관광지는 있어야 합니다.' : 'You must have at least 1 attraction in a day.');
+        showToast(getText('itinerary_min_attraction'));
         return;
       }
 
@@ -12955,7 +13390,7 @@ function bindTimelineActions() {
       
       saveToLocalStorage();
       renderItinerary(state.activeCourse);
-      showToast(state.lang === 'ko' ? '장소가 삭제되었습니다.' : 'Place deleted.');
+      showToast(getText('itinerary_place_deleted'));
     });
   });
 
@@ -13045,7 +13480,7 @@ function bindTimelineActions() {
       renderItinerary(state.activeCourse);
       
       draggedItemIndex = null;
-      showToast(state.lang === 'ko' ? '일정 순서가 변경되었습니다.' : 'Itinerary reordered.');
+      showToast(getText('itinerary_reordered'));
     });
   });
 }
