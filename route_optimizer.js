@@ -1786,6 +1786,7 @@ function renderRouteResultMap(optimized, segments) {
       attribution: '© OpenStreetMap'
     }).addTo(routeLeafletMap);
   }
+  if (typeof localizeLeafletMapControls === 'function') localizeLeafletMapControls(routeLeafletMap);
   setTimeout(() => routeLeafletMap && routeLeafletMap.invalidateSize(), 50);
   if (routeLeafletLayer) routeLeafletMap.removeLayer(routeLeafletLayer);
   routeLeafletLayer = L.layerGroup().addTo(routeLeafletMap);
@@ -1797,8 +1798,7 @@ function renderRouteResultMap(optimized, segments) {
     dashArray: '8, 8'
   }).addTo(routeLeafletLayer);
   points.forEach((point, idx) => {
-    const isKo = typeof state !== 'undefined' && state.lang === 'ko';
-    const label = point.isTransfer ? (isKo ? '\uACBD\uC720' : 'Via') : String(idx + 1);
+    const label = point.isTransfer ? getRouteConnectionText('via') : String(idx + 1);
     const name = point.city ? getRouteCityDisplayName(point.city) : '';
     const safeName = typeof escapeHtml === 'function' ? escapeHtml(name || '') : String(name || '').replace(/[&<>"']/g, '');
     const marker = L.divIcon({

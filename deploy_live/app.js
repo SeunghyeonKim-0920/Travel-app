@@ -312,6 +312,147 @@ const RUNTIME_TEXT_TRANSLATIONS = {
   }
 };
 
+const RUNTIME_ENGLISH_TEXT_PATCHES = {
+  'View Map': { ko: '지도 보기', fr: 'Voir la carte', zh: '查看地图', ja: '地図を見る', es: 'Ver mapa' },
+  'Website': { ko: '공식 사이트', fr: 'Site officiel', zh: '官方网站', ja: '公式サイト', es: 'Sitio oficial' },
+  'Add New Place': { ko: '새로운 장소 추가', fr: 'Ajouter un lieu', zh: '添加新地点', ja: '新しい場所を追加', es: 'Agregar lugar' },
+  'Delete': { ko: '삭제', fr: 'Supprimer', zh: '删除', ja: '削除', es: 'Eliminar' },
+  'Edit': { ko: '수정', fr: 'Modifier', zh: '编辑', ja: '編集', es: 'Editar' },
+  'Cancel': { ko: '취소', fr: 'Annuler', zh: '取消', ja: 'キャンセル', es: 'Cancelar' },
+  'Time': { ko: '시간', fr: 'Heure', zh: '时间', ja: '時間', es: 'Hora' },
+  'Lunch Time': { ko: '점심시간', fr: 'Déjeuner', zh: '午餐时间', ja: 'ランチ時間', es: 'Almuerzo' },
+  'Dinner Time': { ko: '저녁시간', fr: 'Dîner', zh: '晚餐时间', ja: '夕食時間', es: 'Cena' },
+  'All day': { ko: '하루종일', fr: 'Toute la journée', zh: '全天', ja: '終日', es: 'Todo el día' },
+  'Cities': { ko: '방문 도시', fr: 'Villes', zh: '城市', ja: '都市', es: 'Ciudades' },
+  'Segments': { ko: '구간 수', fr: 'Étapes', zh: '路段', ja: '区間', es: 'Tramos' },
+  'Suggested Stay': { ko: '추천 체류', fr: 'Séjour conseillé', zh: '建议停留', ja: 'おすすめ滞在', es: 'Estancia sugerida' },
+  'Average stay': { ko: '평균 체류', fr: 'Séjour moyen', zh: '平均停留', ja: '平均滞在', es: 'Estancia media' },
+  'Save Route': { ko: '경로 저장', fr: 'Enregistrer', zh: '保存路线', ja: 'ルートを保存', es: 'Guardar ruta' },
+  'Share Route': { ko: '경로 공유', fr: 'Partager', zh: '分享路线', ja: 'ルートを共有', es: 'Compartir ruta' },
+  'Download': { ko: '다운로드', fr: 'Télécharger', zh: '下载', ja: 'ダウンロード', es: 'Descargar' },
+  'Reload Planner': { ko: '화면 다시 불러오기', fr: 'Recharger', zh: '重新加载', ja: '再読み込み', es: 'Recargar' },
+  'Route Type': { ko: '운행 방식', fr: 'Type de trajet', zh: '路线类型', ja: '移動タイプ', es: 'Tipo de ruta' },
+  'Route': { ko: '경로', fr: 'Itinéraire', zh: '路线', ja: 'ルート', es: 'Ruta' },
+  'Start': { ko: '출발', fr: 'Départ', zh: '出发', ja: '出発', es: 'Salida' },
+  'End': { ko: '도착', fr: 'Arrivée', zh: '到达', ja: '到着', es: 'Llegada' },
+  'Stop': { ko: '경유', fr: 'Étape', zh: '经停', ja: '経由', es: 'Parada' },
+  'Note': { ko: '참고', fr: 'Remarque', zh: '备注', ja: 'メモ', es: 'Nota' },
+  'Sequence': { ko: '순서', fr: 'Ordre', zh: '顺序', ja: '順序', es: 'Orden' },
+  'Best': { ko: '최적', fr: 'Meilleur', zh: '最佳', ja: '最適', es: 'Mejor' },
+  'AI is crafting your optimized route...': { ko: 'AI가 최적의 동선을 구성하고 있습니다...', fr: "L'IA prépare votre itinéraire optimisé...", zh: 'AI正在生成优化路线...', ja: 'AIが最適なルートを作成しています...', es: 'La IA está preparando tu ruta optimizada...' },
+  'Rainy day indoor-course adjustment': { ko: '비 오는 날 실내 코스 재조정', fr: 'Réorganisation en intérieur pour un jour de pluie', zh: '雨天室内行程调整', ja: '雨の日の屋内コース再調整', es: 'Ajuste de ruta interior para un día de lluvia' },
+  'Make Selected Day Indoor Only': { ko: '선택한 일차를 실내 코스로 바꾸기', fr: 'Passer la journée sélectionnée en intérieur', zh: '将所选日期改为室内行程', ja: '選択した日を屋内コースに変更', es: 'Convertir el día seleccionado en ruta interior' },
+  'Non-smoker': { ko: '비흡연', fr: 'Non-fumeur', zh: '不吸烟', ja: '非喫煙者', es: 'No fumador' },
+  'Smoker': { ko: '흡연', fr: 'Fumeur', zh: '吸烟', ja: '喫煙者', es: 'Fumador' },
+  'No preference': { ko: '상관없음', fr: 'Sans préférence', zh: '不限', ja: 'こだわらない', es: 'Sin preferencia' },
+  'No alcohol': { ko: '마시지 않음', fr: "Pas d'alcool", zh: '不喝酒', ja: '飲まない', es: 'Sin alcohol' },
+  'Social drinking': { ko: '가볍게 가능', fr: 'Occasionnellement', zh: '社交饮酒', ja: '付き合い程度', es: 'Consumo social' },
+  'Enjoys drinks': { ko: '좋아함', fr: "Apprécie l'alcool", zh: '喜欢饮酒', ja: 'お酒が好き', es: 'Le gusta beber' },
+  'Gender': { ko: '성별', fr: 'Genre', zh: '性别', ja: '性別', es: 'Género' },
+  'Male': { ko: '남성', fr: 'Homme', zh: '男性', ja: '男性', es: 'Hombre' },
+  'Female': { ko: '여성', fr: 'Femme', zh: '女性', ja: '女性', es: 'Mujer' },
+  'Companion Chat': { ko: '동행 소통방', fr: 'Discussion entre compagnons', zh: '结伴聊天室', ja: '同行チャット', es: 'Chat de compañeros' },
+  'Share My Itinerary': { ko: '내 일정 공유하기', fr: 'Partager mon itinéraire', zh: '分享我的行程', ja: '自分の日程を共有', es: 'Compartir mi itinerario' },
+  'Unlimited': { ko: '인원 제한 없음', fr: 'Illimité', zh: '不限人数', ja: '人数制限なし', es: 'Sin límite' },
+  '2 People': { ko: '2명', fr: '2 personnes', zh: '2人', ja: '2人', es: '2 personas' },
+  '3 People': { ko: '3명', fr: '3 personnes', zh: '3人', ja: '3人', es: '3 personas' },
+  '4 People': { ko: '4명', fr: '4 personnes', zh: '4人', ja: '4人', es: '4 personas' },
+  '6 People': { ko: '6명', fr: '6 personnes', zh: '6人', ja: '6人', es: '6 personas' },
+  '8 People': { ko: '8명', fr: '8 personnes', zh: '8人', ja: '8人', es: '8 personas' },
+  '10 People': { ko: '10명', fr: '10 personnes', zh: '10人', ja: '10人', es: '10 personas' },
+  'Any Gender': { ko: '성별 무관', fr: 'Tous les genres', zh: '性别不限', ja: '性別不問', es: 'Cualquier género' },
+  'Preferred Age Range': { ko: '희망 나이대', fr: "Tranche d'âge souhaitée", zh: '期望年龄段', ja: '希望年代', es: 'Rango de edad preferido' },
+  'Any Age': { ko: '나이 무관', fr: 'Tous les âges', zh: '年龄不限', ja: '年齢不問', es: 'Cualquier edad' },
+  '20s': { ko: '20대', fr: '20-29 ans', zh: '20多岁', ja: '20代', es: '20-29 años' },
+  '30s': { ko: '30대', fr: '30-39 ans', zh: '30多岁', ja: '30代', es: '30-39 años' },
+  '40s': { ko: '40대', fr: '40-49 ans', zh: '40多岁', ja: '40代', es: '40-49 años' },
+  '50s': { ko: '50대', fr: '50-59 ans', zh: '50多岁', ja: '50代', es: '50-59 años' },
+  '60s+': { ko: '60대 이상', fr: '60 ans et plus', zh: '60岁以上', ja: '60代以上', es: '60 años o más' },
+  'Preferred Languages': { ko: '희망 사용 언어', fr: 'Langues souhaitées', zh: '期望语言', ja: '希望言語', es: 'Idiomas preferidos' },
+  'Smoking Compatibility': { ko: '흡연 호환', fr: 'Compatibilité tabac', zh: '吸烟偏好', ja: '喫煙条件', es: 'Compatibilidad con el tabaco' },
+  'Alcohol Preference': { ko: '술 선호', fr: "Préférence d'alcool", zh: '饮酒偏好', ja: 'お酒の好み', es: 'Preferencia de alcohol' },
+  'Generate an itinerary first': { ko: '일정 생성 후 선택', fr: "Générez d'abord un itinéraire", zh: '请先生成行程', ja: '先に日程を作成してください', es: 'Genera primero un itinerario' },
+  'Choose a city and travel settings, then generate an AI itinerary.': { ko: '도시와 여행 조건을 선택한 뒤 AI 맞춤 코스를 생성해주세요.', fr: "Choisissez une ville et vos paramètres, puis générez un itinéraire IA.", zh: '请选择城市和旅行条件，然后生成AI行程。', ja: '都市と旅行条件を選び、AI日程を作成してください。', es: 'Elige una ciudad y las condiciones del viaje y genera un itinerario IA.' },
+  'Please choose an image file.': { ko: '이미지 파일을 선택해주세요.', fr: 'Choisissez un fichier image.', zh: '请选择图片文件。', ja: '画像ファイルを選択してください。', es: 'Selecciona un archivo de imagen.' },
+  'Please choose a profile photo under 1 MB.': { ko: '프로필 사진은 1MB 이하로 선택해주세요.', fr: 'Choisissez une photo de profil de moins de 1 Mo.', zh: '请选择小于1MB的头像。', ja: '1MB以下のプロフィール写真を選択してください。', es: 'Elige una foto de perfil de menos de 1 MB.' },
+  'Please select a destination city.': { ko: '목적지 도시를 선택해주세요.', fr: 'Choisissez une ville de destination.', zh: '请选择目的地城市。', ja: '目的地の都市を選択してください。', es: 'Selecciona una ciudad de destino.' },
+  'Profile photo reset to default.': { ko: '프로필 사진을 기본으로 되돌렸습니다.', fr: 'La photo de profil par défaut a été restaurée.', zh: '头像已恢复为默认图片。', ja: 'プロフィール写真を初期状態に戻しました。', es: 'La foto de perfil volvió a la predeterminada.' },
+  'Profile saved successfully!': { ko: '프로필을 저장했습니다.', fr: 'Profil enregistré.', zh: '资料已保存。', ja: 'プロフィールを保存しました。', es: 'Perfil guardado.' },
+  'No itinerary to share. Please generate a course first.': { ko: '공유할 일정이 없습니다. 코스를 먼저 생성해주세요.', fr: "Aucun itinéraire à partager. Générez d'abord un parcours.", zh: '没有可分享的行程，请先生成路线。', ja: '共有する日程がありません。先にコースを作成してください。', es: 'No hay un itinerario para compartir. Genera primero una ruta.' },
+  'Itinerary shared in chat.': { ko: '채팅방에 일정이 공유되었습니다.', fr: "L'itinéraire a été partagé dans la discussion.", zh: '行程已分享到聊天室。', ja: 'チャットに日程を共有しました。', es: 'El itinerario se compartió en el chat.' },
+  'This room is full.': { ko: '정원이 가득 찬 방입니다.', fr: 'Cette salle est complète.', zh: '该房间人数已满。', ja: 'このルームは満員です。', es: 'Esta sala está completa.' },
+  'Any Nationality': { ko: '국적 무관', fr: 'Toutes nationalités', zh: '国籍不限', ja: '国籍不問', es: 'Cualquier nacionalidad' },
+  'Room updated successfully!': { ko: '동행 방 정보가 수정되었습니다!', fr: 'Salle mise à jour.', zh: '结伴房间已更新。', ja: '同行ルームを更新しました。', es: 'Sala actualizada.' },
+  'Companion room created!': { ko: '동행 모집방이 생성되었습니다!', fr: 'Salle de compagnons créée.', zh: '结伴房间已创建。', ja: '同行ルームを作成しました。', es: 'Sala de compañeros creada.' },
+  'Are you sure you want to delete this companion room?': { ko: '정말로 이 동행 모집 글을 삭제하시겠습니까?', fr: 'Voulez-vous vraiment supprimer cette salle ?', zh: '确定要删除这个结伴房间吗？', ja: 'この同行ルームを削除しますか？', es: '¿Seguro que quieres eliminar esta sala?' },
+  'Companion room deleted.': { ko: '동행 모집 글이 삭제되었습니다.', fr: 'Salle supprimée.', zh: '结伴房间已删除。', ja: '同行ルームを削除しました。', es: 'Sala eliminada.' },
+  'Kick': { ko: '강퇴', fr: 'Exclure', zh: '移出', ja: '退出させる', es: 'Expulsar' },
+  'Shared Course': { ko: '공유된 여행 코스', fr: 'Itinéraire partagé', zh: '已分享的旅行路线', ja: '共有された旅行コース', es: 'Ruta compartida' },
+  'Preferences:': { ko: '주요 취향:', fr: 'Préférences :', zh: '偏好：', ja: '好み：', es: 'Preferencias:' },
+  'Load Itinerary': { ko: '일정 불러오기', fr: "Charger l'itinéraire", zh: '加载行程', ja: '日程を読み込む', es: 'Cargar itinerario' },
+  'No itinerary to save.': { ko: '저장할 일정이 없습니다.', fr: 'Aucun itinéraire à enregistrer.', zh: '没有可保存的行程。', ja: '保存する日程がありません。', es: 'No hay un itinerario para guardar.' },
+  'Please enter a name for this itinerary:': { ko: '여행 일정의 이름을 입력해주세요:', fr: "Saisissez un nom pour cet itinéraire :", zh: '请输入此行程的名称：', ja: 'この日程の名前を入力してください：', es: 'Escribe un nombre para este itinerario:' },
+  'Saved itinerary updated.': { ko: '기존 여행 일정이 업데이트되었습니다.', fr: 'Itinéraire enregistré mis à jour.', zh: '已更新保存的行程。', ja: '保存済みの日程を更新しました。', es: 'Itinerario guardado actualizado.' },
+  'Itinerary saved.': { ko: '여행 일정이 저장되었습니다.', fr: 'Itinéraire enregistré.', zh: '行程已保存。', ja: '日程を保存しました。', es: 'Itinerario guardado.' },
+  'Are you sure you want to delete this trip?': { ko: '정말 삭제하시겠습니까?', fr: 'Voulez-vous vraiment supprimer ce voyage ?', zh: '确定要删除这个旅行吗？', ja: 'この旅行を削除しますか？', es: '¿Seguro que quieres eliminar este viaje?' },
+  'Deleted.': { ko: '삭제되었습니다.', fr: 'Supprimé.', zh: '已删除。', ja: '削除しました。', es: 'Eliminado.' },
+  'No itinerary to share.': { ko: '공유할 일정이 없습니다.', fr: 'Aucun itinéraire à partager.', zh: '没有可分享的行程。', ja: '共有する日程がありません。', es: 'No hay un itinerario para compartir.' },
+  'Share link copied to clipboard!': { ko: '공유 링크가 클립보드에 복사되었습니다!', fr: 'Lien de partage copié.', zh: '分享链接已复制。', ja: '共有リンクをコピーしました。', es: 'Enlace para compartir copiado.' },
+  'Failed to generate share link.': { ko: '공유 링크 생성에 실패했습니다.', fr: 'Impossible de créer le lien de partage.', zh: '生成分享链接失败。', ja: '共有リンクを作成できませんでした。', es: 'No se pudo crear el enlace para compartir.' },
+  'Copy this link to share:': { ko: '아래 링크를 복사하여 공유하세요:', fr: 'Copiez ce lien pour le partager :', zh: '复制此链接进行分享：', ja: 'このリンクをコピーして共有してください：', es: 'Copia este enlace para compartirlo:' },
+  'Please generate an itinerary first.': { ko: '먼저 일정을 생성해주세요.', fr: "Générez d'abord un itinéraire.", zh: '请先生成行程。', ja: '先に日程を作成してください。', es: 'Genera primero un itinerario.' },
+  'AI is rebuilding the route with the selected mode...': { ko: 'AI가 선택한 모드를 반영해 코스를 재구성하고 있습니다...', fr: "L'IA réorganise le parcours selon le mode choisi...", zh: 'AI正在按所选模式重新安排行程...', ja: 'AIが選択したモードでコースを再構成しています...', es: 'La IA está reorganizando la ruta con el modo elegido...' },
+  'Itinerary successfully adjusted.': { ko: '일정이 성공적으로 재조정되었습니다.', fr: 'Itinéraire réorganisé.', zh: '行程已成功调整。', ja: '日程を再調整しました。', es: 'Itinerario reajustado.' },
+  'You must have at least 1 attraction in a day.': { ko: '하루에 최소 1개 이상의 일반 관광지는 있어야 합니다.', fr: 'Chaque journée doit conserver au moins une visite.', zh: '每天至少要保留一个景点。', ja: '1日に少なくとも1か所の観光地が必要です。', es: 'Cada día debe conservar al menos una atracción.' },
+  'Place deleted.': { ko: '장소가 삭제되었습니다.', fr: 'Lieu supprimé.', zh: '地点已删除。', ja: '場所を削除しました。', es: 'Lugar eliminado.' },
+  'Itinerary reordered.': { ko: '일정 순서가 변경되었습니다.', fr: "L'ordre de l'itinéraire a été modifié.", zh: '行程顺序已更改。', ja: '日程の順序を変更しました。', es: 'Se cambió el orden del itinerario.' },
+  'Shared route loaded.': { ko: '공유받은 경로를 불러왔습니다.', fr: 'Trajet partagé chargé.', zh: '已加载分享路线。', ja: '共有ルートを読み込みました。', es: 'Ruta compartida cargada.' },
+  'Shared itinerary loaded.': { ko: '공유받은 일정을 불러왔습니다.', fr: 'Itinéraire partagé chargé.', zh: '已加载分享行程。', ja: '共有日程を読み込みました。', es: 'Itinerario compartido cargado.' },
+  'The room creator has deleted this companion room.': { ko: '방장이 동행 방을 삭제했습니다.', fr: 'Le créateur a supprimé cette salle.', zh: '房主已删除此结伴房间。', ja: 'ルーム作成者がこの同行ルームを削除しました。', es: 'El creador eliminó esta sala.' },
+  'You have been removed from the room by the creator.': { ko: '방장에 의해 퇴장되었습니다.', fr: 'Le créateur vous a retiré de la salle.', zh: '你已被房主移出房间。', ja: 'ルーム作成者によって退出させられました。', es: 'El creador te retiró de la sala.' },
+  'Left the companion room.': { ko: '동행방을 퇴장했습니다.', fr: 'Vous avez quitté la salle.', zh: '已退出结伴房间。', ja: '同行ルームを退出しました。', es: 'Saliste de la sala.' },
+  'City request recorded.': { ko: '도시 추가 요청이 기록되었습니다.', fr: 'Demande de ville enregistrée.', zh: '城市添加请求已记录。', ja: '都市追加リクエストを受け付けました。', es: 'Solicitud de ciudad registrada.' },
+  'Please analyze the route first.': { ko: '먼저 경로를 분석해주세요.', fr: "Analysez d'abord le trajet.", zh: '请先分析路线。', ja: '先にルートを分析してください。', es: 'Analiza primero la ruta.' },
+  'Enter a name for this itinerary:': { ko: '저장할 일정 이름을 입력하세요:', fr: "Saisissez un nom pour cet itinéraire :", zh: '请输入行程名称：', ja: '日程名を入力してください：', es: 'Escribe un nombre para este itinerario:' },
+  'Saved route itinerary updated.': { ko: '기존 경로 일정이 업데이트되었습니다.', fr: 'Trajet enregistré mis à jour.', zh: '已更新保存的路线。', ja: '保存済みのルートを更新しました。', es: 'Ruta guardada actualizada.' },
+  'Route saved as itinerary! Check AI Planner.': { ko: '경로가 일정으로 저장되었습니다. AI 일정에서 확인하세요.', fr: "Trajet enregistré comme itinéraire. Consultez le planificateur IA.", zh: '路线已保存为行程，请在AI行程中查看。', ja: 'ルートを日程として保存しました。AI日程で確認してください。', es: 'Ruta guardada como itinerario. Revísala en el planificador IA.' },
+  'Route share link has been copied.': { ko: '경로 공유 링크가 복사되었습니다.', fr: 'Lien de partage du trajet copié.', zh: '路线分享链接已复制。', ja: 'ルート共有リンクをコピーしました。', es: 'Enlace de la ruta copiado.' },
+  'Copy:': { ko: '복사:', fr: 'Copier :', zh: '复制：', ja: 'コピー：', es: 'Copiar:' },
+  'Failed to generate link.': { ko: '링크 생성에 실패했습니다.', fr: 'Impossible de créer le lien.', zh: '生成链接失败。', ja: 'リンクを作成できませんでした。', es: 'No se pudo crear el enlace.' },
+  'Route downloaded!': { ko: '경로가 다운로드되었습니다!', fr: 'Trajet téléchargé.', zh: '路线已下载。', ja: 'ルートをダウンロードしました。', es: 'Ruta descargada.' },
+  'Copy and save:': { ko: '아래 내용을 복사하여 저장하세요:', fr: 'Copiez puis enregistrez :', zh: '复制并保存：', ja: 'コピーして保存してください：', es: 'Copia y guarda:' },
+  'Direct': { ko: '직통', fr: 'Direct', zh: '直达', ja: '直行', es: 'Directo' },
+  'Via stopover': { ko: '경유', fr: 'Avec correspondance', zh: '经停', ja: '経由', es: 'Con escala' },
+  'Via airport': { ko: '공항 경유', fr: "Via l'aéroport", zh: '经机场', ja: '空港経由', es: 'Vía aeropuerto' }
+};
+
+Object.entries(RUNTIME_ENGLISH_TEXT_PATCHES).forEach(([source, translations]) => {
+  Object.entries(translations).forEach(([lang, translated]) => {
+    if (!RUNTIME_TEXT_TRANSLATIONS[lang]) RUNTIME_TEXT_TRANSLATIONS[lang] = {};
+    RUNTIME_TEXT_TRANSLATIONS[lang][source] = translated;
+  });
+});
+
+const RUNTIME_TEXT_PATTERN_TRANSLATIONS = [
+  { pattern: /^(.+) Route$/, text: { ko: '$1 경로', fr: 'Itinéraire $1', zh: '$1路线', ja: '$1ルート', es: 'Ruta $1' } },
+  { pattern: /^Admin alert: (.+) city support was requested\.$/, text: { ko: '관리자 알림: $1 도시 추가 요청이 들어왔습니다.', fr: "Alerte administrateur : ajout de la ville $1 demandé.", zh: '管理员通知：收到添加城市$1的请求。', ja: '管理者通知：$1の都市追加リクエストが届きました。', es: 'Aviso de administración: se solicitó añadir $1.' } },
+  { pattern: /^\[System\] Room created by '(.+)'\. Please be respectful in chat\.$/, text: { ko: "[안내] '$1'님이 만든 동행방입니다. 매너 있는 대화를 부탁드립니다.", fr: "[Système] Salle créée par '$1'. Merci de rester courtois.", zh: "[系统] '$1'创建了此结伴房间，请文明交流。", ja: "[案内] '$1'さんが作成した同行ルームです。丁寧な会話をお願いします。", es: "[Sistema] Sala creada por '$1'. Mantén una conversación respetuosa." } },
+  { pattern: /^\[System\] '(.+)' has left the room\.$/, text: { ko: "[안내] '$1'님이 퇴장하셨습니다.", fr: "[Système] '$1' a quitté la salle.", zh: "[系统] '$1'已退出房间。", ja: "[案内] '$1'さんが退出しました。", es: "[Sistema] '$1' salió de la sala." } },
+  { pattern: /^(.+) has joined the chat\.$/, text: { ko: '$1님이 동행방에 입장하셨습니다.', fr: '$1 a rejoint la discussion.', zh: '$1加入了聊天室。', ja: '$1さんがチャットに参加しました。', es: '$1 se unió al chat.' } },
+  { pattern: /^\[Shared Course\] (.+)'s (\d+)-day course for (.+)$/, text: { ko: '[일정 공유] $1님의 $3 $2일 코스', fr: '[Itinéraire partagé] Parcours de $1 à $3 pour $2 jours', zh: '[行程分享] $1的$3 $2天路线', ja: '[日程共有] $1さんの$3 $2日コース', es: '[Ruta compartida] Ruta de $1 por $3 durante $2 días' } },
+  { pattern: /^Loaded shared route "(.+)"\.$/, text: { ko: '"$1" 공유 경로를 불러왔습니다.', fr: 'Trajet partagé « $1 » chargé.', zh: '已加载分享路线“$1”。', ja: '共有ルート「$1」を読み込みました。', es: 'Ruta compartida «$1» cargada.' } },
+  { pattern: /^Loaded shared "(.+)" itinerary\.$/, text: { ko: '"$1" 공유 일정을 불러왔습니다.', fr: 'Itinéraire partagé « $1 » chargé.', zh: '已加载分享行程“$1”。', ja: '共有日程「$1」を読み込みました。', es: 'Itinerario compartido «$1» cargado.' } },
+  { pattern: /^Loaded "(.+)" route\.$/, text: { ko: '"$1" 경로를 불러왔습니다.', fr: 'Trajet « $1 » chargé.', zh: '已加载路线“$1”。', ja: 'ルート「$1」を読み込みました。', es: 'Ruta «$1» cargada.' } },
+  { pattern: /^Loaded "(.+)" itinerary\.$/, text: { ko: '"$1" 일정을 불러왔습니다.', fr: 'Itinéraire « $1 » chargé.', zh: '已加载行程“$1”。', ja: '日程「$1」を読み込みました。', es: 'Itinerario «$1» cargado.' } },
+  { pattern: /^Are you sure you want to kick '(.+)'\?$/, text: { ko: "'$1'님을 강퇴하시겠습니까?", fr: "Voulez-vous exclure '$1' ?", zh: '确定要移出“$1”吗？', ja: '「$1」さんを退出させますか？', es: "¿Seguro que quieres expulsar a '$1'?" } },
+  { pattern: /^\[System\] '(.+)' was removed by the room creator\.$/, text: { ko: "[안내] '$1'님이 방장에 의해 퇴장되었습니다.", fr: "[Système] '$1' a été retiré par le créateur.", zh: "[系统] '$1'已被房主移出。", ja: "[案内] '$1'さんがルーム作成者によって退出させられました。", es: "[Sistema] '$1' fue expulsado por el creador." } },
+  { pattern: /^'(.+)' has been kicked\.$/, text: { ko: "'$1'님을 강퇴했습니다.", fr: "'$1' a été exclu.", zh: '已移出“$1”。', ja: '「$1」さんを退出させました。', es: "Se expulsó a '$1'." } },
+  { pattern: /^\[안내\] '(.+)'님이 만든 동행방입니다\. 매너 있는 대화를 부탁드립니다\.$/, text: { ko: "[안내] '$1'님이 만든 동행방입니다. 매너 있는 대화를 부탁드립니다.", fr: "[Système] Salle créée par '$1'. Merci de rester courtois.", zh: "[系统] '$1'创建了此结伴房间，请文明交流。", ja: "[案内] '$1'さんが作成した同行ルームです。丁寧な会話をお願いします。", es: "[Sistema] Sala creada por '$1'. Mantén una conversación respetuosa." } },
+  { pattern: /^\[안내\] '(.+)'님이 퇴장하셨습니다\.$/, text: { ko: "[안내] '$1'님이 퇴장하셨습니다.", fr: "[Système] '$1' a quitté la salle.", zh: "[系统] '$1'已退出房间。", ja: "[案内] '$1'さんが退出しました。", es: "[Sistema] '$1' salió de la sala." } },
+  { pattern: /^(.+)님이 동행방에 입장하셨습니다\.$/, text: { ko: '$1님이 동행방에 입장하셨습니다.', fr: '$1 a rejoint la discussion.', zh: '$1加入了聊天室。', ja: '$1さんがチャットに参加しました。', es: '$1 se unió al chat.' } },
+  { pattern: /^\[안내\] '(.+)'님이 방장에 의해 퇴장되었습니다\.$/, text: { ko: "[안내] '$1'님이 방장에 의해 퇴장되었습니다.", fr: "[Système] '$1' a été retiré par le créateur.", zh: "[系统] '$1'已被房主移出。", ja: "[案内] '$1'さんがルーム作成者によって退出させられました。", es: "[Sistema] '$1' fue expulsado por el creador." } }
+];
+
 function isSupportedLanguage(lang) {
   return SUPPORTED_LANG_CODES.includes(String(lang || '').toLowerCase());
 }
@@ -329,15 +470,29 @@ function getLanguageLocale(lang = state.lang) {
   return LANGUAGE_LOCALES[normalizeLanguageCode(lang)] || 'en-US';
 }
 
-function localizeRuntimeText(text) {
+function localizeRuntimeText(text, langOverride = null) {
   if (typeof text !== 'string' || !text.trim()) return text;
-  const lang = typeof state !== 'undefined' ? normalizeLanguageCode(state.lang) : 'ko';
+  const lang = langOverride
+    ? normalizeLanguageCode(langOverride)
+    : (typeof state !== 'undefined' ? normalizeLanguageCode(state.lang) : 'ko');
   const map = RUNTIME_TEXT_TRANSLATIONS[lang];
-  if (!map) return text;
   const leading = text.match(/^\s*/)[0];
   const trailing = text.match(/\s*$/)[0];
   const core = text.trim();
-  if (map[core]) return leading + repairMojibakeText(map[core]) + trailing;
+  if (map && map[core]) return leading + repairMojibakeText(map[core]) + trailing;
+  const decorated = core.match(/^([\u2600-\u27BF\u{1F000}-\u{1FAFF}\uFE0F\u200D]+\s*)(.+)$/u);
+  if (map && decorated && map[decorated[2]]) {
+    return leading + decorated[1] + repairMojibakeText(map[decorated[2]]) + trailing;
+  }
+  if (lang !== 'en') {
+    for (const rule of RUNTIME_TEXT_PATTERN_TRANSLATIONS) {
+      const match = core.match(rule.pattern);
+      const template = rule.text && rule.text[lang];
+      if (!match || !template) continue;
+      const localized = template.replace(/\$(\d+)/g, (_, index) => match[Number(index)] || '');
+      return leading + repairMojibakeText(localized) + trailing;
+    }
+  }
   const dayMatch = core.match(/^Day\s+(\d+)$/i);
   if (dayMatch) {
     const n = dayMatch[1];
@@ -608,6 +763,55 @@ const ENGLISH_CITY_PLACE_TRANSLATIONS = {
   ]
 };
 
+const CURATED_PLACE_NAME_TRANSLATIONS = {
+  'lower manhattan/soho (south)': { ko: '로어 맨해튼/소호 (남부)', fr: 'Lower Manhattan/SoHo (sud)', zh: '下曼哈顿/苏豪区（南部）', ja: 'ロウアー・マンハッタン/ソーホー（南部）', es: 'Lower Manhattan/SoHo (sur)' },
+  'queens/astoria (northeast)': { ko: '퀸스/아스토리아 (북동부)', fr: 'Queens/Astoria (nord-est)', zh: '皇后区/阿斯托里亚（东北部）', ja: 'クイーンズ/アストリア（北東部）', es: 'Queens/Astoria (noreste)' },
+  'griffith observatory park': { ko: '그리피스 천문대 공원', fr: 'parc de l’observatoire Griffith', zh: '格里菲斯天文台公园', ja: 'グリフィス天文台公園', es: 'parque del Observatorio Griffith' },
+  'hollywood walk of fame': { ko: '할리우드 명예의 거리', fr: 'Walk of Fame d’Hollywood', zh: '好莱坞星光大道', ja: 'ハリウッド・ウォーク・オブ・フェーム', es: 'Paseo de la Fama de Hollywood' },
+  'universal studios hollywood': { ko: '유니버설 스튜디오 할리우드', fr: 'Universal Studios Hollywood', zh: '好莱坞环球影城', ja: 'ユニバーサル・スタジオ・ハリウッド', es: 'Universal Studios Hollywood' },
+  'rodeo drive beverly hills': { ko: '베벌리힐스 로데오 드라이브', fr: 'Rodeo Drive à Beverly Hills', zh: '比佛利山庄罗迪欧大道', ja: 'ビバリーヒルズ・ロデオドライブ', es: 'Rodeo Drive de Beverly Hills' },
+  'the getty center': { ko: '게티 센터', fr: 'centre Getty', zh: '盖蒂中心', ja: 'ゲティ・センター', es: 'Centro Getty' },
+  'the broad': { ko: '더 브로드 미술관', fr: 'musée The Broad', zh: '布洛德博物馆', ja: 'ザ・ブロード美術館', es: 'Museo The Broad' },
+  'tcl chinese theatre': { ko: 'TCL 차이니즈 시어터', fr: 'TCL Chinese Theatre', zh: 'TCL中国剧院', ja: 'TCLチャイニーズ・シアター', es: 'Teatro Chino TCL' },
+  'lacma urban light': { ko: 'LACMA 어반 라이트', fr: 'Urban Light du LACMA', zh: '洛杉矶郡艺术博物馆都市之光', ja: 'LACMAアーバン・ライト', es: 'Urban Light del LACMA' },
+  'santa monica pier': { ko: '산타모니카 피어', fr: 'jetée de Santa Monica', zh: '圣莫尼卡码头', ja: 'サンタモニカ・ピア', es: 'muelle de Santa Mónica' },
+  'venice beach boardwalk': { ko: '베니스 비치 보드워크', fr: 'promenade de Venice Beach', zh: '威尼斯海滩木板路', ja: 'ベニスビーチ・ボードウォーク', es: 'paseo de Venice Beach' },
+  'getty villa': { ko: '게티 빌라', fr: 'villa Getty', zh: '盖蒂别墅', ja: 'ゲティ・ヴィラ', es: 'Villa Getty' },
+  'the grove los angeles': { ko: '더 그로브 로스앤젤레스', fr: 'The Grove de Los Angeles', zh: '洛杉矶格罗夫购物中心', ja: 'ザ・グローブ・ロサンゼルス', es: 'The Grove de Los Ángeles' },
+  'grand central market los angeles': { ko: '로스앤젤레스 그랜드 센트럴 마켓', fr: 'Grand Central Market de Los Angeles', zh: '洛杉矶中央大市场', ja: 'ロサンゼルス・グランドセントラルマーケット', es: 'Grand Central Market de Los Ángeles' },
+  'abbot kinney boulevard': { ko: '애벗 키니 불러바드', fr: 'boulevard Abbot Kinney', zh: '阿博特金尼大道', ja: 'アボット・キニー・ブールバード', es: 'bulevar Abbot Kinney' },
+  'warner bros studio tour hollywood': { ko: '워너 브라더스 스튜디오 투어 할리우드', fr: 'visite des studios Warner Bros Hollywood', zh: '华纳兄弟好莱坞影城之旅', ja: 'ワーナー・ブラザース・スタジオツアー・ハリウッド', es: 'tour de Warner Bros Studio Hollywood' },
+  'space center houston & nasa': { ko: '스페이스 센터 휴스턴과 NASA', fr: 'centre spatial de Houston et NASA', zh: '休斯敦太空中心与NASA', ja: 'ヒューストン宇宙センターとNASA', es: 'Centro Espacial de Houston y NASA' },
+  'space center houston': { ko: '스페이스 센터 휴스턴', fr: 'centre spatial de Houston', zh: '休斯敦太空中心', ja: 'ヒューストン宇宙センター', es: 'Centro Espacial de Houston' },
+  'houston museum of natural science': { ko: '휴스턴 자연과학박물관', fr: 'musée des sciences naturelles de Houston', zh: '休斯敦自然科学博物馆', ja: 'ヒューストン自然科学博物館', es: 'Museo de Ciencias Naturales de Houston' },
+  'museum of fine arts houston': { ko: '휴스턴 미술관', fr: 'musée des Beaux-Arts de Houston', zh: '休斯敦美术博物馆', ja: 'ヒューストン美術館', es: 'Museo de Bellas Artes de Houston' },
+  'buffalo bayou park': { ko: '버펄로 바이유 공원', fr: 'parc Buffalo Bayou', zh: '布法罗河口公园', ja: 'バッファロー・バイユー公園', es: 'parque Buffalo Bayou' },
+  'discovery green': { ko: '디스커버리 그린', fr: 'parc Discovery Green', zh: '探索绿地公园', ja: 'ディスカバリー・グリーン', es: 'parque Discovery Green' },
+  'minute maid park': { ko: '미닛메이드 파크', fr: 'stade Minute Maid Park', zh: '美汁源球场', ja: 'ミニッツメイド・パーク', es: 'estadio Minute Maid Park' },
+  'museum district & natural science museum': { ko: '뮤지엄 디스트릭트와 자연과학박물관', fr: 'quartier des musées et musée des sciences naturelles', zh: '博物馆区与自然科学博物馆', ja: 'ミュージアム地区と自然科学博物館', es: 'Distrito de Museos y Museo de Ciencias Naturales' },
+  'kemah boardwalk': { ko: '케마 보드워크', fr: 'promenade de Kemah', zh: '凯马木板路', ja: 'ケマー・ボードウォーク', es: 'paseo marítimo de Kemah' },
+  'buffalo bayou park & kayaking': { ko: '버펄로 바이유 공원과 카약', fr: 'parc Buffalo Bayou et kayak', zh: '布法罗河口公园与皮划艇', ja: 'バッファロー・バイユー公園とカヤック', es: 'parque Buffalo Bayou y kayak' },
+  'sam houston national forest hiking': { ko: '샘 휴스턴 국유림 하이킹', fr: 'randonnée dans la forêt nationale Sam Houston', zh: '萨姆休斯敦国家森林徒步', ja: 'サム・ヒューストン国有林ハイキング', es: 'senderismo en el Bosque Nacional Sam Houston' },
+  'galleria houston shopping mall': { ko: '갤러리아 휴스턴 쇼핑몰', fr: 'centre commercial Galleria Houston', zh: '休斯敦商业街购物中心', ja: 'ギャレリア・ヒューストン', es: 'centro comercial Galleria Houston' },
+  'texas bbq & brisket experience': { ko: '텍사스 바비큐와 브리스킷 체험', fr: 'barbecue texan et brisket', zh: '德州烧烤与牛胸肉体验', ja: 'テキサスBBQとブリスケット体験', es: 'experiencia de barbacoa y brisket de Texas' },
+  'houston tex-mex tacos & fajitas': { ko: '휴스턴 텍스멕스 타코와 파히타', fr: 'tacos et fajitas tex-mex de Houston', zh: '休斯敦德墨塔可与法士达', ja: 'ヒューストンのテクスメクス・タコスとファヒータ', es: 'tacos y fajitas tex-mex de Houston' },
+  'bellagio fountain show': { ko: '벨라지오 분수 쇼', fr: 'spectacle des fontaines du Bellagio', zh: '百乐宫喷泉秀', ja: 'ベラージオ噴水ショー', es: 'espectáculo de fuentes del Bellagio' },
+  'las vegas strip': { ko: '라스베이거스 스트립', fr: 'Strip de Las Vegas', zh: '拉斯维加斯大道', ja: 'ラスベガス・ストリップ', es: 'Strip de Las Vegas' },
+  "gordon ramsay hell's kitchen": { ko: '고든 램지 헬스 키친', fr: "Hell's Kitchen de Gordon Ramsay", zh: '戈登·拉姆齐地狱厨房', ja: 'ゴードン・ラムゼイ・ヘルズキッチン', es: "Hell's Kitchen de Gordon Ramsay" },
+  'the neon museum': { ko: '네온 박물관', fr: 'musée du Néon', zh: '霓虹博物馆', ja: 'ネオン博物館', es: 'Museo del Neón' },
+  'grand canyon helicopter tour': { ko: '그랜드 캐니언 헬리콥터 투어', fr: 'survol du Grand Canyon en hélicoptère', zh: '大峡谷直升机之旅', ja: 'グランドキャニオン・ヘリコプターツアー', es: 'tour en helicóptero por el Gran Cañón' },
+  'the forum shops at caesars': { ko: '시저스 팰리스 포럼 숍스', fr: 'Forum Shops du Caesars Palace', zh: '凯撒宫论坛商店街', ja: 'シーザーズ・パレスのフォーラムショップス', es: 'Forum Shops de Caesars Palace' },
+  'fremont street experience': { ko: '프리몬트 스트리트 익스피리언스', fr: 'Fremont Street Experience', zh: '弗里蒙特街体验', ja: 'フリーモント・ストリート・エクスペリエンス', es: 'Experiencia de Fremont Street' },
+  'the mob museum': { ko: '몹 뮤지엄', fr: 'musée de la Mafia', zh: '黑帮博物馆', ja: 'モブ・ミュージアム', es: 'Museo de la Mafia' },
+  'sphere las vegas': { ko: '스피어 라스베이거스', fr: 'Sphere Las Vegas', zh: '拉斯维加斯巨型球', ja: 'スフィア・ラスベガス', es: 'Sphere Las Vegas' },
+  'bellagio conservatory and botanical gardens': { ko: '벨라지오 온실과 식물원', fr: 'conservatoire et jardins botaniques du Bellagio', zh: '百乐宫温室与植物园', ja: 'ベラージオ温室・植物園', es: 'Conservatorio y Jardines Botánicos del Bellagio' },
+  'red rock canyon scenic drive': { ko: '레드 록 캐니언 경관 드라이브', fr: 'route panoramique de Red Rock Canyon', zh: '红岩峡谷景观公路', ja: 'レッドロックキャニオン景観ドライブ', es: 'ruta panorámica de Red Rock Canyon' },
+  'grand canal shoppes at the venetian': { ko: '베네시안 그랜드 캐널 숍스', fr: 'Grand Canal Shoppes du Venetian', zh: '威尼斯人大运河购物中心', ja: 'ベネチアン・グランドキャナル・ショップス', es: 'Grand Canal Shoppes del Venetian' },
+  'linq promenade': { ko: '링크 프롬나드', fr: 'promenade LINQ', zh: 'LINQ步行街', ja: 'LINQプロムナード', es: 'paseo LINQ' },
+  'high roller observation wheel': { ko: '하이 롤러 대관람차', fr: 'grande roue High Roller', zh: '豪客摩天轮', ja: 'ハイローラー観覧車', es: 'noria High Roller' },
+  'area15 las vegas': { ko: '에어리어15 라스베이거스', fr: 'AREA15 Las Vegas', zh: '拉斯维加斯AREA15', ja: 'AREA15ラスベガス', es: 'AREA15 Las Vegas' }
+};
+
 Object.entries(ENGLISH_CITY_PLACE_TRANSLATIONS).forEach(([lang, rules]) => {
   if (!PLACE_TERM_TRANSLATIONS[lang]) PLACE_TERM_TRANSLATIONS[lang] = [];
   PLACE_TERM_TRANSLATIONS[lang].unshift(...rules);
@@ -678,6 +882,9 @@ function localizePlaceName(value, lang = state.lang) {
   const codeLang = normalizeLanguageCode(lang);
   let text = cleanUiText(value || '');
   if (!text) return '';
+  const exactKey = text.toLowerCase().replace(/\s+/g, ' ').trim();
+  const curated = CURATED_PLACE_NAME_TRANSLATIONS[exactKey];
+  if (curated && curated[codeLang]) return cleanUiText(curated[codeLang]);
   if (codeLang === 'ko' || codeLang === 'en') return text;
   Object.entries(CITY_LOCALIZED_NAMES).forEach(([cityId, names]) => {
     const city = (typeof CITIES !== 'undefined' && Array.isArray(CITIES))
@@ -773,6 +980,22 @@ function localizeProfileLanguageList(value, lang = state.lang) {
   }).join(', ');
 }
 
+function localizeLanguageChoiceChips(lang = state.lang) {
+  const codeLang = normalizeLanguageCode(lang);
+  const labels = PROFILE_LANGUAGE_LABELS[codeLang] || PROFILE_LANGUAGE_LABELS.en;
+  ['profileLanguages', 'modalRoomLanguage'].forEach(containerId => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.querySelectorAll('label.multi-select-chip').forEach(label => {
+      const input = label.querySelector('input');
+      const text = label.querySelector('span');
+      if (!input || !text) return;
+      const languageCode = getLanguageCodeFromValue(input.value);
+      if (languageCode && labels[languageCode]) text.textContent = cleanUiText(labels[languageCode]);
+    });
+  });
+}
+
 function getDataLabel(key, lang = state.lang) {
   const labels = DATA_LABELS[normalizeLanguageCode(lang)] || DATA_LABELS.en;
   return cleanUiText(labels[key] || DATA_LABELS.en[key] || key);
@@ -782,6 +1005,32 @@ function getInlineText(values, lang = state.lang) {
   const codeLang = normalizeLanguageCode(lang);
   if (!values || typeof values !== 'object') return '';
   return cleanUiText(values[codeLang] || values.en || values.ko || '');
+}
+
+function getLocalizedProfileDisplayName(value, lang = state.lang) {
+  const clean = cleanUiText(value || '');
+  const match = clean.match(/^(?:여행자|Traveler|Voyageur|旅行者|Viajero)_(\d+)$/i);
+  if (!match) return clean;
+  const prefix = getInlineText({ ko: '여행자', en: 'Traveler', fr: 'Voyageur', zh: '旅行者', ja: '旅行者', es: 'Viajero' }, lang);
+  return `${prefix}_${match[1]}`;
+}
+
+function localizeLeafletMapControls(map) {
+  if (!map || typeof map.getContainer !== 'function') return;
+  const container = map.getContainer();
+  if (!container) return;
+  const zoomInLabel = getInlineText({ ko: '확대', en: 'Zoom in', fr: 'Zoom avant', zh: '放大', ja: '拡大', es: 'Acercar' });
+  const zoomOutLabel = getInlineText({ ko: '축소', en: 'Zoom out', fr: 'Zoom arrière', zh: '缩小', ja: '縮小', es: 'Alejar' });
+  const zoomIn = container.querySelector('.leaflet-control-zoom-in');
+  const zoomOut = container.querySelector('.leaflet-control-zoom-out');
+  if (zoomIn) {
+    zoomIn.title = zoomInLabel;
+    zoomIn.setAttribute('aria-label', zoomInLabel);
+  }
+  if (zoomOut) {
+    zoomOut.title = zoomOutLabel;
+    zoomOut.setAttribute('aria-label', zoomOutLabel);
+  }
 }
 
 function formatDayLabel(dayNumber, lang = state.lang) {
@@ -904,7 +1153,7 @@ function repairMojibakeText(value) {
 }
 
 function sanitizeNativeDialogText(value, dialogType = 'alert') {
-  let fixed = repairCommonMojibakeLiterals(repairMojibakeText(String(value ?? '')));
+  let fixed = localizeRuntimeText(repairCommonMojibakeLiterals(repairMojibakeText(String(value ?? ''))));
   if (!hasMojibakeSignal(fixed)) return fixed;
 
   const raw = String(value ?? '').toLowerCase();
@@ -955,7 +1204,7 @@ function installNativeDialogSanitizers() {
     window.prompt = function(message, defaultValue) {
       return nativePrompt(
         sanitizeNativeDialogText(message, 'prompt'),
-        typeof defaultValue === 'string' ? repairMojibakeText(defaultValue) : defaultValue
+        typeof defaultValue === 'string' ? localizeRuntimeText(repairMojibakeText(defaultValue)) : defaultValue
       );
     };
   }
@@ -1028,6 +1277,7 @@ function applyEnhancedTranslations() {
     onboard_days_label: '\uAE30\uAC04',
     onboard_quick_hint: '\uC120\uD0DD\uD55C \uB3C4\uC2DC\uB85C AI \uC77C\uC815 \uC0DD\uC131 \uD654\uBA74\uC774 \uC5F4\uB9BD\uB2C8\uB2E4.',
     onboard_start_btn: '\uB0B4 \uCCAB \uCF54\uC2A4 \uC0DD\uC131\uD558\uAE30',
+    onboard_steps_aria: '\uC628\uBCF4\uB529 \uB2E8\uACC4',
     onboard_step1_title: '\uB3C4\uC2DC\uC640 \uCDE8\uD5A5 \uC120\uD0DD',
     onboard_step1_desc: '\uC219\uC18C \uC704\uCE58, \uC5EC\uD589 \uAE30\uAC04, \uC120\uD638\uD558\uB294 \uC5EC\uD589 \uC2A4\uD0C0\uC77C\uC744 \uAC00\uBCCD\uAC8C \uACE0\uB985\uB2C8\uB2E4.',
     onboard_step2_title: 'AI \uCF54\uC2A4 \uD655\uC778',
@@ -1173,6 +1423,7 @@ function applyEnhancedTranslations() {
     onboard_days_label: 'Duration',
     onboard_quick_hint: 'The AI itinerary screen opens with your selected city.',
     onboard_start_btn: 'Create My First Course',
+    onboard_steps_aria: 'Onboarding steps',
     onboard_step1_title: 'Choose City and Style',
     onboard_step1_desc: 'Pick lodging area, trip length, and your preferred travel style.',
     onboard_step2_title: 'Review AI Course',
@@ -1267,6 +1518,7 @@ function applyEnhancedTranslations() {
       onboard_days_label: 'Durée',
       onboard_quick_hint: "L'écran de création IA s'ouvrira avec la ville choisie.",
       onboard_start_btn: 'Créer mon premier parcours',
+      onboard_steps_aria: 'Étapes de démarrage',
       onboard_step1_title: 'Choisir ville et style',
       onboard_step1_desc: "Sélectionnez le quartier de départ, la durée et votre style de voyage.",
       onboard_step2_title: 'Vérifier le parcours IA',
@@ -1365,6 +1617,7 @@ function applyEnhancedTranslations() {
       onboard_days_label: '天数',
       onboard_quick_hint: '将用所选城市打开AI行程生成页面。',
       onboard_start_btn: '创建我的第一个路线',
+      onboard_steps_aria: '入门步骤',
       onboard_step1_title: '选择城市和偏好',
       onboard_step1_desc: '选择住宿位置、旅行天数和喜欢的旅行方式。',
       onboard_step2_title: '查看AI路线',
@@ -1463,6 +1716,7 @@ function applyEnhancedTranslations() {
       onboard_days_label: '日数',
       onboard_quick_hint: '選択した都市でAI日程作成画面を開きます。',
       onboard_start_btn: '最初のコースを作成',
+      onboard_steps_aria: '開始手順',
       onboard_step1_title: '都市と好みを選択',
       onboard_step1_desc: '宿泊エリア、旅行日数、好みのスタイルを選びます。',
       onboard_step2_title: 'AIコースを確認',
@@ -1561,6 +1815,7 @@ function applyEnhancedTranslations() {
       onboard_days_label: 'Duración',
       onboard_quick_hint: 'Se abrirá la pantalla de itinerario IA con la ciudad elegida.',
       onboard_start_btn: 'Crear mi primera ruta',
+      onboard_steps_aria: 'Pasos de inicio',
       onboard_step1_title: 'Elige ciudad y estilo',
       onboard_step1_desc: 'Selecciona zona de alojamiento, duración y estilo de viaje.',
       onboard_step2_title: 'Revisa la ruta IA',
@@ -2856,7 +3111,7 @@ function loadFromLocalStorage() {
   repairStateMojibake();
   
   // Sync profile values to input fields
-  document.getElementById('profileName').value = state.activeProfile.name;
+  document.getElementById('profileName').value = getLocalizedProfileDisplayName(state.activeProfile.name);
   document.getElementById('profileGender').value = state.activeProfile.gender;
   document.getElementById('profileMBTI').value = state.activeProfile.mbti;
   const profileAgeRange = document.getElementById('profileAgeRange');
@@ -2871,7 +3126,7 @@ function loadFromLocalStorage() {
   
   const headerName = document.getElementById('headerProfileName');
   if (headerName) {
-    headerName.textContent = state.activeProfile.name;
+    headerName.textContent = getLocalizedProfileDisplayName(state.activeProfile.name);
   }
   updateProfileAvatarUI();
   updateProfileAvatarUI();
@@ -2917,7 +3172,16 @@ function setupUIStrings() {
   applyEnhancedTranslations();
   state.lang = normalizeLanguageCode(state.lang);
   ensureEnhancedControls();
+  localizeLanguageChoiceChips();
   document.documentElement.lang = state.lang;
+  document.title = getInlineText({
+    ko: 'Together - AI 여행 코스 및 동행 매칭',
+    en: 'Together - AI Travel Itineraries and Companions',
+    fr: 'Together - Itinéraires IA et compagnons de voyage',
+    zh: 'Together - AI旅行行程与结伴匹配',
+    ja: 'Together - AI旅行コースと同行マッチング',
+    es: 'Together - Rutas de viaje IA y compañeros'
+  });
   // Update data-i18n elements
   document.querySelectorAll('[data-i18n]').forEach(elem => {
     const key = elem.getAttribute('data-i18n');
@@ -2936,14 +3200,20 @@ function setupUIStrings() {
     elem.setAttribute('title', cleanUiText(getText(key)));
   });
 
+  document.querySelectorAll('[data-i18n-aria-label]').forEach(elem => {
+    const key = elem.getAttribute('data-i18n-aria-label');
+    elem.setAttribute('aria-label', cleanUiText(getText(key)));
+  });
+
   updateLanguageControl();
 
   // Update header widget
-  let displayName = repairMojibakeText(state.activeProfile.name || '');
-  if (state.lang === 'en' && displayName.startsWith('\uC5EC\uD589\uC790_')) {
-    displayName = 'Traveler_' + displayName.replace('\uC5EC\uD589\uC790_', '');
-  }
+  const displayName = getLocalizedProfileDisplayName(state.activeProfile.name);
   document.getElementById('headerProfileName').textContent = displayName;
+  const profileNameInput = document.getElementById('profileName');
+  if (profileNameInput && /^(?:여행자|Traveler|Voyageur|旅行者|Viajero)_\d+$/i.test(profileNameInput.value || '')) {
+    profileNameInput.value = displayName;
+  }
   updateProfileAvatarUI();
   
   // Re-render components with translated fields
@@ -3044,7 +3314,14 @@ function updateOnboardingQuickDaysOptions() {
 
 function getText(key) {
   const table = (TRANSLATIONS && TRANSLATIONS[state.lang]) || {};
-  if (table[key] !== undefined) return cleanUiText(table[key]);
+  if (table[key] !== undefined) {
+    const direct = cleanUiText(table[key]);
+    const lang = normalizeLanguageCode(state.lang);
+    if (lang !== 'en' && TRANSLATIONS.en && cleanUiText(TRANSLATIONS.en[key]) === direct) {
+      return cleanUiText(localizeRuntimeText(direct));
+    }
+    return direct;
+  }
   const primaryFallback = isKoreanLanguage() ? (TRANSLATIONS.ko || {}) : (TRANSLATIONS.en || {});
   if (primaryFallback[key] !== undefined) {
     const repaired = cleanUiText(primaryFallback[key]);
@@ -3063,6 +3340,48 @@ function getText(key) {
   if (runtimeFallback !== key) return cleanUiText(runtimeFallback);
   return key;
 }
+
+function runLocalizationAudit() {
+  applyEnhancedTranslations();
+  const attributes = ['data-i18n', 'data-i18n-placeholder', 'data-i18n-title'];
+  const keys = Array.from(new Set(
+    Array.from(document.querySelectorAll(attributes.map(attr => `[${attr}]`).join(',')))
+      .flatMap(elem => attributes.map(attr => elem.getAttribute(attr)))
+      .filter(Boolean)
+  ));
+  const legitimateSharedValues = {
+    fr: new Set(['nav_logo', 'profile_mbti', 'comp_category_restaurant', 'modal_room_date']),
+    zh: new Set(['nav_logo', 'profile_mbti']),
+    ja: new Set(['nav_logo', 'profile_mbti']),
+    es: new Set(['nav_logo', 'profile_mbti', 'comp_category_restaurant', 'modal_room_date'])
+  };
+  const report = {};
+  SUPPORTED_LANG_CODES.forEach(lang => {
+    const table = TRANSLATIONS[lang] || {};
+    const english = TRANSLATIONS.en || {};
+    const missing = keys.filter(key => table[key] === undefined && english[key] === undefined);
+    const untranslated = [];
+    if (lang !== 'en' && lang !== 'ko') {
+      keys.forEach(key => {
+        const source = cleanUiText(table[key] !== undefined ? table[key] : english[key]);
+        const englishValue = cleanUiText(english[key]);
+        if (!source || !englishValue || source !== englishValue || !/[A-Za-z]{3}/.test(source)) return;
+        const effective = cleanUiText(localizeRuntimeText(source, lang));
+        if (effective === source && !(legitimateSharedValues[lang] || new Set()).has(key)) {
+          untranslated.push({ key, value: source });
+        }
+      });
+    }
+    report[lang] = { missing, untranslated, pass: missing.length === 0 && untranslated.length === 0 };
+  });
+  return {
+    keyCount: keys.length,
+    pass: SUPPORTED_LANG_CODES.every(lang => report[lang].pass),
+    languages: report
+  };
+}
+
+if (typeof window !== 'undefined') window.runLocalizationAudit = runLocalizationAudit;
 
 function getCategoryLabel(category) {
   return getText(`comp_category_${category}`) || category;
@@ -3145,7 +3464,17 @@ function getAgeRangeLabel(value) {
     .split(',')
     .map(v => v.trim())
     .filter(Boolean);
-  const specificValues = values.filter(v => v !== 'any');
+  const normalizedValues = values.map(item => {
+    const clean = repairMojibakeText(item).toLowerCase();
+    if (/20/.test(clean)) return '20s';
+    if (/30/.test(clean)) return '30s';
+    if (/40/.test(clean)) return '40s';
+    if (/50/.test(clean)) return '50s';
+    if (/60/.test(clean)) return '60s';
+    if (/any|all|무관|상관없|不限|不問|todos|tous/.test(clean)) return 'any';
+    return item;
+  });
+  const specificValues = normalizedValues.filter(v => v !== 'any');
   if (!specificValues.length) return getText('age_any');
   return specificValues.map(v => getProfileChoiceLabel('age', v)).join(', ');
 }
@@ -5925,15 +6254,16 @@ function renderCitySelectors() {
 }
 
 function getProfileInitial(profile = state.activeProfile) {
-  const name = String((profile && profile.name) || '').trim();
+  const name = getLocalizedProfileDisplayName((profile && profile.name) || '');
   return name ? name.charAt(0).toUpperCase() : '?';
 }
 
 function renderAvatarMarkup(profile, className) {
   const avatar = profile && profile.avatarDataUrl;
-  const label = profile && profile.name ? profile.name : 'Profile';
+  const label = profile && profile.name ? getLocalizedProfileDisplayName(profile.name) : getText('profile_title');
+  const photoLabel = getInlineText({ ko: '프로필 사진', en: 'profile photo', fr: 'photo de profil', zh: '头像', ja: 'プロフィール写真', es: 'foto de perfil' });
   if (avatar) {
-    return `<img class="${className}" src="${avatar}" alt="${label} profile photo">`;
+    return `<img class="${className}" src="${avatar}" alt="${label} ${photoLabel}">`;
   }
   return `<div class="${className}">${getProfileInitial(profile)}</div>`;
 }
@@ -5977,11 +6307,40 @@ function cleanUiText(value) {
 
 function getLocalizedRoomField(room, base) {
   const lang = normalizeLanguageCode(state.lang);
+  const direct = room && room[`${base}_${lang}`];
+  if (direct) return localizePlaceName(cleanUiText(direct), lang);
+  if (lang !== 'ko' && lang !== 'en') {
+    const city = room && typeof CITIES !== 'undefined' ? CITIES.find(item => item.id === room.cityId) : null;
+    const cityName = city ? getLocalizedCityField(city, 'name', lang) : '';
+    const category = getCategoryLabel((room && room.category) || 'city');
+    const sourcePlace = room && (room.place_en || room.place_ko || room.place);
+    const cleanSourcePlace = cleanUiText(sourcePlace || cityName);
+    const place = /[\uAC00-\uD7A3]/.test(cleanSourcePlace)
+      ? getInlineText({ fr: `point de rencontre à ${cityName}`, zh: `${cityName}集合地点`, ja: `${cityName}の集合場所`, es: `punto de encuentro en ${cityName}` }, lang)
+      : localizePlaceName(cleanSourcePlace, lang);
+    if (base === 'title') {
+      return getInlineText({
+        fr: `${category} à ${cityName}`,
+        zh: `${cityName}${category}结伴`,
+        ja: `${cityName}の${category}同行募集`,
+        es: `${category} en ${cityName}`
+      }, lang);
+    }
+    if (base === 'desc') {
+      return getInlineText({
+        fr: `Retrouvez les participants à ${place} et coordonnez les détails dans la discussion.`,
+        zh: `在${place}与同行者会合，并在聊天室协调详细安排。`,
+        ja: `${place}で合流し、チャットで詳細を調整します。`,
+        es: `Reúnete con los participantes en ${place} y coordina los detalles en el chat.`
+      }, lang);
+    }
+    if (base === 'place') return place;
+  }
   const fallbackKeys = lang === 'ko'
     ? [`${base}_ko`, `${base}_en`, base]
     : lang === 'en'
       ? [`${base}_en`, base, `${base}_ko`]
-      : [`${base}_${lang}`, `${base}_en`, base, `${base}_ko`];
+      : [`${base}_en`, base, `${base}_ko`];
   for (const key of fallbackKeys) {
     if (room && room[key]) return localizePlaceName(cleanUiText(room[key]), lang);
   }
@@ -6014,7 +6373,7 @@ function translateKnownPlaceNameToKorean(value) {
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .trim();
-  return KNOWN_KOREAN_PLACE_NAMES[key] || '';
+  return KNOWN_KOREAN_PLACE_NAMES[key] || (CURATED_PLACE_NAME_TRANSLATIONS[key] && CURATED_PLACE_NAME_TRANSLATIONS[key].ko) || '';
 }
 
 function getLocalizedItineraryField(item, base) {
@@ -6032,6 +6391,9 @@ function formatRoomSchedule(room) {
 }
 
 function updateProfileAvatarUI() {
+  const displayName = getLocalizedProfileDisplayName(state.activeProfile.name);
+  const photoLabel = getInlineText({ ko: '프로필 사진', en: 'profile photo', fr: 'photo de profil', zh: '头像', ja: 'プロフィール写真', es: 'foto de perfil' });
+  const initialLabel = getInlineText({ ko: '프로필 이니셜', en: 'profile initial', fr: 'initiale du profil', zh: '头像首字母', ja: 'プロフィールの頭文字', es: 'inicial del perfil' });
   const headerWidget = document.querySelector('.user-status-widget');
   if (headerWidget) {
     let headerAvatar = document.getElementById('headerProfileAvatar');
@@ -6044,11 +6406,11 @@ function updateProfileAvatarUI() {
     if (state.activeProfile.avatarDataUrl) {
       headerAvatar.style.backgroundImage = `url("${state.activeProfile.avatarDataUrl}")`;
       headerAvatar.textContent = '';
-      headerAvatar.setAttribute('aria-label', `${state.activeProfile.name} profile photo`);
+      headerAvatar.setAttribute('aria-label', `${displayName} ${photoLabel}`);
     } else {
       headerAvatar.style.backgroundImage = '';
       headerAvatar.textContent = getProfileInitial();
-      headerAvatar.setAttribute('aria-label', `${state.activeProfile.name} profile initial`);
+      headerAvatar.setAttribute('aria-label', `${displayName} ${initialLabel}`);
     }
   }
 
@@ -10208,7 +10570,7 @@ function renderItineraryTimeline(items) {
                 ${hideDurationControl || isSpecialItem ? '' : `
                   <span style="font-size:11px; color:var(--text-muted);">${durationLabel}:</span>
                   <input type="number" class="timeline-duration-input" data-attraction-index="${attIdx}" value="${item.duration || 90}" min="10" max="600" step="10">
-                  <span style="font-size:11px; color:var(--text-muted); margin-right:8px;">m</span>
+                  <span style="font-size:11px; color:var(--text-muted); margin-right:8px;">${getInlineText({ ko: '분', en: 'min', fr: 'min', zh: '分钟', ja: '分', es: 'min' })}</span>
                 `}
                 ${item.isLodging ? '' : `
                   <button class="timeline-delete-btn" data-attraction-index="${attIdx}" title="${getText('Delete')}">&times;</button>
@@ -10453,7 +10815,7 @@ async function createCompanionRoom(e) {
   const targetLanguage = getMultiSelectValues('modalRoomLanguage') || '';
   const targetSmoking = document.getElementById('modalRoomSmoking')?.value || 'ok';
   const targetAlcohol = document.getElementById('modalRoomAlcohol')?.value || 'ok';
-  const targetNationality = state.lang === 'ko' ? '\uAD6D\uC801 \uBB34\uAD00' : 'Any Nationality';
+  const targetNationality = localizeRuntimeText('Any Nationality');
   const preferenceCode = 'healing';
   const desc = document.getElementById('modalRoomDesc').value;
   const roomLang = normalizeLanguageCode(state.lang);
@@ -10648,7 +11010,7 @@ function renderChatRoom() {
     const showKick = isCreator && !isMe && !isRoomCreator;
 
     const kickBtn = showKick ? `
-      <button class="kick-member-btn" data-username="${m.name}" title="${state.lang === 'ko' ? '강퇴' : 'Kick'}">
+      <button class="kick-member-btn" data-username="${m.name}" title="${localizeRuntimeText('Kick')}">
         <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
       </button>` : '';
 
@@ -10692,7 +11054,7 @@ function renderChatMessages(forceScrollToBottom = false) {
 
   logs.forEach(log => {
     if (log.system) {
-      container.insertAdjacentHTML('beforeend', `<div class="chat-msg-system">${escapeHtml(cleanUiText(log.text))}</div>`);
+      container.insertAdjacentHTML('beforeend', `<div class="chat-msg-system">${escapeHtml(localizeRuntimeText(cleanUiText(log.text)))}</div>`);
     } else if (log.type === 'share_course') {
       const isMe = log.sender === state.activeProfile.name;
       const bubbleClass = isMe ? 'outgoing' : 'incoming';
@@ -10702,11 +11064,13 @@ function renderChatMessages(forceScrollToBottom = false) {
       const cardId = `chat-card-${log.id}`;
       const coursePrefs = getCoursePreferences(course);
       const prefText = coursePrefs.length > 0
-        ? (state.lang === 'ko'
-          ? coursePrefs.map(p => TRANSLATIONS.ko['planner_pref_' + p] || p).join(', ')
-          : coursePrefs.join(', '))
+        ? coursePrefs.map(p => getText('planner_pref_' + p)).join(', ')
         : '-';
       const courseDays = getCourseDurationDays(course);
+      const localizedCourseCity = course.cityId && course.cityId !== 'multi_route'
+        ? getCityDisplayName(course.cityId)
+        : localizePlaceName(course.cityName);
+      const itineraryNoun = getInlineText({ ko: '일정', en: 'itinerary', fr: 'itinéraire', zh: '行程', ja: '日程', es: 'itinerario' });
       
       const cardHTML = `
         <div class="chat-msg-bubble ${bubbleClass}">
@@ -10715,13 +11079,13 @@ function renderChatMessages(forceScrollToBottom = false) {
             <div class="chat-msg-card">
               <div class="chat-msg-card-title">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.4z"/></svg>
-                <span>${state.lang === 'ko' ? '공유된 여행 코스' : 'Shared Course'}</span>
+                <span>${localizeRuntimeText('Shared Course')}</span>
               </div>
               <div class="chat-msg-card-desc">
-                <b>${course.cityName}</b> ${courseDays}일 일정<br>
-                ${state.lang === 'ko' ? '메인 취향: ' + prefText : 'Preferences: ' + prefText}
+                <b>${localizedCourseCity}</b> ${formatExportDurationDays(courseDays)} ${itineraryNoun}<br>
+                ${localizeRuntimeText('Preferences:')} ${prefText}
               </div>
-              <button class="chat-msg-card-btn" id="${cardId}">${state.lang === 'ko' ? '일정 불러오기' : 'Load Itinerary'}</button>
+              <button class="chat-msg-card-btn" id="${cardId}">${localizeRuntimeText('Load Itinerary')}</button>
             </div>
           </div>
         </div>
@@ -10895,7 +11259,7 @@ async function kickMember(username) {
 // --- Toast and Feedback ---
 function showToast(message) {
   const toast = document.getElementById('toastNotification');
-  toast.textContent = cleanUiText(message);
+  toast.textContent = cleanUiText(localizeRuntimeText(message));
   toast.classList.add('show');
   setTimeout(() => {
     toast.classList.remove('show');
@@ -11118,7 +11482,7 @@ function renderMapForDay(dayIndex) {
     if (typeof L === 'undefined') {
       document.getElementById('itineraryMap').innerHTML = `
         <div style="height:100%; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.03); border-radius:16px; color:var(--text-muted); padding: 20px; text-align:center;">
-          <span>지도를 로드할 수 없습니다 (인터넷 연결 확인)</span>
+          <span>${getInlineText({ ko: '지도를 불러올 수 없습니다. 인터넷 연결을 확인해주세요.', en: 'Unable to load the map. Check your internet connection.', fr: 'Impossible de charger la carte. Vérifiez votre connexion Internet.', zh: '无法加载地图，请检查网络连接。', ja: '地図を読み込めません。インターネット接続を確認してください。', es: 'No se pudo cargar el mapa. Comprueba la conexión a Internet.' })}</span>
         </div>
       `;
       return;
@@ -11134,6 +11498,7 @@ function renderMapForDay(dayIndex) {
         attribution: '© OpenStreetMap'
       }).addTo(leafletMap);
     }
+    localizeLeafletMapControls(leafletMap);
     
     // Invalidate Leaflet map size to prevent gray panes when container displays
     setTimeout(() => {
@@ -11999,8 +12364,9 @@ function exportItineraryToPdf(inputCourse = null) {
   const url = URL.createObjectURL(pdfBlob);
   const link = document.createElement('a');
   const safeName = cleanText(exportCityName).replace(/[\\/:*?"<>|]+/g, '_') || 'itinerary';
+  const fileDayUnit = cleanText(getExportLabel('dayUnit', exportLang));
   link.href = url;
-  link.download = `WanderSync_${safeName}_${displayDurationDays}${isKo ? '일' : 'days'}.pdf`;
+  link.download = `WanderSync_${safeName}_${displayDurationDays}${fileDayUnit}.pdf`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -12059,7 +12425,10 @@ function exportItineraryToMarkdown() {
       if (item.isTransit) {
         txt += `\n  ${getExportLabel('transit', exportLang)}\n`;
         txt += `  ${displayTime ? displayTime + '  ' : ''}${name}`;
-        if (item.duration) txt += ` (${item.duration}${isKo ? '\uBD84' : 'min'})`;
+        if (item.duration) {
+          const minuteUnit = getInlineText({ ko: '분', en: 'min', fr: 'min', zh: '分钟', ja: '分', es: 'min' }, exportLang);
+          txt += ` (${item.duration}${minuteUnit})`;
+        }
         txt += `\n`;
       } else if (item.isLodging) {
         txt += `\n  ${displayTime ? displayTime + '  ' : ''}${name}\n`;

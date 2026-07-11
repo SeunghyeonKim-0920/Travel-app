@@ -145,7 +145,7 @@
 
     function p(name, duration, x, y, landmark, open, close) {
       return {
-        name_ko: name,
+        name_ko: '',
         name_en: name,
         duration: duration,
         x: x,
@@ -153,7 +153,7 @@
         open: open == null ? 540 : open,
         close: close == null ? 1260 : close,
         isLandmark: !!landmark,
-        desc_ko: 'Real verified place: ' + name + '.',
+        desc_ko: '',
         desc_en: 'Visit the real verified place: ' + name + '.'
       };
     }
