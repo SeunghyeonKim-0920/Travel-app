@@ -12,6 +12,9 @@ The application currently leaks English text when Korean, French, Chinese, Japan
 - Make a newly created companion room immediately visible by ensuring the active category filter does not hide it after creation.
 - Keep root source files and matching `deploy_live` files synchronized whenever both are affected.
 - After explicit approval, verify locally with Playwright at `http://localhost:8000`, test Home, Planner, Companion Matching, Route Planner, and Profile, check browser console errors, deploy through the existing Surge workflow, verify the live site, and only then commit and push the current branch.
+- Make city selection and companion-room creation reliably touch-operable on mobile portrait and landscape layouts.
+- Replace the visible `WanderSync` brand with the concise travel-oriented `TripTogether` name, shorten the Home copy, and use bright destination photography to make trip planning feel immediate and inviting.
+- Show the Korean language option as `한국어`, add a localized profile gender privacy choice, and display a localized anti-fraud notice whenever a companion chat is opened.
 
 ## Capabilities
 
@@ -27,6 +30,7 @@ None. The repository currently has no existing OpenSpec capability specification
 ## Impact
 
 - Primary implementation areas: `app.js`, localized city/place data and translation maps, companion-room rendering and remote persistence flow.
+- Additional implementation areas: `index.html`, `style.css`, route-planner labels, responsive interaction styles, and local travel-photo assets.
 - Mirrored deployment files under `deploy_live` must remain byte-equivalent or functionally synchronized with the root files they mirror.
 - The remote room payload integration and existing Surge deployment scripts are affected by verification, but no public API breaking change is expected.
 - Local and live browser verification must cover all supported language selections and the full companion-room creation path.

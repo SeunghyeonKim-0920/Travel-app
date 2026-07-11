@@ -1,6 +1,6 @@
 {
-  "name": "WanderSync",
-  "short_name": "WanderSync",
+  "name": "TripTogether",
+  "short_name": "TripTogether",
   "description": "AI travel itinerary planning and companion matching.",
   "start_url": "/",
   "scope": "/",

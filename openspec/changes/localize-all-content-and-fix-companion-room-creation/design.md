@@ -17,12 +17,15 @@ The change must preserve existing useful behavior, keep root and `deploy_live` a
 - Make companion-room creation transactional from the user’s perspective: success is shown only when persistence succeeds and the room remains available in state.
 - Ensure the newly created room is visible immediately after creation.
 - Verify local and deployed behavior across all required views and supported language modes.
+- Provide a mobile-first city picker and companion-room modal that work with touch in both portrait and landscape orientation.
+- Reduce Home copy, replace the visible brand, and add bright travel photography while retaining the existing navigation and core workflows.
+- Add a localized gender privacy option and a persistent companion-chat safety notice.
 
 **Non-Goals:**
 
 - Automatically machine-translating arbitrary user-entered room titles, descriptions, profile names, or free-form place text.
 - Replacing the current remote storage provider or redesigning the companion data model beyond what is needed for reliable creation.
-- Redesigning page layouts or changing unrelated itinerary, chat, membership, or route-planning behavior.
+- Changing unrelated itinerary, membership, or route-planning behavior.
 - Translating third-party brand names into forms that do not exist in the target language; official localized names or established transliterations will be used where available.
 
 ## Decisions
@@ -74,6 +77,14 @@ After successful creation, the companion category filter will be set to `all` or
 Changes to mirrored source assets will be applied to both root and `deploy_live`, followed by an explicit comparison of affected files. Local Playwright verification must pass before running the existing Surge deployment workflow. The deployed URL will then be opened and verified before commit and push.
 
 **Rationale:** The project serves production from mirrored deployment assets, so root-only fixes would not reach the live site.
+
+### 8. Prefer touch-native controls and responsive safe areas
+
+City search will expose an application-owned listbox of matching supported cities instead of depending only on mobile browser `datalist` behavior. Long companion-room forms will scroll inside a `100dvh` modal with a sticky action area, safe-area padding, and 48-pixel touch targets. Portrait and landscape layouts will each receive explicit constraints.
+
+### 9. Use a concise, photo-led Home experience
+
+The Home view will retain its direct Planner and Companion actions, but remove verbose step-by-step onboarding copy. A bright planning photograph and a small curated destination-photo set will provide the travel signal without turning the first screen into a marketing-only page.
 
 ## Risks / Trade-offs
 

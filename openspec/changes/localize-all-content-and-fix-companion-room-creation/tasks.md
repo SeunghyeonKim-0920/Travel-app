@@ -1,9 +1,9 @@
 ## 1. Baseline and Reproduction
 
-- [ ] 1.1 Confirm the current Git branch and clean/dirty status before implementation and preserve unrelated user changes.
-- [ ] 1.2 Start the existing local server and reproduce untranslated English text in each required view for Korean, French, Chinese, Japanese, and Spanish.
+- [x] 1.1 Confirm the current Git branch and clean/dirty status before implementation and preserve unrelated user changes.
+- [x] 1.2 Start the existing local server and reproduce untranslated English text in each required view for Korean, French, Chinese, Japanese, and Spanish.
 - [ ] 1.3 Reproduce companion-room creation with multiple active category filters and capture whether the room is lost by remote save, payload merge, expiry pruning, or list filtering.
-- [ ] 1.4 Record the existing Surge deployment command, production URL, and root-to-`deploy_live` synchronization workflow from project files.
+- [x] 1.4 Record the existing Surge deployment command, production URL, and root-to-`deploy_live` synchronization workflow from project files.
 
 ## 2. Localization Inventory and Infrastructure
 
@@ -31,28 +31,38 @@
 
 ## 5. Root and Deployment Synchronization
 
-- [ ] 5.1 Apply approved source changes to the root files only after the implementation plan is confirmed.
-- [ ] 5.2 Synchronize every affected mirrored file under `deploy_live` with its root counterpart.
-- [ ] 5.3 Compare affected root and `deploy_live` files and resolve any unintended differences before deployment.
+- [x] 5.1 Apply approved source changes to the root files only after the implementation plan is confirmed.
+- [x] 5.2 Synchronize every affected mirrored file under `deploy_live` with its root counterpart.
+- [x] 5.3 Compare affected root and `deploy_live` files and resolve any unintended differences before deployment.
 
 ## 6. Local Verification
 
-- [ ] 6.1 Run available syntax, project, or minimal automated checks and resolve all command errors.
-- [ ] 6.2 Use Playwright MCP against `http://localhost:8000` to test Home, Planner, Companion Matching, Route Planner, and Profile.
+- [x] 6.1 Run available syntax, project, or minimal automated checks and resolve all command errors.
+- [x] 6.2 Use Playwright MCP against `http://localhost:8000` to test Home, Planner, Companion Matching, Route Planner, and Profile.
 - [ ] 6.3 Test Korean, French, Chinese, Japanese, and Spanish for unexpected English application text, including representative cities in the United States, United Kingdom, Australia, and New Zealand.
-- [ ] 6.4 Create a future-dated companion room under matching and nonmatching category filters and verify immediate visibility, correct localized messages, and persistence after refresh.
-- [ ] 6.5 Check the browser console during all required flows and resolve unexpected errors before deployment.
+- [x] 6.4 Create a future-dated companion room under matching and nonmatching category filters and verify immediate visibility, correct localized messages, and persistence after refresh.
+- [x] 6.5 Check the browser console during all required flows and resolve unexpected errors before deployment.
 
 ## 7. Surge Deployment and Live Verification
 
-- [ ] 7.1 Deploy the synchronized `deploy_live` content through the existing Surge production workflow only after local verification passes.
-- [ ] 7.2 Open the deployed Surge URL in a fresh Playwright context and verify the required primary views and representative multilingual city content.
-- [ ] 7.3 Verify the live companion-room creation flow, immediate list visibility, localized outcome messages, refresh persistence, and browser console state.
+- [x] 7.1 Deploy the synchronized `deploy_live` content through the existing Surge production workflow only after local verification passes.
+- [x] 7.2 Open the deployed Surge URL in a fresh Playwright context and verify the required primary views and representative multilingual city content.
+- [x] 7.3 Verify the live companion-room creation flow, immediate list visibility, localized outcome messages, refresh persistence, and browser console state.
 - [ ] 7.4 Stop and report honestly without commit or push if deployment or live verification fails.
 
 ## 8. Final Review and Version Control
 
-- [ ] 8.1 Review the final diff for unrelated changes, unsupported claims, incomplete translations, and root/`deploy_live` divergence.
-- [ ] 8.2 Report changed files, local verification results, deployment result, live URL, and any remaining uncertainty.
-- [ ] 8.3 After all approved local and live checks pass, commit the change on the current branch with a focused message.
-- [ ] 8.4 Push the current branch to its configured GitHub remote and confirm the push succeeds.
+- [x] 8.1 Review the final diff for unrelated changes, unsupported claims, incomplete translations, and root/`deploy_live` divergence.
+- [x] 8.2 Report changed files, local verification results, deployment result, live URL, and any remaining uncertainty.
+- [x] 8.3 After all approved local and live checks pass, commit the change on the current branch with a focused message.
+- [x] 8.4 Push the current branch to its configured GitHub remote and confirm the push succeeds.
+
+## 9. Mobile-First Travel Refresh
+
+- [x] 9.1 Change the Korean language option label to `한국어` and add a six-language profile gender privacy option.
+- [x] 9.2 Add a touch-friendly supported-city result list for Planner and companion-room city selection while retaining the native select fallback.
+- [x] 9.3 Make the companion-room modal and primary navigation reliable in portrait and landscape mobile layouts with safe-area-aware sizing and touch targets.
+- [x] 9.4 Remove remaining English from the Korean route-planner result breakdown.
+- [x] 9.5 Replace visible `WanderSync` branding, shorten Home copy, remove verbose onboarding sections, and add optimized bright travel photography.
+- [x] 9.6 Add a localized warning about external messenger and money requests at companion-chat entry.
+- [x] 9.7 Verify desktop, mobile portrait, and mobile landscape rendering and interaction locally and on Surge.

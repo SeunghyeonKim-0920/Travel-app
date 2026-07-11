@@ -2179,8 +2179,16 @@ function applyEnhancedTranslations() {
       shared_course_label: '공유된 여행 코스',
       load_itinerary: '일정 불러오기',
       preference_label: '메인 취향',
-      nav_logo: 'WanderSync',
-      profile_mbti: 'MBTI'
+      nav_logo: 'TripTogether',
+      profile_mbti: 'MBTI',
+      gender_private: '공개 안 함',
+      chat_safety_notice: '외부 메신저 이동이나 선입금·송금을 요구하면 주의하세요.',
+      dash_welcome: '다음 여행, 어디로 갈까요?',
+      dash_subtitle: 'AI 코스와 필요한 순간의 동행.',
+      onboard_eyebrow: '바로 계획하기',
+      onboard_title: '도시와 기간만 고르세요',
+      onboard_desc: '대표 명소와 이동 순서를 바로 만듭니다.',
+      onboard_quick_hint: '선택한 도시로 일정을 만듭니다.'
     },
     en: {
       room_create_success: 'Companion room created!',
@@ -2226,8 +2234,16 @@ function applyEnhancedTranslations() {
       shared_course_label: 'Shared Course',
       load_itinerary: 'Load Itinerary',
       preference_label: 'Preferences',
-      nav_logo: 'WanderSync',
-      profile_mbti: 'MBTI'
+      nav_logo: 'TripTogether',
+      profile_mbti: 'MBTI',
+      gender_private: 'Prefer not to say',
+      chat_safety_notice: 'Be cautious if someone asks you to move to an external messenger or send money.',
+      dash_welcome: 'Where will you go next?',
+      dash_subtitle: 'AI itineraries. Companions when you need them.',
+      onboard_eyebrow: 'Plan now',
+      onboard_title: 'Choose a city and duration',
+      onboard_desc: 'Get key sights in a practical order.',
+      onboard_quick_hint: 'Build an itinerary for this city.'
     },
     fr: {
       age_20s: '20–29 ans', age_30s: '30–39 ans', age_40s: '40–49 ans', age_50s: '50–59 ans', age_60s: '60 ans et plus', age_any: 'Tous les âges',
@@ -2236,10 +2252,12 @@ function applyEnhancedTranslations() {
       comp_room_age_limit: 'Âge souhaité', comp_room_closed: 'Fermée', comp_room_details: 'Détails', comp_room_filters: 'Filtres', comp_room_gender_limit: 'Genre souhaité', comp_room_joined: 'Participant', comp_room_nat_limit: 'Nationalité souhaitée', comp_room_time: 'Horaire', comp_room_verify_badge: 'Profil vérifié',
       dash_ref_desc: 'Des méthodes de mise en relation éprouvées sont utilisées pour proposer des compagnons adaptés.', dash_ref_title: 'Communauté de voyage', dash_stat_matches: 'Taux de mise en relation : 94,2 %', dash_stat_users: '124 000 utilisateurs cumulés', dash_stat_verified: 'Profil prêt',
       duration_1: '1 jour', duration_2: '2 jours', duration_3: '3 jours', duration_4: '4 jours', duration_5: '5 jours', duration_6: '6 jours', duration_7: '7 jours',
-      gender_any: 'Sans préférence', gender_female: 'Femme', gender_male: 'Homme',
+      gender_any: 'Sans préférence', gender_female: 'Femme', gender_male: 'Homme', gender_private: 'Ne pas afficher',
+      chat_safety_notice: 'Soyez vigilant si l’on vous demande de passer sur une messagerie externe ou d’envoyer de l’argent.',
+      dash_welcome: 'Votre prochain voyage ?', dash_subtitle: 'Itinéraire IA et compagnons au bon moment.', onboard_eyebrow: 'Planifier maintenant', onboard_title: 'Choisissez une ville et une durée', onboard_desc: 'Obtenez les lieux essentiels dans un ordre pratique.', onboard_quick_hint: 'Créer un itinéraire pour cette ville.',
       member_no_info: 'Aucune information supplémentaire', member_profile_btn: 'Voir le profil', member_profile_title: 'Profil du participant',
       modal_any: 'Sans préférence', modal_room_age: 'Tranche d’âge souhaitée', modal_room_alcohol: 'Préférence pour l’alcool', modal_room_any: 'Sans préférence', modal_room_language: 'Langues souhaitées', modal_room_nationality: 'Nationalité souhaitée', modal_room_pref: 'Style de voyage', modal_room_smoking: 'Compatibilité tabac',
-      nat_any: 'Toute nationalité', nat_foreign: 'Voyageur international', nat_korean: 'Coréen', nav_logo: 'WanderSync', pdf_download_started: 'Le téléchargement du PDF a commencé.',
+      nat_any: 'Toute nationalité', nat_foreign: 'Voyageur international', nat_korean: 'Coréen', nav_logo: 'TripTogether', pdf_download_started: 'Le téléchargement du PDF a commencé.',
       planner_day: 'Jour', planner_dest_placeholder: 'Sélectionnez une ville', planner_generating: 'L’IA prépare le meilleur itinéraire…',
       profile_gender: 'Genre', profile_mbti: 'MBTI', profile_nationality: 'Nationalité', profile_saved_toast: 'Profil enregistré.', profile_sns: 'Réseau social', profile_unverified: 'Non vérifié', profile_verified: 'Vérifié',
       rain_regen_btn: 'Adapter la journée sélectionnée aux lieux couverts', rain_regen_done: 'La journée sélectionnée a été réorganisée avec des lieux couverts.', rain_regen_label: 'Adapter en cas de pluie', rain_regen_no_candidates: 'Il n’y a pas assez de lieux couverts dans cette ville.', rain_regen_no_course: 'Créez d’abord un itinéraire.', regen_input_placeholder: 'Décrivez le changement souhaité…',
@@ -2256,10 +2274,12 @@ function applyEnhancedTranslations() {
       comp_room_age_limit: '期望年龄', comp_room_closed: '已结束', comp_room_details: '详细信息', comp_room_filters: '筛选', comp_room_gender_limit: '期望性别', comp_room_joined: '已参加', comp_room_nat_limit: '期望国籍', comp_room_time: '时间', comp_room_verify_badge: '资料已验证',
       dash_ref_desc: '结合成熟的旅行同行匹配经验，为您推荐合适的同行者。', dash_ref_title: '旅行社区', dash_stat_matches: '匹配成功率 94.2%', dash_stat_users: '累计用户 12.4 万', dash_stat_verified: '资料已准备',
       duration_1: '1天', duration_2: '2天', duration_3: '3天', duration_4: '4天', duration_5: '5天', duration_6: '6天', duration_7: '7天',
-      gender_any: '性别不限', gender_female: '女性', gender_male: '男性',
+      gender_any: '性别不限', gender_female: '女性', gender_male: '男性', gender_private: '不公开',
+      chat_safety_notice: '如有人要求转到外部聊天软件或提前汇款，请提高警惕。',
+      dash_welcome: '下一站去哪里？', dash_subtitle: 'AI规划行程，需要时寻找旅伴。', onboard_eyebrow: '立即规划', onboard_title: '选择城市和天数', onboard_desc: '按合理顺序安排必游景点。', onboard_quick_hint: '为所选城市生成行程。',
       member_no_info: '暂无更多资料', member_profile_btn: '查看资料', member_profile_title: '参与者资料',
       modal_any: '不限', modal_room_age: '期望年龄段', modal_room_alcohol: '饮酒偏好', modal_room_any: '不限', modal_room_language: '期望语言', modal_room_nationality: '期望国籍', modal_room_pref: '旅行风格', modal_room_smoking: '吸烟偏好',
-      nat_any: '国籍不限', nat_foreign: '国际旅行者', nat_korean: '韩国人', nav_logo: 'WanderSync', pdf_download_started: 'PDF下载已开始。',
+      nat_any: '国籍不限', nat_foreign: '国际旅行者', nat_korean: '韩国人', nav_logo: 'TripTogether', pdf_download_started: 'PDF下载已开始。',
       planner_day: '第几天', planner_dest_placeholder: '请选择城市', planner_generating: 'AI正在生成最佳路线…',
       profile_gender: '性别', profile_mbti: 'MBTI', profile_nationality: '国籍', profile_saved_toast: '资料已保存。', profile_sns: '社交账号', profile_unverified: '未验证', profile_verified: '已验证',
       rain_regen_btn: '将所选日期改为室内行程', rain_regen_done: '所选日期已调整为适合雨天的室内行程。', rain_regen_label: '雨天室内调整', rain_regen_no_candidates: '该城市的室内地点不足。', rain_regen_no_course: '请先生成行程。', regen_input_placeholder: '请输入希望调整的内容…',
@@ -2276,10 +2296,12 @@ function applyEnhancedTranslations() {
       comp_room_age_limit: '希望年齢', comp_room_closed: '募集終了', comp_room_details: '詳細', comp_room_filters: '絞り込み', comp_room_gender_limit: '希望する性別', comp_room_joined: '参加済み', comp_room_nat_limit: '希望する国籍', comp_room_time: '時間', comp_room_verify_badge: 'プロフィール確認済み',
       dash_ref_desc: '旅行同行サービスの実績あるマッチング方法を活用し、相性のよい同行者を提案します。', dash_ref_title: '旅行コミュニティ', dash_stat_matches: 'マッチング成功率 94.2%', dash_stat_users: '累計利用者 12.4万人', dash_stat_verified: 'プロフィール準備完了',
       duration_1: '1日', duration_2: '2日', duration_3: '3日', duration_4: '4日', duration_5: '5日', duration_6: '6日', duration_7: '7日',
-      gender_any: '性別不問', gender_female: '女性', gender_male: '男性',
+      gender_any: '性別不問', gender_female: '女性', gender_male: '男性', gender_private: '非公開',
+      chat_safety_notice: '外部メッセンジャーへの移動や送金を求められた場合は注意してください。',
+      dash_welcome: '次はどこへ行きますか？', dash_subtitle: 'AIの旅程と、必要な時の旅仲間。', onboard_eyebrow: '今すぐ計画', onboard_title: '都市と日数を選択', onboard_desc: '定番スポットを効率よく並べます。', onboard_quick_hint: '選んだ都市の旅程を作成します。',
       member_no_info: '追加プロフィール情報なし', member_profile_btn: 'プロフィールを見る', member_profile_title: '参加者プロフィール',
       modal_any: '指定なし', modal_room_age: '希望年齢層', modal_room_alcohol: '飲酒の希望', modal_room_any: '指定なし', modal_room_language: '希望言語', modal_room_nationality: '希望する国籍', modal_room_pref: '旅行スタイル', modal_room_smoking: '喫煙の相性',
-      nat_any: '国籍不問', nat_foreign: '海外旅行者', nat_korean: '韓国人', nav_logo: 'WanderSync', pdf_download_started: 'PDFのダウンロードを開始しました。',
+      nat_any: '国籍不問', nat_foreign: '海外旅行者', nat_korean: '韓国人', nav_logo: 'TripTogether', pdf_download_started: 'PDFのダウンロードを開始しました。',
       planner_day: '日目', planner_dest_placeholder: '都市を選択', planner_generating: 'AIが最適なルートを作成しています…',
       profile_gender: '性別', profile_mbti: 'MBTI', profile_nationality: '国籍', profile_saved_toast: 'プロフィールを保存しました。', profile_sns: 'SNS', profile_unverified: '未確認', profile_verified: '確認済み',
       rain_regen_btn: '選択した日を屋内中心に変更', rain_regen_done: '選択した日を雨天向けの屋内コースに調整しました。', rain_regen_label: '雨天時の屋内コース調整', rain_regen_no_candidates: 'この都市には屋内候補が十分ありません。', rain_regen_no_course: '先に旅程を作成してください。', regen_input_placeholder: '変更したい内容を入力してください…',
@@ -2296,10 +2318,12 @@ function applyEnhancedTranslations() {
       comp_room_age_limit: 'Edad preferida', comp_room_closed: 'Cerrada', comp_room_details: 'Detalles', comp_room_filters: 'Filtros', comp_room_gender_limit: 'Género preferido', comp_room_joined: 'Participando', comp_room_nat_limit: 'Nacionalidad preferida', comp_room_time: 'Horario', comp_room_verify_badge: 'Perfil verificado',
       dash_ref_desc: 'Usamos métodos contrastados de comunidades de viaje para recomendar compañeros compatibles.', dash_ref_title: 'Comunidad de viajes', dash_stat_matches: 'Tasa de coincidencia: 94,2 %', dash_stat_users: '124 000 usuarios acumulados', dash_stat_verified: 'Perfil preparado',
       duration_1: '1 día', duration_2: '2 días', duration_3: '3 días', duration_4: '4 días', duration_5: '5 días', duration_6: '6 días', duration_7: '7 días',
-      gender_any: 'Cualquier género', gender_female: 'Mujer', gender_male: 'Hombre',
+      gender_any: 'Cualquier género', gender_female: 'Mujer', gender_male: 'Hombre', gender_private: 'No mostrar',
+      chat_safety_notice: 'Ten cuidado si te piden pasar a una mensajería externa o enviar dinero.',
+      dash_welcome: '¿Cuál será tu próximo viaje?', dash_subtitle: 'Ruta con IA y compañía cuando la necesites.', onboard_eyebrow: 'Planifica ahora', onboard_title: 'Elige ciudad y duración', onboard_desc: 'Organiza los lugares esenciales en un orden práctico.', onboard_quick_hint: 'Crea una ruta para esta ciudad.',
       member_no_info: 'Sin información adicional', member_profile_btn: 'Ver perfil', member_profile_title: 'Perfil del participante',
       modal_any: 'Sin preferencia', modal_room_age: 'Rango de edad preferido', modal_room_alcohol: 'Preferencia de alcohol', modal_room_any: 'Sin preferencia', modal_room_language: 'Idiomas preferidos', modal_room_nationality: 'Nacionalidad preferida', modal_room_pref: 'Estilo de viaje', modal_room_smoking: 'Compatibilidad con tabaco',
-      nat_any: 'Cualquier nacionalidad', nat_foreign: 'Viajero internacional', nat_korean: 'Coreano', nav_logo: 'WanderSync', pdf_download_started: 'La descarga del PDF ha comenzado.',
+      nat_any: 'Cualquier nacionalidad', nat_foreign: 'Viajero internacional', nat_korean: 'Coreano', nav_logo: 'TripTogether', pdf_download_started: 'La descarga del PDF ha comenzado.',
       planner_day: 'Día', planner_dest_placeholder: 'Selecciona una ciudad', planner_generating: 'La IA está creando la mejor ruta…',
       profile_gender: 'Género', profile_mbti: 'MBTI', profile_nationality: 'Nacionalidad', profile_saved_toast: 'Perfil guardado.', profile_sns: 'Red social', profile_unverified: 'Sin verificar', profile_verified: 'Verificado',
       rain_regen_btn: 'Convertir el día seleccionado en ruta interior', rain_regen_done: 'El día seleccionado se reorganizó con lugares interiores.', rain_regen_label: 'Ajuste para días de lluvia', rain_regen_no_candidates: 'No hay suficientes lugares interiores en esta ciudad.', rain_regen_no_course: 'Primero genera un itinerario.', regen_input_placeholder: 'Describe el cambio que deseas…',
@@ -3536,12 +3560,12 @@ function setupUIStrings() {
   updateProfileLanguageControlLabels(state.lang);
   document.documentElement.lang = state.lang;
   document.title = getInlineText({
-    ko: 'Together - AI 여행 코스 및 동행 매칭',
-    en: 'Together - AI Travel Itineraries and Companions',
-    fr: 'Together - Itinéraires IA et compagnons de voyage',
-    zh: 'Together - AI旅行行程与结伴匹配',
-    ja: 'Together - AI旅行コースと同行マッチング',
-    es: 'Together - Rutas de viaje IA y compañeros'
+    ko: 'TripTogether - AI 여행 코스와 동행',
+    en: 'TripTogether - AI Itineraries and Companions',
+    fr: 'TripTogether - Itinéraires IA et compagnons',
+    zh: 'TripTogether - AI旅行行程与结伴',
+    ja: 'TripTogether - AI旅行コースと同行',
+    es: 'TripTogether - Rutas con IA y compañeros'
   });
   // Update data-i18n elements
   document.querySelectorAll('[data-i18n]').forEach(elem => {
@@ -3752,8 +3776,12 @@ function getGenderLabel(value) {
   const raw = String(value || '').trim();
   const lower = raw.toLowerCase();
   const ko = TRANSLATIONS.ko || {};
-  if (raw === ko.gender_male || lower === 'male') return getText('gender_male');
-  if (raw === ko.gender_female || lower === 'female') return getText('gender_female');
+  const maleAliases = ['male', 'man', 'homme', 'hombre', '男性', '남성'];
+  const femaleAliases = ['female', 'woman', 'femme', 'mujer', '女性', '여성'];
+  const privateAliases = ['private', 'prefer not to say', 'ne pas afficher', 'no mostrar', '不公开', '非公開', '공개 안 함'];
+  if (raw === ko.gender_male || maleAliases.includes(lower)) return getText('gender_male');
+  if (raw === ko.gender_female || femaleAliases.includes(lower)) return getText('gender_female');
+  if (raw === ko.gender_private || privateAliases.includes(lower)) return getText('gender_private');
   if (raw === ko.gender_any || lower.includes('any')) return getText('gender_any');
   return raw;
 }
@@ -3870,7 +3898,7 @@ function findCityByTypedName(query) {
     const names = [city.id, city.name_ko, city.name_en, city.country_ko, city.country_en, ...localizedNames]
       .filter(Boolean)
       .map(v => String(v).toLowerCase());
-    return names.some(name => name === q) || names.some(name => name.startsWith(q));
+    return names.some(name => name === q);
   }) || null;
 }
 
@@ -3937,9 +3965,68 @@ function updateUnsupportedCityState(inputId, statusId, requestBtnId) {
   if (btn) btn.disabled = !unsupported;
 }
 
+function getMatchingCities(query, limit = 10) {
+  const q = String(query || '').trim().toLowerCase();
+  const cities = getSortedSupportedDestinationCities();
+  if (!q) return cities.slice(0, limit);
+  return cities.filter(city => {
+    const localizedNames = SUPPORTED_LANG_CODES.flatMap(lang => [
+      getLocalizedCityField(city, 'name', lang),
+      getLocalizedCityField(city, 'country', lang)
+    ]);
+    return [city.id, city.name_ko, city.name_en, city.country_ko, city.country_en, ...localizedNames]
+      .filter(Boolean)
+      .some(value => String(value).toLowerCase().includes(q));
+  }).slice(0, limit);
+}
+
+function renderCitySearchResults(input, results, select, onSelected) {
+  if (!results) return;
+  const matches = getMatchingCities(input.value);
+  results.innerHTML = '';
+  matches.forEach(city => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'city-search-result';
+    button.setAttribute('role', 'option');
+    button.dataset.cityId = city.id;
+    const cityName = getLocalizedCityField(city, 'name');
+    const countryName = getLocalizedCityField(city, 'country');
+    button.innerHTML = `<strong>${escapeHtml(cityName)}</strong><span>${escapeHtml(countryName)}</span>`;
+    button.addEventListener('pointerdown', event => event.preventDefault());
+    button.addEventListener('keydown', event => {
+      const options = [...results.querySelectorAll('.city-search-result')];
+      const index = options.indexOf(button);
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        (options[index + 1] || options[0])?.focus();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        (options[index - 1] || input)?.focus();
+      } else if (event.key === 'Escape') {
+        results.hidden = true;
+        input.setAttribute('aria-expanded', 'false');
+        input.focus();
+      }
+    });
+    button.addEventListener('click', () => {
+      select.value = city.id;
+      input.value = cityName;
+      results.hidden = true;
+      input.setAttribute('aria-expanded', 'false');
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+      input.focus({ preventScroll: true });
+    });
+    results.appendChild(button);
+  });
+  results.hidden = matches.length === 0;
+  input.setAttribute('aria-expanded', matches.length ? 'true' : 'false');
+}
+
 function connectCitySearch(inputId, selectId, statusId, requestBtnId, onSelected) {
   const input = document.getElementById(inputId);
   const select = document.getElementById(selectId);
+  const results = document.getElementById(inputId.replace(/Input$/, 'Results'));
   if (!input || !select || input.dataset.boundCitySearch === 'true') return;
   input.dataset.boundCitySearch = 'true';
   input.addEventListener('input', () => {
@@ -3951,6 +4038,23 @@ function connectCitySearch(inputId, selectId, statusId, requestBtnId, onSelected
     } else {
       updateUnsupportedCityState(inputId, statusId, requestBtnId);
     }
+    renderCitySearchResults(input, results, select, onSelected);
+  });
+  input.addEventListener('focus', () => renderCitySearchResults(input, results, select, onSelected));
+  input.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && results) {
+      results.hidden = true;
+      input.setAttribute('aria-expanded', 'false');
+    } else if (event.key === 'ArrowDown' && results && !results.hidden) {
+      event.preventDefault();
+      results.querySelector('.city-search-result')?.focus();
+    }
+  });
+  input.addEventListener('blur', () => {
+    window.setTimeout(() => {
+      if (results) results.hidden = true;
+      input.setAttribute('aria-expanded', 'false');
+    }, 160);
   });
   select.addEventListener('change', () => {
     const city = getSortedSupportedDestinationCities().find(c => c.id === select.value);
@@ -3968,8 +4072,9 @@ function buildCitySearchMarkup(prefix) {
   return `
     <div class="city-search-control" id="${prefix}CitySearchWrap">
       <label class="form-label" for="${prefix}CitySearchInput" data-i18n="planner_city_search_label">${getText('planner_city_search_label')}</label>
-      <input type="text" class="form-control" id="${prefix}CitySearchInput" list="${prefix}CityDatalist" data-i18n-placeholder="planner_city_search_placeholder" autocomplete="off">
+      <input type="text" class="form-control" id="${prefix}CitySearchInput" list="${prefix}CityDatalist" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${prefix}CitySearchResults" data-i18n-placeholder="planner_city_search_placeholder" autocomplete="off">
       <datalist id="${prefix}CityDatalist"></datalist>
+      <div class="city-search-results" id="${prefix}CitySearchResults" role="listbox" hidden></div>
       <div class="unsupported-city-box" id="${prefix}UnsupportedCityBox" style="display:none;">
         <span data-i18n="unsupported_city_text">${getText('unsupported_city_text')}</span>
         <button type="button" class="city-request-btn" id="${prefix}RequestCityBtn" data-i18n="request_city_btn">${getText('request_city_btn')}</button>
@@ -4211,6 +4316,15 @@ function getIndoorCandidatesForCity(cityId) {
   return candidates;
 }
 
+function insertSwappedOutdoorIntoDay(dayPlan, outdoorItem, cityId) {
+  if (!dayPlan || !Array.isArray(dayPlan.items) || !outdoorItem) return;
+  const dinnerIdx = dayPlan.items.findIndex(item => isMealBreakItem(item) && isDinnerMealBreakItem(item));
+  const insertAt = dinnerIdx >= 0 ? dinnerIdx : dayPlan.items.length;
+  const clone = { ...outdoorItem, isRainySwapOutdoor: true, swappedFromRainyDay: true };
+  dayPlan.items.splice(insertAt, 0, clone);
+  recalculateDayPlanTimes(dayPlan, cityId);
+}
+
 function handleRainyDayRegen() {
   if (!state.activeCourse || !Array.isArray(state.activeCourse.days)) {
     showToast(getText('rain_regen_no_course'));
@@ -4229,8 +4343,9 @@ function handleRainyDayRegen() {
     .map(item => ({ ...item, isRainySwapOutdoor: true }));
 
   const existingIndoor = (dayPlan.items || [])
-    .filter(item => isIndoorFriendlyItem(item))
+    .filter(item => isReplaceableSightseeing(item) && isIndoorFriendlyItem(item))
     .map(item => ({ ...item, isRainyIndoor: true }));
+
   const movableIndoorSources = [];
   state.activeCourse.days.forEach(sourceDay => {
     if (sourceDay.day === dayNumber) return;
@@ -4238,61 +4353,105 @@ function handleRainyDayRegen() {
       if (!isReplaceableSightseeing(item) || !isIndoorFriendlyItem(item)) return;
       movableIndoorSources.push({
         sourceDay,
+        sourceDayNumber: sourceDay.day,
         index,
         item: { ...item, isRainyIndoor: true },
         key: getSimplePlaceKey(item)
       });
     });
   });
-  const pool = [...existingIndoor, ...movableIndoorSources.map(source => source.item), ...getIndoorCandidatesForCity(cityId)];
 
-  const seen = new Set();
-  const uniquePool = pool.filter(item => {
-    const key = getSimplePlaceKey(item);
-    if (!key || seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  const cityPool = getIndoorCandidatesForCity(cityId);
+  const replaceableCount = (dayPlan.items || []).filter(isReplaceableSightseeing).length;
+  const paceCap = state.travelPace === 'relaxed' ? 2 : (state.travelPace === 'packed' ? 5 : 4);
+  const targetCount = Math.min(
+    paceCap,
+    Math.max(2, replaceableCount || 3),
+    movableIndoorSources.length + existingIndoor.length + cityPool.length
+  );
 
-  if (!uniquePool.length) {
+  if (targetCount < 1) {
     showToast(getText('rain_regen_no_candidates'));
     return;
   }
 
-  const replaceableCount = (dayPlan.items || []).filter(item =>
-    item && !item.isTransit && !item.isLodging && !isMealBreakItem(item) && !isFlexibleBreakItem(item)
-  ).length;
-  const paceCap = state.travelPace === 'relaxed' ? 2 : (state.travelPace === 'packed' ? 5 : 4);
-  const targetCount = Math.min(uniquePool.length, paceCap, Math.max(2, replaceableCount || 3));
-  const selected = uniquePool.slice(0, targetCount);
-  const selectedKeys = new Set(selected.map(getSimplePlaceKey).filter(Boolean));
-  const movedSources = movableIndoorSources.filter(source => selectedKeys.has(source.key));
+  const selectedIndoor = [];
+  const swapSources = [];
+  const usedKeys = new Set();
+
+  const tryAddIndoor = (item, sourceMeta) => {
+    const key = getSimplePlaceKey(item);
+    if (!key || usedKeys.has(key) || selectedIndoor.length >= targetCount) return false;
+    usedKeys.add(key);
+    selectedIndoor.push({ ...item, isRainyIndoor: true });
+    if (sourceMeta) swapSources.push(sourceMeta);
+    return true;
+  };
+
+  // 1) 다른 날의 실내 일정을 우선 이동 (이동 시 비 오는 날 실외 일정과 1:1 교환)
+  movableIndoorSources.forEach(source => {
+    if (selectedIndoor.length >= targetCount) return;
+    tryAddIndoor(source.item, source);
+  });
+
+  // 2) 비 오는 날에 이미 있던 실내 일정 유지
+  existingIndoor.forEach(item => tryAddIndoor(item, null));
+
+  // 3) 부족하면 도시 실내 후보로 보충 (교환 대상 없음)
+  cityPool.forEach(item => tryAddIndoor(item, null));
+
+  if (!selectedIndoor.length) {
+    showToast(getText('rain_regen_no_candidates'));
+    return;
+  }
 
   const startLodging = (dayPlan.items || []).find(item => item.isLodging && item.isStart);
   const endLodging = (dayPlan.items || []).find(item => item.isLodging && item.isEnd);
   const lunch = (dayPlan.items || []).find(item => isMealBreakItem(item) && isLunchMealBreakItem(item));
   const dinner = (dayPlan.items || []).find(item => isMealBreakItem(item) && isDinnerMealBreakItem(item));
-  const midpoint = Math.ceil(selected.length / 2);
-  const rebuilt = [
+  const midpoint = Math.ceil(selectedIndoor.length / 2);
+  dayPlan.items = [
     startLodging,
-    ...selected.slice(0, midpoint),
+    ...selectedIndoor.slice(0, midpoint),
     lunch,
-    ...selected.slice(midpoint),
+    ...selectedIndoor.slice(midpoint),
     dinner,
     endLodging
   ].filter(Boolean);
-
-  dayPlan.items = rebuilt;
   recalculateDayPlanTimes(dayPlan, cityId);
 
-  if (movedSources.length && rainyOriginalOutdoor.length) {
-    const outdoorQueue = [...rainyOriginalOutdoor];
-    movedSources.forEach(source => {
-      if (!source.sourceDay || !Array.isArray(source.sourceDay.items)) return;
-      const replacement = outdoorQueue.shift() || rainyOriginalOutdoor[0];
-      if (!replacement) return;
-      source.sourceDay.items[source.index] = { ...replacement };
-      recalculateDayPlanTimes(source.sourceDay, cityId);
+  const outdoorQueue = [...rainyOriginalOutdoor];
+  const touchedDays = new Set();
+
+  // 다른 날에서 가져온 실내 ↔ 비 오는 날 실외 1:1 교환 (원래 장소 삭제 금지)
+  swapSources.forEach((source, swapIndex) => {
+    if (!source.sourceDay || !Array.isArray(source.sourceDay.items)) return;
+    const outdoorReplacement = outdoorQueue[swapIndex];
+    if (!outdoorReplacement) return;
+    source.sourceDay.items[source.index] = {
+      ...outdoorReplacement,
+      isRainySwapOutdoor: true,
+      swappedFromRainyDay: dayNumber
+    };
+    recalculateDayPlanTimes(source.sourceDay, cityId);
+    touchedDays.add(source.sourceDayNumber);
+  });
+
+  // 교환되지 않은 나머지 실외 일정은 다른 날로 분산 배치 (삭제하지 않음)
+  const remainingOutdoor = outdoorQueue.slice(swapSources.length);
+  if (remainingOutdoor.length) {
+    const fallbackDays = state.activeCourse.days
+      .filter(day => day.day !== dayNumber)
+      .sort((a, b) => {
+        const aTouched = touchedDays.has(a.day) ? 0 : 1;
+        const bTouched = touchedDays.has(b.day) ? 0 : 1;
+        if (aTouched !== bTouched) return aTouched - bTouched;
+        return a.day - b.day;
+      });
+    remainingOutdoor.forEach((outdoor, idx) => {
+      const targetDay = fallbackDays[idx % fallbackDays.length];
+      if (!targetDay) return;
+      insertSwappedOutdoorIntoDay(targetDay, outdoor, cityId);
     });
   }
 
@@ -5959,6 +6118,12 @@ function getLocalTimeInputValue(date = new Date()) {
   return `${padDatePart(safeDate.getHours())}:${padDatePart(safeDate.getMinutes())}`;
 }
 
+function getSuggestedCompanionDateTime() {
+  const suggested = new Date(Date.now() + 30 * 60 * 1000);
+  suggested.setMinutes(Math.ceil(suggested.getMinutes() / 10) * 10, 0, 0);
+  return suggested;
+}
+
 function getCompanionDateTime(dateValue, timeValue) {
   if (!dateValue || !timeValue) return null;
   const selected = new Date(`${dateValue}T${timeValue}`);
@@ -6278,9 +6443,9 @@ function setupEventListeners() {
     state.editingRoomId = null;
     document.getElementById('createRoomModalTitle').textContent = getText('modal_title');
     document.getElementById('createRoomModalSubmitBtn').textContent = getText('modal_submit');
-    const today = getLocalDateInputValue();
-    document.getElementById('modalRoomDate').value = today;
-    document.getElementById('modalRoomTime').value = getLocalTimeInputValue();
+    const suggestedDateTime = getSuggestedCompanionDateTime();
+    document.getElementById('modalRoomDate').value = getLocalDateInputValue(suggestedDateTime);
+    document.getElementById('modalRoomTime').value = getLocalTimeInputValue(suggestedDateTime);
     syncCompanionDateTimeConstraints({ coerce: true });
     const profile = getPublicProfileSnapshot();
     const modalAge = document.getElementById('modalRoomAge');
@@ -6292,6 +6457,7 @@ function setupEventListeners() {
     if (modalSmoking) modalSmoking.value = 'ok';
     if (modalAlcohol) modalAlcohol.value = 'ok';
     document.getElementById('createRoomModal').classList.add('active');
+    document.body.classList.add('modal-open');
   });
 
   document.getElementById('closeCreateRoomModalBtn').addEventListener('click', closeCreateModal);
@@ -6425,6 +6591,7 @@ function setupEventListeners() {
 
 function closeCreateModal() {
   document.getElementById('createRoomModal').classList.remove('active');
+  document.body.classList.remove('modal-open');
   document.getElementById('createRoomForm').reset();
   state.editingRoomId = null;
   // Restore default CREATE mode labels
@@ -6469,6 +6636,7 @@ function openEditRoomModal(roomId) {
 
   syncCompanionDateTimeConstraints({ coerce: true });
   document.getElementById('createRoomModal').classList.add('active');
+  document.body.classList.add('modal-open');
 }
 
 // --- View Router Updates ---
@@ -6517,7 +6685,16 @@ function renderPopularDestinations() {
   const grid = document.getElementById('popularDestinationsGrid');
   grid.innerHTML = '';
 
-  getSortedSupportedDestinationCities().forEach(city => {
+  const destinationPhotos = {
+    paris: 'assets/travel/paris.jpg',
+    newyork: 'assets/travel/new-york.jpg',
+    tokyo: 'assets/travel/tokyo.jpg'
+  };
+  const featuredCities = ['paris', 'newyork', 'tokyo']
+    .map(id => getSortedSupportedDestinationCities().find(city => city.id === id))
+    .filter(Boolean);
+
+  featuredCities.forEach(city => {
     const name = getLocalizedCityField(city, 'name');
     const country = getLocalizedCityField(city, 'country');
     const desc = getLocalizedCityField(city, 'desc');
@@ -6525,6 +6702,7 @@ function renderPopularDestinations() {
     const card = document.createElement('div');
     card.className = `dest-card ${city.id}`;
     card.setAttribute('data-city-id', city.id);
+    card.style.setProperty('--destination-photo', `url("${destinationPhotos[city.id]}")`);
     card.innerHTML = `
       <span class="dest-tag">${country}</span>
       <div class="dest-info">
@@ -11328,15 +11506,15 @@ async function createCompanionRoom(e) {
   saveToLocalStorage();
 
   const createSaved = await pushToRemote();
-  let createdRoom = state.rooms.find(room => room.id === newRoomId);
-  if (!createdRoom) {
-    createdRoom = normalizeRoomRecord({ ...newRoom, pendingSync: !createSaved });
-    state.rooms.push(createdRoom);
-    state.chatLogs[newRoomId] = state.chatLogs[newRoomId] || [
-      createMessageObject({ text: welcomeMsg, system: true })
-    ];
+  const createdRoom = state.rooms.find(room => room.id === newRoomId);
+  if (!createSaved || !createdRoom) {
+    state.rooms = state.rooms.filter(room => room.id !== newRoomId);
+    delete state.chatLogs[newRoomId];
+    saveToLocalStorage();
+    showToast(getText('room_create_failed'));
+    return;
   }
-  createdRoom.pendingSync = !createSaved;
+  createdRoom.pendingSync = false;
   saveToLocalStorage();
 
   closeCreateModal();
@@ -11346,7 +11524,7 @@ async function createCompanionRoom(e) {
   if (createdCard) {
     createdCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
-  showToast(getText(createSaved ? 'room_create_success' : 'room_create_local_only'));
+  showToast(getText('room_create_success'));
 }
 
 async function deleteCompanionRoom(roomId) {
@@ -11387,7 +11565,7 @@ function renderChatRoom() {
   
   // Update header titles
   document.getElementById('chatRoomTitleText').textContent = title;
-  document.getElementById('chatRoomCategoryBadge').textContent = room.category.toUpperCase();
+  document.getElementById('chatRoomCategoryBadge').textContent = getCategoryLabel(room.category);
 
   // Render members sidebar
   const membersContainer = document.getElementById('chatMemberListContainer');
@@ -12681,7 +12859,7 @@ function exportItineraryToPdf(inputCourse = null) {
     if (pageNo > 1) {
       ctx.fillStyle = '#64748b';
       ctx.font = '16px "Malgun Gothic", "Segoe UI", Arial, sans-serif';
-      ctx.fillText(`WanderSync - ${cleanText(exportCityName)}`, margin, 28);
+      ctx.fillText(`TripTogether - ${cleanText(exportCityName)}`, margin, 28);
       ctx.strokeStyle = '#e2e8f0';
       ctx.beginPath();
       ctx.moveTo(margin, 54);
@@ -12694,7 +12872,7 @@ function exportItineraryToPdf(inputCourse = null) {
   const finishPage = () => {
     ctx.fillStyle = '#94a3b8';
     ctx.font = '12px "Malgun Gothic", "Segoe UI", Arial, sans-serif';
-    ctx.fillText(`WanderSync - ${pageNo}`, margin, pageHeight - 32);
+    ctx.fillText(`TripTogether - ${pageNo}`, margin, pageHeight - 32);
     const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
     pages.push({
       bytes: base64ToUint8Array(dataUrl.split(',')[1]),
@@ -12761,7 +12939,7 @@ function exportItineraryToPdf(inputCourse = null) {
   };
 
   setupPage();
-  addText('WanderSync', { size: 18, weight: 700, color: '#2563eb', after: 6 });
+  addText('TripTogether', { size: 18, weight: 700, color: '#2563eb', after: 6 });
   addText(getExportLabel('title', exportLang), { size: 34, weight: 800, color: '#0f172a', after: 14 });
   addText(`${getExportLabel('destination', exportLang)}: ${cleanText(exportCityName)}`, { size: 16, weight: 700, color: '#111827' });
   addText(`${getExportLabel('duration', exportLang)}: ${formatExportDurationDays(displayDurationDays, exportLang)}`);
@@ -12796,7 +12974,7 @@ function exportItineraryToPdf(inputCourse = null) {
   const safeName = cleanText(exportCityName).replace(/[\\/:*?"<>|]+/g, '_') || 'itinerary';
   const fileDayUnit = cleanText(getExportLabel('dayUnit', exportLang));
   link.href = url;
-  link.download = `WanderSync_${safeName}_${displayDurationDays}${fileDayUnit}.pdf`;
+  link.download = `TripTogether_${safeName}_${displayDurationDays}${fileDayUnit}.pdf`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -12829,7 +13007,7 @@ function exportItineraryToMarkdown() {
   }).join(', ');
 
   let txt = `${divider}\n`;
-  txt += `WanderSync ${getExportLabel('title', exportLang)}\n`;
+  txt += `TripTogether ${getExportLabel('title', exportLang)}\n`;
   txt += `${divider}\n`;
   txt += `${getExportLabel('destination', exportLang)} : ${cleanText(exportCityName)}\n`;
   txt += `${getExportLabel('duration', exportLang)} : ${formatExportDurationDays(course.days.length, exportLang)}\n`;
@@ -12839,7 +13017,7 @@ function exportItineraryToMarkdown() {
   if (preferenceLabels) {
     txt += `${getExportLabel('travelStyle', exportLang)} : ${cleanText(preferenceLabels)}\n`;
   }
-  txt += `${getExportLabel('generatedBy', exportLang)} : WanderSync AI Course Planner\n`;
+  txt += `${getExportLabel('generatedBy', exportLang)} : TripTogether\n`;
   
   course.days.forEach(dayPlan => {
     txt += `\n${thinDivider}\n`;
@@ -12880,7 +13058,7 @@ function exportItineraryToMarkdown() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.setAttribute("href", url);
-  link.setAttribute("download", `WanderSync_${cleanText(exportCityName)}_${formatExportDurationDays(course.days.length, exportLang)}.txt`);
+  link.setAttribute("download", `TripTogether_${cleanText(exportCityName)}_${formatExportDurationDays(course.days.length, exportLang)}.txt`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -13490,7 +13668,7 @@ function startApplication() {
   try {
     init();
   } catch (err) {
-    console.error("WanderSync failed to initialize:", err);
+    console.error("TripTogether failed to initialize:", err);
     installCoreNavigationFallback();
   }
 }

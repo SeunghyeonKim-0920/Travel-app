@@ -15,7 +15,7 @@ const checks = [
   ['selected-language toast messages', /toast\.textContent = cleanUiText\(localizeRuntimeText\(message\)\)/.test(app)],
   ['selected-language native dialogs', /let fixed = localizeRuntimeText\(/.test(app)],
   ['browser localization audit', /window\.runLocalizationAudit = runLocalizationAudit/.test(app)],
-  ['localized accessibility labels', app.includes("[data-i18n-aria-label]") && html.includes('data-i18n-aria-label="onboard_steps_aria"')],
+  ['localized mobile accessibility', html.includes('data-i18n="chat_safety_notice"') && app.includes('aria-autocomplete="list"') && app.includes('aria-expanded="false"')],
   ['localized generated descriptions', /return buildLocalizedItemDescription\(item, codeLang\)/.test(app)],
   ['localized US itinerary names', ['griffith observatory park', 'space center houston', 'las vegas strip'].every(name => app.includes(`'${name}'`))],
   ['no English Korean placeholder names', !/name_ko:\s*name,/.test(dataPatch)],
