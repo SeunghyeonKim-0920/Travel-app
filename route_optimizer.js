@@ -165,6 +165,12 @@ const TRAVEL_DB = {
   'helsinki|stockholm': { flight: { time: 300, actualFlightTime: 70, waitTime: 90, transferTime: 140, distanceKm: 462, connectionType: 'direct', fixedTime: true, note_ko: '헬싱키-스톡홀름은 항공 이동이 실질적으로 가장 빠릅니다. 시내 출발부터 도착까지 공항 이동과 대기 시간을 모두 포함합니다.', note_en: 'Flight is the practical fastest option; door-to-door estimate includes airports.' }, ferry: { time: 1020, distanceKm: 460, connectionType: 'direct', note_ko: '직항 발트해 페리는 보통 약 16~17시간 소요', note_en: 'Direct Baltic ferry usually takes about 16-17h.' }, train: null, bus: null },
   'copenhagen|berlin':  { flight: { time: 350, actualFlightTime: 80, waitTime: 120, transferTime: 150, distanceKm: 410, connectionType: 'direct', fixedTime: true, note_ko: '코펜하겐-베를린 항공 약 5시간 50분 (공항 이동/수속/대기 포함)', note_en: 'Copenhagen-Berlin flight about 5h50m door-to-door, including airport transfers and wait time.' }, train: { time: 450, distanceKm: 620, connectionType: 'via', note_ko: '함부르크 경유 열차 약 7시간 30분 (시내-시내 기준)', note_en: 'Train via Hamburg about 7h30m city-to-city.' }, bus: { time: 460, distanceKm: 440, connectionType: 'direct', note_ko: '직행 시외버스 약 7시간 40분', note_en: 'Direct coach about 7h40m.' } },
 
+  // Verified operator schedules, rounded to the app's 10-minute display unit.
+  'nice|monaco':        { train: { time: 30, distanceKm: 19, connectionType: 'direct', fixedTime: true, note_ko: '\uB2C8\uC2A4-\uBAA8\uB098\uCF54 TER \uC9C1\uD1B5 \uD3C9\uADE0 \uC57D 23\uBD84, 10\uBD84 \uB2E8\uC704 \uBC18\uC62C\uB9BC', note_en: 'Direct Nice-Monaco TER averages about 23 minutes; rounded to 10 minutes.' } },
+  'amsterdam|brussels': { train: { time: 120, distanceKm: 210, connectionType: 'direct', fixedTime: true, note_ko: '\uC554\uC2A4\uD14C\uB974\uB2F4-\uBE0C\uB93C\uC140 Eurostar \uC9C1\uD1B5 \uC57D 1\uC2DC\uAC04 56\uBD84, 10\uBD84 \uB2E8\uC704 \uBC18\uC62C\uB9BC', note_en: 'Direct Amsterdam-Brussels Eurostar takes about 1h56m; rounded to 10 minutes.' } },
+  'brussels|paris':     { train: { time: 80, distanceKm: 260, connectionType: 'direct', fixedTime: true, note_ko: '\uBE0C\uB93C\uC140-\uD30C\uB9AC Eurostar \uC9C1\uD1B5 \uC57D 1\uC2DC\uAC04 22\uBD84, 10\uBD84 \uB2E8\uC704 \uBC18\uC62C\uB9BC', note_en: 'Direct Brussels-Paris Eurostar takes about 1h22m; rounded to 10 minutes.' } },
+  'dubai|abudhabi':     { bus: { time: 160, distanceKm: 140, connectionType: 'direct', fixedTime: true, note_ko: '\uB450\uBC14\uC774-\uC544\uBD80\uB2E4\uBE44 E100/E101/E102 \uC9C1\uD589 \uBC84\uC2A4\uC640 \uD130\uBBF8\uB110 \uC811\uADFC \uC2DC\uAC04\uC744 \uD3EC\uD568\uD55C \uC57D 2\uC2DC\uAC04 40\uBD84', note_en: 'Direct E100/E101/E102 inter-emirate bus plus terminal access, about 2h40m city-to-city.' } },
+
   // ---- PORTUGAL / SPAIN / UK / SWITZERLAND CONNECTIONS ----
   'porto|lisbon':       { train: { time: 180, note: 'Alfa Pendular 고속열차 직통 3h (구글맵 기준)' }, bus: { time: 210, note: '시외버스 약 3h30m (구글맵 기준)' } },
   'porto|madrid':       { train: { time: 540, note: '열차 환승 약 9h (구글맵 기준)' }, bus: { time: 480, note: '시외버스 약 8h (구글맵 기준)' } },
@@ -851,6 +857,7 @@ const ROUTE_CITY_CENTERS = Object.freeze({
   miami: { lat: 25.7617, lon: -80.1918 },
   mexicocity: { lat: 19.4326, lon: -99.1332 },
   monaco: { lat: 43.7384, lon: 7.4246 },
+  nice: { lat: 43.7102, lon: 7.2620 },
   moscow: { lat: 55.7558, lon: 37.6173 },
   munich: { lat: 48.1351, lon: 11.5820 },
   milan: { lat: 45.4642, lon: 9.1900 },

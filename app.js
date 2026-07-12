@@ -27,12 +27,12 @@ const LANGUAGE_LABELS = {
   es: 'Español'
 };
 const LANGUAGE_SHORT_LABELS = {
-  ko: 'KO',
-  en: 'EN',
-  fr: 'FR',
+  ko: '한국어',
+  en: 'English',
+  fr: 'Français',
   zh: '中文',
   ja: '日本語',
-  es: 'ES'
+  es: 'Español'
 };
 const LANGUAGE_LOCALES = {
   ko: 'ko-KR',
@@ -523,6 +523,7 @@ const state = {
   },
   rooms: [],
   cityRequests: [],
+  feedbacks: [],
   travelPace: 'moderate',
   joinedRoomId: null,
   editingRoomId: null,
@@ -729,7 +730,8 @@ const CITY_DESCRIPTION_TEMPLATES = {
   es: (city, country) => `Un itinerario organizado alrededor de los lugares principales de ${city}${country ? `, ${country}` : ''}.`
 };
 
-const MAX_REASONABLE_DAY_TRIP_KM = 230;
+const MAX_REASONABLE_DAY_TRIP_KM = 160;
+const MAX_REASONABLE_DAY_TRIP_ONE_WAY_MINUTES = 120;
 const FAR_DAY_TRIP_TEXT_PATTERN = /(norway in a nutshell|nutshell|naeroyfjord|nærøyfjord|flam|flåm|meteora|cliffs of moher|giant'?s causeway|krakow|belfast|long full[-\s]?day|장거리|메테오라|모허|자이언츠|크라쿠프|벨파스트)/i;
 
 const DATA_LABELS = {
@@ -1399,6 +1401,45 @@ function installMojibakeRepairObserver() {
 
 function applyEnhancedTranslations() {
   if (typeof TRANSLATIONS === 'undefined') return;
+  const feedbackLanguagePatches = {
+    ko: {
+      feedback_title: '\uC0AC\uC6A9\uC790 \uD53C\uB4DC\uBC31',
+      feedback_subtitle: '\uC5EC\uD589 \uACC4\uD68D \uC11C\uBE44\uC2A4\uB97C \uC0AC\uC6A9\uD558\uBA70 \uB290\uB080 \uC810\uC744 \uB0A8\uACA8\uC8FC\uC138\uC694. \uD53C\uB4DC\uBC31\uC740 \uC11C\uBE44\uC2A4 \uAC1C\uC120\uC5D0 \uBC18\uC601\uB429\uB2C8\uB2E4.',
+      feedback_rating_label: '\uD3C9\uC810', feedback_name_label: '\uB2C9\uB124\uC784',
+      feedback_name_placeholder: '\uB2C9\uB124\uC784\uC744 \uC785\uB825\uD558\uC138\uC694',
+      feedback_text_label: '\uD53C\uB4DC\uBC31 \uB0B4\uC6A9',
+      feedback_text_placeholder: '\uC88B\uC558\uB358 \uC810\uC774\uB098 \uAC1C\uC120\uC774 \uD544\uC694\uD55C \uC810\uC744 \uC54C\uB824\uC8FC\uC138\uC694.',
+      feedback_submit: '\uD53C\uB4DC\uBC31 \uBCF4\uB0B4\uAE30'
+    },
+    en: {
+      feedback_title: 'User feedback', feedback_subtitle: 'Tell us about your experience planning a trip. Your feedback helps improve the service.',
+      feedback_rating_label: 'Rating', feedback_name_label: 'Nickname', feedback_name_placeholder: 'Enter your nickname',
+      feedback_text_label: 'Feedback', feedback_text_placeholder: 'Tell us what worked well or what needs improvement.', feedback_submit: 'Send feedback'
+    },
+    fr: {
+      feedback_title: 'Avis des utilisateurs', feedback_subtitle: 'Partagez votre exp\u00E9rience de planification. Vos avis nous aident \u00E0 am\u00E9liorer le service.',
+      feedback_rating_label: 'Note', feedback_name_label: 'Pseudonyme', feedback_name_placeholder: 'Saisissez votre pseudonyme',
+      feedback_text_label: 'Avis', feedback_text_placeholder: 'Indiquez ce qui fonctionne bien ou ce qui doit \u00EAtre am\u00E9lior\u00E9.', feedback_submit: 'Envoyer'
+    },
+    zh: {
+      feedback_title: '\u7528\u6237\u53CD\u9988', feedback_subtitle: '\u8BF7\u5206\u4EAB\u60A8\u7684\u65C5\u884C\u89C4\u5212\u4F53\u9A8C\u3002\u60A8\u7684\u53CD\u9988\u5C06\u5E2E\u52A9\u6211\u4EEC\u6539\u8FDB\u670D\u52A1\u3002',
+      feedback_rating_label: '\u8BC4\u5206', feedback_name_label: '\u6635\u79F0', feedback_name_placeholder: '\u8BF7\u8F93\u5165\u6635\u79F0',
+      feedback_text_label: '\u53CD\u9988\u5185\u5BB9', feedback_text_placeholder: '\u8BF7\u544A\u8BC9\u6211\u4EEC\u54EA\u4E9B\u505A\u5F97\u597D\uFF0C\u54EA\u4E9B\u9700\u8981\u6539\u8FDB\u3002', feedback_submit: '\u63D0\u4EA4\u53CD\u9988'
+    },
+    ja: {
+      feedback_title: '\u30E6\u30FC\u30B6\u30FC\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF', feedback_subtitle: '\u65C5\u884C\u8A08\u753B\u306E\u4F7F\u7528\u4F53\u9A13\u3092\u304A\u805E\u304B\u305B\u304F\u3060\u3055\u3044\u3002\u30B5\u30FC\u30D3\u30B9\u6539\u5584\u306B\u6D3B\u7528\u3057\u307E\u3059\u3002',
+      feedback_rating_label: '\u8A55\u4FA1', feedback_name_label: '\u30CB\u30C3\u30AF\u30CD\u30FC\u30E0', feedback_name_placeholder: '\u30CB\u30C3\u30AF\u30CD\u30FC\u30E0\u3092\u5165\u529B',
+      feedback_text_label: '\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF', feedback_text_placeholder: '\u826F\u304B\u3063\u305F\u70B9\u3084\u6539\u5584\u304C\u5FC5\u8981\u306A\u70B9\u3092\u304A\u77E5\u3089\u305B\u304F\u3060\u3055\u3044\u3002', feedback_submit: '\u9001\u4FE1\u3059\u308B'
+    },
+    es: {
+      feedback_title: 'Opiniones de usuarios', feedback_subtitle: 'Cu\u00E9ntanos tu experiencia al planificar el viaje. Tus comentarios nos ayudan a mejorar el servicio.',
+      feedback_rating_label: 'Puntuaci\u00F3n', feedback_name_label: 'Apodo', feedback_name_placeholder: 'Escribe tu apodo',
+      feedback_text_label: 'Comentario', feedback_text_placeholder: 'Cu\u00E9ntanos qu\u00E9 funciona bien o qu\u00E9 debemos mejorar.', feedback_submit: 'Enviar comentario'
+    }
+  };
+  Object.entries(feedbackLanguagePatches).forEach(([lang, patch]) => {
+    TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
+  });
   Object.keys(TRANSLATIONS).forEach(lang => {
     const table = TRANSLATIONS[lang];
     if (!table || typeof table !== 'object') return;
@@ -2401,7 +2442,8 @@ async function fetchRemotePayload() {
   return pruneExpiredRemotePayload({
     rooms: Array.isArray(data && data.rooms) ? data.rooms : [],
     chatLogs: data && data.chatLogs ? data.chatLogs : {},
-    cityRequests: Array.isArray(data && data.cityRequests) ? data.cityRequests : []
+    cityRequests: Array.isArray(data && data.cityRequests) ? data.cityRequests : [],
+    feedbacks: Array.isArray(data && data.feedbacks) ? data.feedbacks : []
   });
 }
 
@@ -2427,8 +2469,28 @@ function pruneExpiredRemotePayload(payload) {
   return {
     rooms: activeRooms,
     chatLogs,
-    cityRequests: Array.isArray(payload.cityRequests) ? payload.cityRequests : []
+    cityRequests: Array.isArray(payload.cityRequests) ? payload.cityRequests : [],
+    feedbacks: normalizeFeedbackCollection(payload.feedbacks)
   };
+}
+
+function normalizeFeedbackCollection(entries) {
+  const byId = new Map();
+  (Array.isArray(entries) ? entries : []).forEach(entry => {
+    if (!entry || !entry.id) return;
+    const timestamp = Number(entry.timestamp) || 0;
+    byId.set(String(entry.id), {
+      id: String(entry.id),
+      name: cleanUiText(String(entry.name || '')).slice(0, 30),
+      text: cleanUiText(String(entry.text || '')).slice(0, 500),
+      rating: Math.max(1, Math.min(5, Number(entry.rating) || 1)),
+      timestamp,
+      lang: normalizeLanguageCode(entry.lang || 'en')
+    });
+  });
+  return Array.from(byId.values())
+    .sort((a, b) => b.timestamp - a.timestamp)
+    .slice(0, 50);
 }
 
 function getPublicProfileSnapshot(profile = state.activeProfile) {
@@ -2472,6 +2534,7 @@ function repairStateMojibake() {
   repairMojibakeDeep(state.rooms, 'rooms');
   repairMojibakeDeep(state.chatLogs, 'chatLogs');
   repairMojibakeDeep(state.cityRequests, 'cityRequests');
+  repairMojibakeDeep(state.feedbacks, 'feedbacks');
   repairMojibakeDeep(state.activeCourse, 'activeCourse');
   repairMojibakeDeep(state.savedCourses, 'savedCourses');
 }
@@ -2518,6 +2581,7 @@ function stripRoomSyncMetadata(room) {
 
 function mergeRemotePayload(localPayload, remotePayload, options = {}) {
   const deletedRoomIds = new Set((options.deletedRoomIds || []).map(String));
+  const deletedFeedbackIds = new Set((options.deletedFeedbackIds || []).map(String));
   const replaceMembershipRoomIds = new Set((options.replaceMembershipRoomIds || []).map(String));
   const roomsById = new Map();
 
@@ -2571,11 +2635,17 @@ function mergeRemotePayload(localPayload, remotePayload, options = {}) {
     const key = req.id || `${req.cityName || ''}|${req.createdAt || ''}|${req.source || ''}`;
     requestMap.set(String(key), req);
   });
+  const feedbackMap = new Map();
+  [...(remotePayload.feedbacks || []), ...(localPayload.feedbacks || [])].forEach(entry => {
+    if (!entry || !entry.id || deletedFeedbackIds.has(String(entry.id))) return;
+    feedbackMap.set(String(entry.id), entry);
+  });
 
   return pruneExpiredRemotePayload({
     rooms: Array.from(roomsById.values()),
     chatLogs,
-    cityRequests: Array.from(requestMap.values())
+    cityRequests: Array.from(requestMap.values()),
+    feedbacks: Array.from(feedbackMap.values())
   });
 }
 
@@ -2702,6 +2772,7 @@ async function pullFromRemote() {
       state.rooms = mergeRemoteRoomsWithPending(data.rooms, state.rooms);
       state.chatLogs = mergeChatLogs(state.chatLogs, data.chatLogs || {});
       state.cityRequests = Array.isArray(data.cityRequests) ? data.cityRequests : [];
+      state.feedbacks = normalizeFeedbackCollection([...(state.feedbacks || []), ...(data.feedbacks || [])]);
       repairStateMojibake();
       
       // Auto-kick / room-deleted logic
@@ -2727,6 +2798,7 @@ async function pullFromRemote() {
       }
 
       renderCompanionRooms();
+      renderFeedbackList();
       if (state.currentView === 'chat' && state.joinedRoomId !== null) {
         renderChatRoom();
       }
@@ -2750,7 +2822,8 @@ async function pushToRemoteNow(options = {}) {
     const localPayload = {
       rooms: state.rooms.map(stripRoomSyncMetadata),
       chatLogs: state.chatLogs,
-      cityRequests: state.cityRequests || []
+      cityRequests: state.cityRequests || [],
+      feedbacks: normalizeFeedbackCollection(state.feedbacks)
     };
     let payload = localPayload;
     try {
@@ -2773,6 +2846,7 @@ async function pushToRemoteNow(options = {}) {
     state.rooms = payload.rooms.map(room => ({ ...normalizeRoomRecord(room), pendingSync: false }));
     state.chatLogs = mergeChatLogs(state.chatLogs, payload.chatLogs || {});
     state.cityRequests = Array.isArray(payload.cityRequests) ? payload.cityRequests : [];
+    state.feedbacks = normalizeFeedbackCollection(payload.feedbacks);
     repairStateMojibake();
     saveToLocalStorage();
     return true;
@@ -2953,6 +3027,7 @@ function init() {
   loadFromLocalStorage();
   setupUIStrings();
   setupEventListeners();
+  initFeedbackSystem();
   renderPopularDestinations();
   renderCitySelectors();
   renderCompanionRooms();
@@ -3376,6 +3451,7 @@ function loadFromLocalStorage() {
 
   const localCityRequests = safeGetStoredJson('wander_city_requests', []);
   state.cityRequests = Array.isArray(localCityRequests) ? localCityRequests : [];
+  loadFeedbacksFromStorage();
 
   const storedPace = safeGetLocalStorage('wander_travel_pace');
   state.travelPace = ['relaxed', 'moderate', 'packed'].includes(storedPace) ? storedPace : (state.travelPace || 'moderate');
@@ -3524,6 +3600,7 @@ function saveToLocalStorage() {
   safeSetLocalStorage('wander_profile', JSON.stringify(state.activeProfile));
   safeSetLocalStorage('wander_rooms', JSON.stringify(state.rooms));
   safeSetLocalStorage('wander_city_requests', JSON.stringify(state.cityRequests || []));
+  safeSetLocalStorage('wander_feedbacks', JSON.stringify(normalizeFeedbackCollection(state.feedbacks)));
   safeSetLocalStorage('wander_travel_pace', state.travelPace || 'moderate');
   safeSetLocalStorage('wander_chat_logs', JSON.stringify(state.chatLogs));
   safeSetLocalStorage('wander_joined_room_id', state.joinedRoomId !== null ? String(state.joinedRoomId) : '');
@@ -3628,6 +3705,7 @@ function setupUIStrings() {
     safeRenderRouteOptimizerTab();
   }
   updateRainyDaySelector();
+  if (typeof updateFeedbackStarUI === 'function') updateFeedbackStarUI();
   repairVisibleMojibake(document.body);
 }
 
@@ -3648,7 +3726,7 @@ function updateLanguageControl() {
     control.setAttribute('aria-label', cleanUiText(LANGUAGE_LABELS[control.value] || 'Language'));
     return;
   }
-  control.textContent = cleanUiText(LANGUAGE_SHORT_LABELS[normalizeLanguageCode(state.lang)] || 'KO');
+  control.textContent = cleanUiText(LANGUAGE_SHORT_LABELS[normalizeLanguageCode(state.lang)] || '한국어');
   control.setAttribute('aria-label', cleanUiText(LANGUAGE_LABELS[normalizeLanguageCode(state.lang)] || 'Language'));
 }
 
@@ -5204,8 +5282,21 @@ function isReasonableNearbyDayTripForCity(item, cityId) {
   if (!isNearbyDayTripItem(item)) return true;
   const text = getAttractionSearchText(item);
   if (FAR_DAY_TRIP_TEXT_PATTERN.test(text)) return false;
+  const oneWayMinutes = Number(item.oneWayTravelMinutes);
+  if (Number.isFinite(oneWayMinutes) && oneWayMinutes > MAX_REASONABLE_DAY_TRIP_ONE_WAY_MINUTES) return false;
   const distanceKm = getDayTripDistanceFromCityKm(item, cityId || item.cityId);
   return Number.isFinite(distanceKm) && distanceKm <= MAX_REASONABLE_DAY_TRIP_KM;
+}
+
+function getVerifiedGroundDayTripMinutes(fromId, toId) {
+  if (typeof getTravelData !== 'function') return null;
+  const data = getTravelData(fromId, toId);
+  if (!data) return null;
+  const options = ['train', 'bus', 'ferry']
+    .map(type => data[type])
+    .filter(option => option && option.estimated !== true && Number.isFinite(Number(option.time)))
+    .map(option => Number(option.time));
+  return options.length ? Math.min(...options) : null;
 }
 
 function getDynamicNearbyCityDayTripCandidate(cityId, usedKeys = new Set()) {
@@ -5221,7 +5312,9 @@ function getDynamicNearbyCityDayTripCandidate(cityId, usedKeys = new Set()) {
       if (!coords) return null;
       const distanceKm = getHaversineDistance(baseCoords.y, baseCoords.x, coords.y, coords.x);
       if (!Number.isFinite(distanceKm) || distanceKm < 35 || distanceKm > MAX_REASONABLE_DAY_TRIP_KM) return null;
-      return { city, coords, distanceKm };
+      const oneWayTravelMinutes = getVerifiedGroundDayTripMinutes(cityId, city.id);
+      if (!Number.isFinite(oneWayTravelMinutes) || oneWayTravelMinutes > MAX_REASONABLE_DAY_TRIP_ONE_WAY_MINUTES) return null;
+      return { city, coords, distanceKm, oneWayTravelMinutes };
     })
     .filter(Boolean)
     .sort((a, b) => {
@@ -5243,6 +5336,7 @@ function getDynamicNearbyCityDayTripCandidate(cityId, usedKeys = new Set()) {
       isLandmark: false,
       isNearbyDayTrip: true,
       isAllDayTrip: true,
+      oneWayTravelMinutes: candidate.oneWayTravelMinutes,
       x: candidate.coords.x,
       y: candidate.coords.y,
       open: duration >= 600 ? 420 : 480,
@@ -9092,6 +9186,34 @@ function createDessertBreakItem(cityId, customCityName, coords, duration) {
 }
 
 const NEARBY_DAY_TRIP_SUPPLEMENTS = {
+  milan: [
+    {
+      name_ko: '\uCF54\uBAA8\uC640 \uCF54\uBAA8 \uD638\uC218 \uB2F9\uC77C\uCE58\uAE30',
+      name_en: 'Como & Lake Como Day Trip',
+      duration: 480,
+      oneWayTravelMinutes: 40,
+      isLandmark: true,
+      x: 9.0852,
+      y: 45.8081,
+      open: 480,
+      close: 1260,
+      desc_ko: '\uBC00\uB77C\uB178 \uC911\uC559\uC5ED\uC5D0\uC11C \uC9C1\uD1B5 \uC5F4\uCC28\uB85C \uC57D 40\uBD84 \uC774\uB3D9\uD574 \uCF54\uBAA8 \uAD6C\uC2DC\uAC00\uC9C0\uC640 \uD638\uC218\uBCC0\uC744 \uB458\uB7EC\uBCF4\uB294 \uC77C\uC815',
+      desc_en: 'Verified direct rail day trip from Milano Centrale to Como in about 40 minutes, with time for the old town and lakefront.'
+    },
+    {
+      name_ko: '\uD30C\uBE44\uC544 \uAD6C\uC2DC\uAC00\uC9C0 \uB2F9\uC77C\uCE58\uAE30',
+      name_en: 'Pavia Historic Center Day Trip',
+      duration: 420,
+      oneWayTravelMinutes: 30,
+      isLandmark: false,
+      x: 9.1582,
+      y: 45.1847,
+      open: 480,
+      close: 1200,
+      desc_ko: '\uBC00\uB77C\uB178\uC5D0\uC11C \uC9C1\uD1B5 \uC5F4\uCC28\uB85C \uC57D 30\uBD84 \uC774\uB3D9\uD574 \uD30C\uBE44\uC544 \uB300\uC131\uB2F9\uACFC \uC911\uC138 \uAD6C\uC2DC\uAC00\uC9C0\uB97C \uB458\uB7EC\uBCF4\uB294 \uC77C\uC815',
+      desc_en: 'Verified direct rail day trip from Milan to Pavia in about 30 minutes, focused on the cathedral and medieval center.'
+    }
+  ],
   oslo: [
     { name_ko: '노르웨이 인 어 넛셸 피요르 당일치기', name_en: 'Norway in a Nutshell Fjord Day Trip', duration: 600, isLandmark: true, x: 7.1132, y: 60.8610, open: 420, close: 1320, desc_ko: '오슬로에서 기차와 보트를 이어 플롬과 네뢰이피요르 일대를 다녀오는 장거리 피요르 하루 코스', desc_en: 'Full-day fjord route from Oslo using train and boat connections around Flam and Naeroyfjord.' },
     { name_ko: '오슬로피요르 섬 투어 당일치기', name_en: 'Oslofjord Islands Day Trip', duration: 480, isLandmark: false, x: 10.7340, y: 59.8860, open: 480, close: 1260, desc_ko: '오슬로 시내에서 페리로 이동해 오슬로피요르의 섬과 해안 산책로를 둘러보는 실제 당일 코스', desc_en: 'Real Oslo day trip by ferry through Oslofjord islands and waterfront walking routes.' },
@@ -9809,6 +9931,224 @@ function buildCourseStructure(cityId, days, preferences, customCityName, wikiPoo
     const adjusted = Math.round((Math.min(dur, cap) * PACE_DURATION_FACTOR) / 10) * 10;
     return Math.max(minDuration, Math.min(cap, adjusted));
   };
+
+function showToast(message) {
+  const toast = document.getElementById('toastNotification');
+  toast.textContent = cleanUiText(localizeRuntimeText(message));
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
+}
+
+// --- User Feedback System ---
+let feedbackSelectedRating = 0;
+
+function initFeedbackSystem() {
+  // Star rating interaction
+  const starsContainer = document.getElementById('feedbackStars');
+  if (starsContainer) {
+    starsContainer.querySelectorAll('.star-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        feedbackSelectedRating = parseInt(btn.getAttribute('data-star'));
+        updateFeedbackStarUI();
+      });
+    });
+  }
+
+  // Submit button
+  const submitBtn = document.getElementById('feedbackSubmitBtn');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', submitFeedback);
+  }
+
+  // Pre-fill name from profile
+  const nameInput = document.getElementById('feedbackName');
+  if (nameInput && state.activeProfile && state.activeProfile.name) {
+    nameInput.value = repairMojibakeText(state.activeProfile.name);
+  }
+
+  renderFeedbackList();
+}
+
+function updateFeedbackStarUI() {
+  const starsContainer = document.getElementById('feedbackStars');
+  if (!starsContainer) return;
+  starsContainer.querySelectorAll('.star-btn').forEach(btn => {
+    const starVal = parseInt(btn.getAttribute('data-star'));
+    btn.classList.toggle('active', starVal <= feedbackSelectedRating);
+  });
+}
+
+function submitFeedback() {
+  const nameInput = document.getElementById('feedbackName');
+  const textInput = document.getElementById('feedbackText');
+  if (!nameInput || !textInput) return;
+
+  const name = nameInput.value.trim();
+  const text = textInput.value.trim();
+
+  if (!name) {
+    showToast(getInlineText({
+      ko: '닉네임을 입력해주세요.',
+      en: 'Please enter your nickname.',
+      fr: 'Veuillez saisir votre pseudonyme.',
+      zh: '请输入昵称。',
+      ja: 'ニックネームを入力してください。',
+      es: 'Por favor, introduce tu apodo.'
+    }));
+    return;
+  }
+  if (!text) {
+    showToast(getInlineText({
+      ko: '피드백 내용을 입력해주세요.',
+      en: 'Please enter your feedback.',
+      fr: 'Veuillez saisir votre avis.',
+      zh: '请输入反馈内容。',
+      ja: 'フィードバック内容を入力してください。',
+      es: 'Por favor, escribe tu opinión.'
+    }));
+    return;
+  }
+  if (feedbackSelectedRating === 0) {
+    showToast(getInlineText({
+      ko: '평점을 선택해주세요.',
+      en: 'Please select a rating.',
+      fr: 'Veuillez sélectionner une note.',
+      zh: '请选择评分。',
+      ja: '評点を選択してください。',
+      es: 'Por favor, selecciona una puntuación.'
+    }));
+    return;
+  }
+
+  const feedback = {
+    id: Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 8),
+    name: cleanUiText(name),
+    text: cleanUiText(text),
+    rating: feedbackSelectedRating,
+    timestamp: Date.now(),
+    lang: state.lang
+  };
+
+  if (!Array.isArray(state.feedbacks)) {
+    state.feedbacks = [];
+  }
+  state.feedbacks.unshift(feedback);
+
+  // Keep maximum 50 feedbacks
+  if (state.feedbacks.length > 50) {
+    state.feedbacks = state.feedbacks.slice(0, 50);
+  }
+
+  saveFeedbacksToStorage();
+  pushToRemote().catch(() => {});
+  renderFeedbackList();
+
+  // Reset form
+  textInput.value = '';
+  feedbackSelectedRating = 0;
+  updateFeedbackStarUI();
+
+  showToast(getInlineText({
+    ko: '피드백이 등록되었습니다. 감사합니다! 🙏',
+    en: 'Feedback submitted. Thank you! 🙏',
+    fr: 'Avis envoyé. Merci ! 🙏',
+    zh: '反馈已提交，谢谢！🙏',
+    ja: 'フィードバックが送信されました。ありがとうございます！🙏',
+    es: '¡Opinión enviada. Gracias! 🙏'
+  }));
+}
+
+function saveFeedbacksToStorage() {
+  try {
+    safeSetLocalStorage('wander_feedbacks', JSON.stringify(state.feedbacks || []));
+  } catch (e) {
+    console.warn('Failed to save feedbacks:', e);
+  }
+}
+
+function loadFeedbacksFromStorage() {
+  try {
+    const raw = safeGetLocalStorage('wander_feedbacks');
+    if (raw) {
+      state.feedbacks = JSON.parse(raw);
+    }
+  } catch (e) {
+    console.warn('Failed to load feedbacks:', e);
+  }
+  if (!Array.isArray(state.feedbacks)) {
+    state.feedbacks = [];
+  }
+}
+
+function renderFeedbackList() {
+  const container = document.getElementById('feedbackList');
+  if (!container) return;
+
+  const feedbacks = Array.isArray(state.feedbacks) ? state.feedbacks : [];
+
+  if (feedbacks.length === 0) {
+    container.innerHTML = `<div class="feedback-empty">${getInlineText({
+      ko: '아직 피드백이 없습니다. 첫 번째 피드백을 남겨보세요!',
+      en: 'No feedback yet. Be the first to share your thoughts!',
+      fr: 'Aucun avis pour le moment. Soyez le premier à partager !',
+      zh: '还没有反馈，成为第一个分享想法的人吧！',
+      ja: 'まだフィードバックがありません。最初のフィードバックを投稿しましょう！',
+      es: '¡Aún no hay opiniones. Sé el primero en compartir!'
+    })}</div>`;
+    return;
+  }
+
+  container.innerHTML = feedbacks.map(fb => {
+    const stars = '★'.repeat(fb.rating || 0) + '☆'.repeat(5 - (fb.rating || 0));
+    const date = new Date(fb.timestamp);
+    const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+    const deleteBtn = `<button class="feedback-delete-btn" onclick="deleteFeedback('${fb.id}')" title="${getInlineText({ ko: '삭제', en: 'Delete', fr: 'Supprimer', zh: '删除', ja: '削除', es: 'Eliminar' })}">✕</button>`;
+
+    return `
+      <div class="feedback-card">
+        <div class="feedback-card-header">
+          <span class="feedback-author">${cleanUiText(fb.name)}</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="feedback-date">${dateStr}</span>
+            ${deleteBtn}
+          </div>
+        </div>
+        <div class="feedback-card-stars">${stars}</div>
+        <div class="feedback-card-text">${cleanUiText(fb.text)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function deleteFeedback(feedbackId) {
+  if (!Array.isArray(state.feedbacks)) return;
+  const confirmMsg = getInlineText({
+    ko: '이 피드백을 삭제하시겠습니까?',
+    en: 'Delete this feedback?',
+    fr: 'Supprimer cet avis ?',
+    zh: '删除此反馈？',
+    ja: 'このフィードバックを削除しますか？',
+    es: '¿Eliminar esta opinión?'
+  });
+  if (!confirm(confirmMsg)) return;
+
+  state.feedbacks = state.feedbacks.filter(fb => fb.id !== feedbackId);
+  saveFeedbacksToStorage();
+  pushToRemote({ deletedFeedbackIds: [feedbackId] }).catch(() => {});
+  renderFeedbackList();
+  showToast(getInlineText({
+    ko: '피드백이 삭제되었습니다.',
+    en: 'Feedback deleted.',
+    fr: 'Avis supprimé.',
+    zh: '反馈已删除。',
+    ja: 'フィードバックを削除しました。',
+    es: 'Opinión eliminada.'
+  }));
+}
+
+// --- WanderSync Enhancements Helper Functions ---
 
   const isOpenDuring = (item, startMin, endMin) => {
     if (!item || item.isFallback) return true;
@@ -11862,6 +12202,116 @@ function showToast(message) {
   setTimeout(() => {
     toast.classList.remove('show');
   }, 3000);
+}
+
+let sharedFeedbackSelectedRating = 0;
+
+function getFeedbackStarLabel(value) {
+  return getInlineText({
+    ko: `${value}\uC810`,
+    en: `${value} stars`,
+    fr: `${value} \u00E9toiles`,
+    zh: `${value}\u661F`,
+    ja: `${value}\u3064\u661F`,
+    es: `${value} estrellas`
+  });
+}
+
+function loadFeedbacksFromStorage() {
+  state.feedbacks = normalizeFeedbackCollection(safeGetStoredJson('wander_feedbacks', []));
+}
+
+function saveFeedbacksToStorage() {
+  state.feedbacks = normalizeFeedbackCollection(state.feedbacks);
+  safeSetLocalStorage('wander_feedbacks', JSON.stringify(state.feedbacks));
+}
+
+function updateFeedbackStarUI() {
+  const stars = document.querySelectorAll('#feedbackStars .star-btn');
+  stars.forEach(button => {
+    const value = Number(button.dataset.star);
+    button.classList.toggle('active', value <= sharedFeedbackSelectedRating);
+    button.setAttribute('aria-pressed', value === sharedFeedbackSelectedRating ? 'true' : 'false');
+    button.setAttribute('aria-label', getFeedbackStarLabel(value));
+  });
+}
+
+function initFeedbackSystem() {
+  document.querySelectorAll('#feedbackStars .star-btn').forEach(button => {
+    const value = Number(button.dataset.star);
+    button.setAttribute('aria-pressed', 'false');
+    button.addEventListener('click', () => {
+      sharedFeedbackSelectedRating = value;
+      updateFeedbackStarUI();
+    });
+  });
+  const nameInput = document.getElementById('feedbackName');
+  if (nameInput && !nameInput.value && state.activeProfile && state.activeProfile.name) {
+    nameInput.value = repairMojibakeText(state.activeProfile.name);
+  }
+  const submitButton = document.getElementById('feedbackSubmitBtn');
+  if (submitButton) submitButton.addEventListener('click', submitFeedback);
+  renderFeedbackList();
+}
+
+async function submitFeedback() {
+  const nameInput = document.getElementById('feedbackName');
+  const textInput = document.getElementById('feedbackText');
+  if (!nameInput || !textInput) return;
+  const name = nameInput.value.trim();
+  const text = textInput.value.trim();
+  if (!name) {
+    showToast(getInlineText({ ko: '\uB2C9\uB124\uC784\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694.', en: 'Please enter your nickname.', fr: 'Veuillez saisir votre pseudonyme.', zh: '\u8BF7\u8F93\u5165\u6635\u79F0\u3002', ja: '\u30CB\u30C3\u30AF\u30CD\u30FC\u30E0\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002', es: 'Escribe tu apodo.' }));
+    return;
+  }
+  if (!text) {
+    showToast(getInlineText({ ko: '\uD53C\uB4DC\uBC31 \uB0B4\uC6A9\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694.', en: 'Please enter your feedback.', fr: 'Veuillez saisir votre avis.', zh: '\u8BF7\u8F93\u5165\u53CD\u9988\u5185\u5BB9\u3002', ja: '\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002', es: 'Escribe tu comentario.' }));
+    return;
+  }
+  if (!sharedFeedbackSelectedRating) {
+    showToast(getInlineText({ ko: '\uD3C9\uC810\uC744 \uC120\uD0DD\uD574\uC8FC\uC138\uC694.', en: 'Please select a rating.', fr: 'Veuillez choisir une note.', zh: '\u8BF7\u9009\u62E9\u8BC4\u5206\u3002', ja: '\u8A55\u4FA1\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\u3002', es: 'Selecciona una puntuaci\u00F3n.' }));
+    return;
+  }
+  const entry = {
+    id: `feedback-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    name: cleanUiText(name).slice(0, 30),
+    text: cleanUiText(text).slice(0, 500),
+    rating: sharedFeedbackSelectedRating,
+    timestamp: Date.now(),
+    lang: normalizeLanguageCode(state.lang)
+  };
+  state.feedbacks = normalizeFeedbackCollection([entry, ...(state.feedbacks || [])]);
+  saveFeedbacksToStorage();
+  renderFeedbackList();
+  const saved = await pushToRemote();
+  if (saved) {
+    textInput.value = '';
+    sharedFeedbackSelectedRating = 0;
+    updateFeedbackStarUI();
+  } else {
+    state.feedbacks = state.feedbacks.filter(item => item.id !== entry.id);
+    saveFeedbacksToStorage();
+    renderFeedbackList();
+  }
+  showToast(saved
+    ? getInlineText({ ko: '\uD53C\uB4DC\uBC31\uC774 \uB4F1\uB85D\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uAC10\uC0AC\uD569\uB2C8\uB2E4!', en: 'Feedback submitted. Thank you!', fr: 'Avis envoy\u00E9. Merci !', zh: '\u53CD\u9988\u5DF2\u63D0\u4EA4\uFF0C\u8C22\u8C22\uFF01', ja: '\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\u3092\u9001\u4FE1\u3057\u307E\u3057\u305F\u3002', es: 'Comentario enviado. \u00A1Gracias!' })
+    : getInlineText({ ko: '\uC11C\uBC84 \uC800\uC7A5\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694.', en: 'Could not save feedback to the server. Please try again.', fr: "Impossible d'enregistrer l'avis. R\u00E9essayez.", zh: '\u65E0\u6CD5\u4FDD\u5B58\u53CD\u9988\uFF0C\u8BF7\u91CD\u8BD5\u3002', ja: '\u30B5\u30FC\u30D0\u30FC\u306B\u4FDD\u5B58\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F\u3002', es: 'No se pudo guardar. Int\u00E9ntalo de nuevo.' }));
+}
+
+function renderFeedbackList() {
+  const container = document.getElementById('feedbackList');
+  if (!container) return;
+  const entries = normalizeFeedbackCollection(state.feedbacks);
+  if (!entries.length) {
+    container.innerHTML = `<div class="feedback-empty">${getInlineText({ ko: '\uC544\uC9C1 \uD53C\uB4DC\uBC31\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.', en: 'No feedback yet.', fr: 'Aucun avis pour le moment.', zh: '\u6682\u65E0\u53CD\u9988\u3002', ja: '\u307E\u3060\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\u306F\u3042\u308A\u307E\u305B\u3093\u3002', es: 'A\u00FAn no hay comentarios.' })}</div>`;
+    return;
+  }
+  container.innerHTML = entries.map(entry => {
+    const date = new Date(entry.timestamp);
+    const dateText = date.toLocaleDateString(normalizeLanguageCode(state.lang));
+    const stars = '\u2605'.repeat(entry.rating) + '\u2606'.repeat(5 - entry.rating);
+    return `<article class="feedback-card"><div class="feedback-card-header"><span class="feedback-author">${cleanUiText(entry.name)}</span><span class="feedback-date">${dateText}</span></div><div class="feedback-card-stars" aria-label="${entry.rating}/5">${stars}</div><div class="feedback-card-text">${cleanUiText(entry.text)}</div></article>`;
+  }).join('');
 }
 
 // --- WanderSync Enhancements Helper Functions ---

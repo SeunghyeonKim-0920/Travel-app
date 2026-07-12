@@ -215,6 +215,40 @@
         <!-- Rendered dynamically from CITIES -->
       </div>
 
+      <!-- Feedback Section -->
+      <section class="feedback-section" id="feedbackSection">
+        <h3 class="section-title"><span></span><span data-i18n="feedback_title">사용자 피드백</span></h3>
+        <p class="feedback-subtitle" data-i18n="feedback_subtitle">WanderSync에 대한 의견을 남겨주세요. 여러분의 소중한 피드백이 서비스 개선에 큰 도움이 됩니다.</p>
+
+        <div class="feedback-form-card" id="feedbackFormCard">
+          <div class="feedback-rating-group">
+            <label class="form-label" data-i18n="feedback_rating_label">평점</label>
+            <div class="feedback-stars" id="feedbackStars">
+              <button type="button" class="star-btn" data-star="1" aria-label="1 star">★</button>
+              <button type="button" class="star-btn" data-star="2" aria-label="2 stars">★</button>
+              <button type="button" class="star-btn" data-star="3" aria-label="3 stars">★</button>
+              <button type="button" class="star-btn" data-star="4" aria-label="4 stars">★</button>
+              <button type="button" class="star-btn" data-star="5" aria-label="5 stars">★</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="feedbackName" data-i18n="feedback_name_label">닉네임</label>
+            <input type="text" class="form-control" id="feedbackName" maxlength="30" data-i18n-placeholder="feedback_name_placeholder" placeholder="닉네임을 입력하세요">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="feedbackText" data-i18n="feedback_text_label">피드백 내용</label>
+            <textarea class="form-control feedback-textarea" id="feedbackText" rows="3" maxlength="500" data-i18n-placeholder="feedback_text_placeholder" placeholder="어떤 기능이 좋았나요? 개선할 점이 있나요?"></textarea>
+          </div>
+          <button type="button" class="btn-primary feedback-submit-btn" id="feedbackSubmitBtn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            <span data-i18n="feedback_submit">피드백 보내기</span>
+          </button>
+        </div>
+
+        <div class="feedback-list" id="feedbackList">
+          <!-- Feedback cards rendered dynamically -->
+        </div>
+      </section>
 
     </section>
 
