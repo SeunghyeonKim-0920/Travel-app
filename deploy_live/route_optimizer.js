@@ -1,5 +1,41 @@
 // ===== MULTI-CITY ROUTE OPTIMIZER =====
 
+// Share links are URL fragments, so use URL-safe base64 for new links while
+// accepting the standard base64 form used by links generated previously.
+function encodeSharePayload(payload) {
+  const json = JSON.stringify(payload);
+  try {
+    const bytes = new TextEncoder().encode(json);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 1) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/g, '');
+  } catch (error) {
+    return btoa(unescape(encodeURIComponent(json)))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/g, '');
+  }
+}
+
+function decodeSharePayload(encoded) {
+  const normalized = String(encoded || '').replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  try {
+    if (typeof TextDecoder === 'function') {
+      return JSON.parse(new TextDecoder().decode(bytes));
+    }
+  } catch (error) {
+    // Fall through to the legacy URI-decoding path below.
+  }
+  return JSON.parse(decodeURIComponent(escape(binary)));
+}
+
 // Travel time database (door-to-door in minutes)
 // Format: { flight: {time, note?}, train: {time, note?}|null, bus: {time, note?}|null }
 // Flight door-to-door = city_to_airport(60) + checkin_security(120) + flight_time + baggage(30) + arrival_airport_to_city(60)
@@ -2197,7 +2233,7 @@ function shareRouteLink() {
     originalCities: serializeRouteCities(optimized)
   };
   try {
-    const base64Str = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    const base64Str = encodeSharePayload(payload);
     const shareUrl = window.location.href.split('?')[0].split('#')[0] + '#share=' + base64Str;
     
     const alertMsg = isKo ? '경로 공유 링크가 복사되었습니다.' : 'Route share link has been copied.';
@@ -2720,14 +2756,13 @@ function renderRouteOptimizerTabImpl() {
     const hash = window.location.hash;
     if (hash && hash.startsWith('#share=')) {
       try {
-        const payload = JSON.parse(decodeURIComponent(escape(atob(hash.slice(7)))));
+        const payload = decodeSharePayload(hash.slice(7));
         if (payload.type === 'route' && Array.isArray(payload.cities) && payload.cities.length >= 2) {
           restoreRouteStateFromPayload(payload);
           if (typeof state !== 'undefined') {
             state.currentView = 'routeplanner';
             state.activeCourse = null;
           }
-          history.replaceState(null, '', window.location.pathname + window.location.search);
           showToast(getRouteUiText('sharedRouteLoaded', '🔗 공유된 경로를 불러왔습니다.', '🔗 Shared route loaded.'));
         }
       } catch(e) {
@@ -2739,6 +2774,9 @@ function renderRouteOptimizerTabImpl() {
   // Re-render city chips after local/saved/shared route state has been restored.
   renderRouteCityList();
   if (routeState.lastResult) renderRouteResult();
+  if (window.location.hash.startsWith('#share=') && routeState.lastResult) {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
 }
 
 function renderRouteOptimizerTabFallback(error) {

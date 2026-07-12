@@ -2093,6 +2093,35 @@ function applyEnhancedTranslations() {
   Object.entries(languagePatches).forEach(([lang, patch]) => {
     TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
   });
+  const mobileNavLanguagePatches = {
+    ko: {
+      nav_dashboard_short: '홈', nav_planner_short: '코스', nav_companions_short: '동행',
+      nav_routeplanner_short: '도시 경로', nav_profile_short: '프로필'
+    },
+    en: {
+      nav_dashboard_short: 'Home', nav_planner_short: 'Plan', nav_companions_short: 'Match',
+      nav_routeplanner_short: 'Routes', nav_profile_short: 'Profile'
+    },
+    fr: {
+      nav_dashboard_short: 'Accueil', nav_planner_short: 'Parcours', nav_companions_short: 'Compagnons',
+      nav_routeplanner_short: 'Itinéraire', nav_profile_short: 'Profil'
+    },
+    zh: {
+      nav_dashboard_short: '首页', nav_planner_short: '行程', nav_companions_short: '结伴',
+      nav_routeplanner_short: '城市路线', nav_profile_short: '资料'
+    },
+    ja: {
+      nav_dashboard_short: 'ホーム', nav_planner_short: '日程', nav_companions_short: '同行',
+      nav_routeplanner_short: '都市ルート', nav_profile_short: 'プロフィール'
+    },
+    es: {
+      nav_dashboard_short: 'Inicio', nav_planner_short: 'Plan', nav_companions_short: 'Compañía',
+      nav_routeplanner_short: 'Rutas', nav_profile_short: 'Perfil'
+    }
+  };
+  Object.entries(mobileNavLanguagePatches).forEach(([lang, patch]) => {
+    TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
+  });
   const supplementalLanguagePatches = {
     fr: {
       ai_regen_title: 'Régénération du parcours IA',
@@ -3037,12 +3066,11 @@ function init() {
   const shareData = urlParams.get('share');
   if (shareData) {
     try {
-      const decodedJson = decodeURIComponent(escape(atob(shareData)));
-      const sharedCourse = JSON.parse(decodedJson);
+      const sharedCourse = decodeSharePayload(shareData);
       if (sharedCourse && isSupportedLanguage(sharedCourse.lang)) {
         applySharedLanguage(sharedCourse.lang);
       }
-      if (sharedCourse && sharedCourse.isRoute) {
+      if (sharedCourse && (sharedCourse.isRoute || sharedCourse.type === 'route')) {
         if (typeof restoreRouteStateFromPayload === 'function') {
           restoreRouteStateFromPayload(sharedCourse);
         } else if (typeof routeState !== 'undefined') {
@@ -3061,12 +3089,11 @@ function init() {
         state.activeCourse = null;
         state.editingSavedCourseId = null;
         
-        // Remove share query parameter from URL without page reload
-        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        window.history.replaceState({ path: newUrl }, '', newUrl);
-        
         saveToLocalStorage();
         updateView();
+        // Only clear the share payload after the route view has rendered successfully.
+        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({ path: newUrl }, '', newUrl);
         
         showToast(getText('shared_route_loaded'));
       } else if (sharedCourse && sharedCourse.days && (sharedCourse.cityName || sharedCourse.cityId)) {
@@ -3077,13 +3104,12 @@ function init() {
         state.currentView = 'planner';
         syncPlannerControlsFromCourse(sharedCourse);
         
-        // Remove share query parameter from URL without page reload
-        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        window.history.replaceState({ path: newUrl }, '', newUrl);
-        
         saveToLocalStorage();
         updateView();
         renderItinerary(state.activeCourse);
+        // Only clear the share payload after the itinerary has rendered successfully.
+        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({ path: newUrl }, '', newUrl);
         
         showToast(getText('shared_itinerary_loaded'));
       }
@@ -3098,7 +3124,7 @@ function init() {
     if (hash.startsWith('#share=')) {
       // Route share - just set view, let renderRouteOptimizerTab() handle the rest
       try {
-        const payload = JSON.parse(decodeURIComponent(escape(atob(hash.slice(7)))));
+        const payload = decodeSharePayload(hash.slice(7));
         if (payload && isSupportedLanguage(payload.lang)) {
           applySharedLanguage(payload.lang);
         }
@@ -3109,6 +3135,7 @@ function init() {
           state.currentView = 'routeplanner';
           state.activeCourse = null;
           state.editingSavedCourseId = null;
+          updateView();
         }
       } catch(e) {
         console.error('Failed to parse share hash in init:', e);
@@ -3116,8 +3143,7 @@ function init() {
     } else if (hash.startsWith('#itinerary=')) {
       // Itinerary share
       try {
-        const decodedJson = decodeURIComponent(escape(atob(hash.slice(11))));
-        const sharedCourse = JSON.parse(decodedJson);
+        const sharedCourse = decodeSharePayload(hash.slice(11));
         if (sharedCourse && isSupportedLanguage(sharedCourse.lang)) {
           applySharedLanguage(sharedCourse.lang);
         }
@@ -3129,10 +3155,11 @@ function init() {
           state.currentView = 'planner';
           syncPlannerControlsFromCourse(sharedCourse);
           
-          window.history.replaceState(null, '', window.location.pathname);
           saveToLocalStorage();
+          updateView();
           // Render the shared itinerary immediately
           renderItinerary(state.activeCourse);
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
           showToast(getText('shared_itinerary_loaded'));
         }
       } catch(e) {
@@ -9988,17 +10015,6 @@ function submitFeedback() {
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
 
-  if (!name) {
-    showToast(getInlineText({
-      ko: '닉네임을 입력해주세요.',
-      en: 'Please enter your nickname.',
-      fr: 'Veuillez saisir votre pseudonyme.',
-      zh: '请输入昵称。',
-      ja: 'ニックネームを入力してください。',
-      es: 'Por favor, introduce tu apodo.'
-    }));
-    return;
-  }
   if (!text) {
     showToast(getInlineText({
       ko: '피드백 내용을 입력해주세요.',
@@ -10024,7 +10040,14 @@ function submitFeedback() {
 
   const feedback = {
     id: Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 8),
-    name: cleanUiText(name),
+    name: cleanUiText(name || getInlineText({
+      ko: '익명',
+      en: 'Anonymous',
+      fr: 'Anonyme',
+      zh: '匿名',
+      ja: '匿名',
+      es: 'Anónimo'
+    })).slice(0, 30),
     text: cleanUiText(text),
     rating: feedbackSelectedRating,
     timestamp: Date.now(),
@@ -12260,10 +12283,6 @@ async function submitFeedback() {
   if (!nameInput || !textInput) return;
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
-  if (!name) {
-    showToast(getInlineText({ ko: '\uB2C9\uB124\uC784\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694.', en: 'Please enter your nickname.', fr: 'Veuillez saisir votre pseudonyme.', zh: '\u8BF7\u8F93\u5165\u6635\u79F0\u3002', ja: '\u30CB\u30C3\u30AF\u30CD\u30FC\u30E0\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002', es: 'Escribe tu apodo.' }));
-    return;
-  }
   if (!text) {
     showToast(getInlineText({ ko: '\uD53C\uB4DC\uBC31 \uB0B4\uC6A9\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694.', en: 'Please enter your feedback.', fr: 'Veuillez saisir votre avis.', zh: '\u8BF7\u8F93\u5165\u53CD\u9988\u5185\u5BB9\u3002', ja: '\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002', es: 'Escribe tu comentario.' }));
     return;
@@ -12274,7 +12293,14 @@ async function submitFeedback() {
   }
   const entry = {
     id: `feedback-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    name: cleanUiText(name).slice(0, 30),
+    name: cleanUiText(name || getInlineText({
+      ko: '\uC775\uBA85',
+      en: 'Anonymous',
+      fr: 'Anonyme',
+      zh: '\u533F\u540D',
+      ja: '\u533F\u540D',
+      es: 'An\u00F3nimo'
+    })).slice(0, 30),
     text: cleanUiText(text).slice(0, 500),
     rating: sharedFeedbackSelectedRating,
     timestamp: Date.now(),
@@ -12941,8 +12967,7 @@ function copyShareLink() {
       }))
     };
     
-    const jsonStr = JSON.stringify(compact);
-    const base64Str = btoa(unescape(encodeURIComponent(jsonStr)));
+    const base64Str = encodeSharePayload(compact);
     // Use hash fragment (#itinerary=) instead of query param (?share=) to avoid 400 Bad Request from server
     const shareUrl = window.location.href.split('?')[0].split('#')[0] + '#itinerary=' + base64Str;
     
@@ -14124,4 +14149,12 @@ function startApplication() {
 }
 
 window.addEventListener('DOMContentLoaded', startApplication);
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash;
+  if (hash.startsWith('#share=') || hash.startsWith('#itinerary=')) {
+    // A pasted share URL can be a same-document navigation on mobile. Reload
+    // once so the normal startup restoration path receives the new payload.
+    window.location.reload();
+  }
+});
 

@@ -3623,6 +3623,48 @@ body.modal-open {
 
 }
 
+/* Keep the mobile navigation understandable when labels are otherwise hidden. */
+.nav-label-mobile {
+  display: none;
+}
+
+@media (max-width: 800px), (max-width: 900px) and (orientation: landscape) {
+  .nav-tabs {
+    display: flex;
+    align-items: stretch;
+    gap: 2px;
+  }
+
+  .nav-tab-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 7px 2px;
+    gap: 3px;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .nav-tab-btn .nav-label-full {
+    display: none;
+  }
+
+  .nav-tab-btn .nav-label-mobile {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 10px;
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+
+  .nav-tab-btn svg {
+    flex: 0 0 auto;
+  }
+}
+
 /* ===== Feedback Section ===== */
 .feedback-section {
   margin-top: 48px;
