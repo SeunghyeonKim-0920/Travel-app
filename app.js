@@ -1440,6 +1440,17 @@ function applyEnhancedTranslations() {
   Object.entries(feedbackLanguagePatches).forEach(([lang, patch]) => {
     TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
   });
+  const feedbackActionLanguagePatches = {
+    ko: { feedback_edit: '편집', feedback_delete: '삭제', feedback_save: '저장', feedback_cancel: '취소', feedback_delete_confirm: '이 피드백을 삭제할까요?', feedback_updated: '피드백을 수정했습니다.', feedback_deleted: '피드백을 삭제했습니다.', feedback_update_failed: '피드백 수정 내용을 저장하지 못했습니다.', feedback_delete_failed: '피드백을 삭제하지 못했습니다.', feedback_edited: '수정됨' },
+    en: { feedback_edit: 'Edit', feedback_delete: 'Delete', feedback_save: 'Save', feedback_cancel: 'Cancel', feedback_delete_confirm: 'Delete this feedback?', feedback_updated: 'Feedback updated.', feedback_deleted: 'Feedback deleted.', feedback_update_failed: 'Could not save the feedback update.', feedback_delete_failed: 'Could not delete the feedback.', feedback_edited: 'Edited' },
+    fr: { feedback_edit: 'Modifier', feedback_delete: 'Supprimer', feedback_save: 'Enregistrer', feedback_cancel: 'Annuler', feedback_delete_confirm: 'Supprimer cet avis ?', feedback_updated: 'Avis modifié.', feedback_deleted: 'Avis supprimé.', feedback_update_failed: "Impossible d'enregistrer la modification.", feedback_delete_failed: "Impossible de supprimer l'avis.", feedback_edited: 'Modifié' },
+    zh: { feedback_edit: '编辑', feedback_delete: '删除', feedback_save: '保存', feedback_cancel: '取消', feedback_delete_confirm: '要删除这条反馈吗？', feedback_updated: '反馈已更新。', feedback_deleted: '反馈已删除。', feedback_update_failed: '无法保存反馈修改。', feedback_delete_failed: '无法删除反馈。', feedback_edited: '已编辑' },
+    ja: { feedback_edit: '編集', feedback_delete: '削除', feedback_save: '保存', feedback_cancel: 'キャンセル', feedback_delete_confirm: 'このフィードバックを削除しますか？', feedback_updated: 'フィードバックを更新しました。', feedback_deleted: 'フィードバックを削除しました。', feedback_update_failed: '変更を保存できませんでした。', feedback_delete_failed: 'フィードバックを削除できませんでした。', feedback_edited: '編集済み' },
+    es: { feedback_edit: 'Editar', feedback_delete: 'Eliminar', feedback_save: 'Guardar', feedback_cancel: 'Cancelar', feedback_delete_confirm: '¿Eliminar este comentario?', feedback_updated: 'Comentario actualizado.', feedback_deleted: 'Comentario eliminado.', feedback_update_failed: 'No se pudo guardar el cambio.', feedback_delete_failed: 'No se pudo eliminar el comentario.', feedback_edited: 'Editado' }
+  };
+  Object.entries(feedbackActionLanguagePatches).forEach(([lang, patch]) => {
+    TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
+  });
   Object.keys(TRANSLATIONS).forEach(lang => {
     const table = TRANSLATIONS[lang];
     if (!table || typeof table !== 'object') return;
@@ -2095,8 +2106,8 @@ function applyEnhancedTranslations() {
   });
   const mobileNavLanguagePatches = {
     ko: {
-      nav_dashboard_short: '홈', nav_planner_short: '코스', nav_companions_short: '동행',
-      nav_routeplanner_short: '도시 경로', nav_profile_short: '프로필'
+      nav_dashboard_short: '홈', nav_planner_short: '코스 생성', nav_companions_short: '동행',
+      nav_routeplanner_short: '도시간 경로', nav_profile_short: '프로필'
     },
     en: {
       nav_dashboard_short: 'Home', nav_planner_short: 'Plan', nav_companions_short: 'Match',
@@ -2514,6 +2525,7 @@ function normalizeFeedbackCollection(entries) {
       text: cleanUiText(String(entry.text || '')).slice(0, 500),
       rating: Math.max(1, Math.min(5, Number(entry.rating) || 1)),
       timestamp,
+      updatedAt: Number(entry.updatedAt) || 0,
       lang: normalizeLanguageCode(entry.lang || 'en')
     });
   });
@@ -2726,6 +2738,66 @@ function applySharedLanguage(lang) {
   }
 }
 
+function getSharedLinkErrorText() {
+  return getInlineText({
+    ko: '공유된 여행 정보를 불러오지 못했습니다. 링크가 잘리지 않았는지 확인해주세요.',
+    en: 'Could not load the shared trip. Check that the link is complete.',
+    fr: "Impossible de charger le voyage partagé. Vérifiez que le lien est complet.",
+    zh: '无法加载共享旅行。请确认链接完整。',
+    ja: '共有された旅行を読み込めませんでした。リンクが完全か確認してください。',
+    es: 'No se pudo cargar el viaje compartido. Comprueba que el enlace esté completo.'
+  });
+}
+
+function restoreDecodedSharedPayload(payload, expectedView = '') {
+  if (!payload || typeof payload !== 'object') return false;
+  if (payload.lang && isSupportedLanguage(payload.lang)) applySharedLanguage(payload.lang);
+
+  const isRoute = payload.type === 'route' || payload.isRoute;
+  if (isRoute) {
+    const routeCities = payload.cities || payload.optimized || payload.displayCities;
+    if (!Array.isArray(routeCities) || routeCities.length < 2 || typeof restoreRouteStateFromPayload !== 'function') return false;
+    restoreRouteStateFromPayload(payload);
+    state.currentView = 'routeplanner';
+    state.activeCourse = null;
+    state.editingSavedCourseId = null;
+    saveToLocalStorage();
+    updateView();
+    showToast(getText('shared_route_loaded'));
+    return true;
+  }
+
+  if (payload.days && (payload.cityName || payload.cityId)) {
+    normalizeCourseMetadata(payload);
+    state.activeCourse = payload;
+    state.editingSavedCourseId = null;
+    state.currentItineraryDay = 1;
+    state.currentView = 'planner';
+    syncPlannerControlsFromCourse(payload);
+    saveToLocalStorage();
+    updateView();
+    renderItinerary(payload);
+    showToast(getText('shared_itinerary_loaded'));
+    return true;
+  }
+
+  if (expectedView === 'routeplanner' || expectedView === 'planner') state.currentView = expectedView;
+  return false;
+}
+
+async function restoreCompactSharedLink(encodedPayload, expectedView) {
+  try {
+    const payload = await decodeSharePayloadFromUrl(encodedPayload);
+    if (!restoreDecodedSharedPayload(payload, expectedView)) throw new Error('Invalid shared payload.');
+    window.history.replaceState(null, '', window.location.pathname);
+  } catch (error) {
+    console.error('Failed to restore compact share link:', error);
+    state.currentView = expectedView === 'routeplanner' ? 'routeplanner' : 'planner';
+    updateView();
+    showToast(getSharedLinkErrorText());
+  }
+}
+
 function renderRouteOptimizerFallback(error) {
   const container = document.getElementById('routeOptimizerContainer');
   if (!container) return;
@@ -2801,7 +2873,17 @@ async function pullFromRemote() {
       state.rooms = mergeRemoteRoomsWithPending(data.rooms, state.rooms);
       state.chatLogs = mergeChatLogs(state.chatLogs, data.chatLogs || {});
       state.cityRequests = Array.isArray(data.cityRequests) ? data.cityRequests : [];
-      state.feedbacks = normalizeFeedbackCollection([...(state.feedbacks || []), ...(data.feedbacks || [])]);
+      let mergedFeedbacks = normalizeFeedbackCollection([...(state.feedbacks || []), ...(data.feedbacks || [])]);
+      if (typeof pendingFeedbackDeletes !== 'undefined' && pendingFeedbackDeletes.size) {
+        mergedFeedbacks = mergedFeedbacks.filter(entry => !pendingFeedbackDeletes.has(entry.id));
+      }
+      if (typeof pendingFeedbackEdits !== 'undefined' && pendingFeedbackEdits.size) {
+        mergedFeedbacks = normalizeFeedbackCollection([
+          ...Array.from(pendingFeedbackEdits.values()),
+          ...mergedFeedbacks.filter(entry => !pendingFeedbackEdits.has(entry.id))
+        ]);
+      }
+      state.feedbacks = mergedFeedbacks;
       repairStateMojibake();
       
       // Auto-kick / room-deleted logic
@@ -3063,7 +3145,15 @@ function init() {
   
   // Parse shared query parameters
   const urlParams = new URLSearchParams(window.location.search);
-  const shareData = urlParams.get('share');
+  const compactShareData = urlParams.get('shared');
+  if (compactShareData) {
+    const expectedView = urlParams.get('view') === 'routeplanner' ? 'routeplanner' : 'planner';
+    state.currentView = expectedView;
+    if (expectedView === 'routeplanner') state.activeCourse = null;
+    updateView();
+    restoreCompactSharedLink(compactShareData, expectedView);
+  }
+  const shareData = compactShareData ? null : urlParams.get('share');
   if (shareData) {
     try {
       const sharedCourse = decodeSharePayload(shareData);
@@ -3120,7 +3210,7 @@ function init() {
 
   // Handle hash-based sharing: #itinerary= for itineraries, #share= for routes
   const hash = window.location.hash;
-  if (hash) {
+  if (hash && !compactShareData) {
     if (hash.startsWith('#share=')) {
       // Route share - just set view, let renderRouteOptimizerTab() handle the rest
       try {
@@ -3733,6 +3823,7 @@ function setupUIStrings() {
   }
   updateRainyDaySelector();
   if (typeof updateFeedbackStarUI === 'function') updateFeedbackStarUI();
+  if (typeof renderFeedbackList === 'function') renderFeedbackList();
   repairVisibleMojibake(document.body);
 }
 
@@ -12227,17 +12318,31 @@ function showToast(message) {
   }, 3000);
 }
 
+const OWNED_FEEDBACK_IDS_KEY = 'wander_feedback_owned_ids_v1';
 let sharedFeedbackSelectedRating = 0;
+let feedbackEditingId = null;
+let ownedFeedbackIds = new Set();
+const pendingFeedbackEdits = new Map();
+const pendingFeedbackDeletes = new Set();
 
 function getFeedbackStarLabel(value) {
-  return getInlineText({
-    ko: `${value}\uC810`,
-    en: `${value} stars`,
-    fr: `${value} \u00E9toiles`,
-    zh: `${value}\u661F`,
-    ja: `${value}\u3064\u661F`,
-    es: `${value} estrellas`
-  });
+  return getInlineText({ ko: `${value}점`, en: `${value} stars`, fr: `${value} étoiles`, zh: `${value}星`, ja: `${value}つ星`, es: `${value} estrellas` });
+}
+
+function loadOwnedFeedbackIds() {
+  const stored = safeGetStoredJson(OWNED_FEEDBACK_IDS_KEY, []);
+  ownedFeedbackIds = new Set((Array.isArray(stored) ? stored : []).filter(id => typeof id === 'string' && /^feedback-[\w-]+$/.test(id)).slice(0, 100));
+}
+
+function saveOwnedFeedbackIds() {
+  const existingIds = new Set((state.feedbacks || []).map(entry => String(entry.id)));
+  ownedFeedbackIds = new Set(Array.from(ownedFeedbackIds).filter(id => existingIds.has(id)).slice(-100));
+  safeSetLocalStorage(OWNED_FEEDBACK_IDS_KEY, JSON.stringify(Array.from(ownedFeedbackIds)));
+}
+
+function isOwnedFeedback(entryOrId) {
+  const id = typeof entryOrId === 'string' ? entryOrId : entryOrId && entryOrId.id;
+  return !!id && ownedFeedbackIds.has(String(id));
 }
 
 function loadFeedbacksFromStorage() {
@@ -12250,8 +12355,7 @@ function saveFeedbacksToStorage() {
 }
 
 function updateFeedbackStarUI() {
-  const stars = document.querySelectorAll('#feedbackStars .star-btn');
-  stars.forEach(button => {
+  document.querySelectorAll('#feedbackStars .star-btn').forEach(button => {
     const value = Number(button.dataset.star);
     button.classList.toggle('active', value <= sharedFeedbackSelectedRating);
     button.setAttribute('aria-pressed', value === sharedFeedbackSelectedRating ? 'true' : 'false');
@@ -12260,6 +12364,7 @@ function updateFeedbackStarUI() {
 }
 
 function initFeedbackSystem() {
+  loadOwnedFeedbackIds();
   document.querySelectorAll('#feedbackStars .star-btn').forEach(button => {
     const value = Number(button.dataset.star);
     button.setAttribute('aria-pressed', 'false');
@@ -12269,11 +12374,21 @@ function initFeedbackSystem() {
     });
   });
   const nameInput = document.getElementById('feedbackName');
-  if (nameInput && !nameInput.value && state.activeProfile && state.activeProfile.name) {
-    nameInput.value = repairMojibakeText(state.activeProfile.name);
-  }
+  if (nameInput && !nameInput.value && state.activeProfile && state.activeProfile.name) nameInput.value = repairMojibakeText(state.activeProfile.name);
   const submitButton = document.getElementById('feedbackSubmitBtn');
   if (submitButton) submitButton.addEventListener('click', submitFeedback);
+  const list = document.getElementById('feedbackList');
+  if (list) {
+    list.addEventListener('click', event => {
+      const action = event.target.closest('[data-feedback-action]');
+      if (!action) return;
+      const id = action.dataset.feedbackId;
+      if (action.dataset.feedbackAction === 'edit') beginFeedbackEdit(id);
+      if (action.dataset.feedbackAction === 'cancel') cancelFeedbackEdit();
+      if (action.dataset.feedbackAction === 'save') saveFeedbackEdit(id);
+      if (action.dataset.feedbackAction === 'delete') deleteFeedback(id);
+    });
+  }
   renderFeedbackList();
 }
 
@@ -12284,23 +12399,16 @@ async function submitFeedback() {
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
   if (!text) {
-    showToast(getInlineText({ ko: '\uD53C\uB4DC\uBC31 \uB0B4\uC6A9\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694.', en: 'Please enter your feedback.', fr: 'Veuillez saisir votre avis.', zh: '\u8BF7\u8F93\u5165\u53CD\u9988\u5185\u5BB9\u3002', ja: '\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002', es: 'Escribe tu comentario.' }));
+    showToast(getInlineText({ ko: '피드백 내용을 입력해주세요.', en: 'Please enter your feedback.', fr: 'Veuillez saisir votre avis.', zh: '请输入反馈内容。', ja: 'フィードバックを入力してください。', es: 'Escribe tu comentario.' }));
     return;
   }
   if (!sharedFeedbackSelectedRating) {
-    showToast(getInlineText({ ko: '\uD3C9\uC810\uC744 \uC120\uD0DD\uD574\uC8FC\uC138\uC694.', en: 'Please select a rating.', fr: 'Veuillez choisir une note.', zh: '\u8BF7\u9009\u62E9\u8BC4\u5206\u3002', ja: '\u8A55\u4FA1\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\u3002', es: 'Selecciona una puntuaci\u00F3n.' }));
+    showToast(getInlineText({ ko: '평점을 선택해주세요.', en: 'Please select a rating.', fr: 'Veuillez choisir une note.', zh: '请选择评分。', ja: '評価を選択してください。', es: 'Selecciona una puntuación.' }));
     return;
   }
   const entry = {
     id: `feedback-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    name: cleanUiText(name || getInlineText({
-      ko: '\uC775\uBA85',
-      en: 'Anonymous',
-      fr: 'Anonyme',
-      zh: '\u533F\u540D',
-      ja: '\u533F\u540D',
-      es: 'An\u00F3nimo'
-    })).slice(0, 30),
+    name: cleanUiText(name || getInlineText({ ko: '익명', en: 'Anonymous', fr: 'Anonyme', zh: '匿名', ja: '匿名', es: 'Anónimo' })).slice(0, 30),
     text: cleanUiText(text).slice(0, 500),
     rating: sharedFeedbackSelectedRating,
     timestamp: Date.now(),
@@ -12311,17 +12419,82 @@ async function submitFeedback() {
   renderFeedbackList();
   const saved = await pushToRemote();
   if (saved) {
+    ownedFeedbackIds.add(entry.id);
+    saveOwnedFeedbackIds();
     textInput.value = '';
     sharedFeedbackSelectedRating = 0;
     updateFeedbackStarUI();
+    renderFeedbackList();
   } else {
     state.feedbacks = state.feedbacks.filter(item => item.id !== entry.id);
     saveFeedbacksToStorage();
     renderFeedbackList();
   }
   showToast(saved
-    ? getInlineText({ ko: '\uD53C\uB4DC\uBC31\uC774 \uB4F1\uB85D\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uAC10\uC0AC\uD569\uB2C8\uB2E4!', en: 'Feedback submitted. Thank you!', fr: 'Avis envoy\u00E9. Merci !', zh: '\u53CD\u9988\u5DF2\u63D0\u4EA4\uFF0C\u8C22\u8C22\uFF01', ja: '\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\u3092\u9001\u4FE1\u3057\u307E\u3057\u305F\u3002', es: 'Comentario enviado. \u00A1Gracias!' })
-    : getInlineText({ ko: '\uC11C\uBC84 \uC800\uC7A5\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694.', en: 'Could not save feedback to the server. Please try again.', fr: "Impossible d'enregistrer l'avis. R\u00E9essayez.", zh: '\u65E0\u6CD5\u4FDD\u5B58\u53CD\u9988\uFF0C\u8BF7\u91CD\u8BD5\u3002', ja: '\u30B5\u30FC\u30D0\u30FC\u306B\u4FDD\u5B58\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F\u3002', es: 'No se pudo guardar. Int\u00E9ntalo de nuevo.' }));
+    ? getInlineText({ ko: '피드백이 등록되었습니다. 감사합니다!', en: 'Feedback submitted. Thank you!', fr: 'Avis envoyé. Merci !', zh: '反馈已提交，谢谢！', ja: 'フィードバックを送信しました。', es: 'Comentario enviado. ¡Gracias!' })
+    : getInlineText({ ko: '서버 저장에 실패했습니다. 다시 시도해주세요.', en: 'Could not save feedback to the server. Please try again.', fr: "Impossible d'enregistrer l'avis. Réessayez.", zh: '无法保存反馈，请重试。', ja: 'サーバーに保存できませんでした。', es: 'No se pudo guardar. Inténtalo de nuevo.' }));
+}
+
+function beginFeedbackEdit(feedbackId) {
+  if (!isOwnedFeedback(feedbackId) || pendingFeedbackEdits.has(String(feedbackId)) || pendingFeedbackDeletes.has(String(feedbackId))) return;
+  feedbackEditingId = String(feedbackId);
+  renderFeedbackList();
+  const editor = document.querySelector(`[data-feedback-editor="${CSS.escape(feedbackEditingId)}"]`);
+  if (editor) {
+    editor.focus();
+    editor.setSelectionRange(editor.value.length, editor.value.length);
+  }
+}
+
+function cancelFeedbackEdit() {
+  feedbackEditingId = null;
+  renderFeedbackList();
+}
+
+async function saveFeedbackEdit(feedbackId) {
+  const id = String(feedbackId || '');
+  if (!isOwnedFeedback(id) || pendingFeedbackEdits.has(id) || pendingFeedbackDeletes.has(id)) return;
+  const original = (state.feedbacks || []).find(entry => entry.id === id);
+  const editor = document.querySelector(`[data-feedback-editor="${CSS.escape(id)}"]`);
+  if (!original || !editor) return;
+  const text = cleanUiText(editor.value.trim()).slice(0, 500);
+  if (!text) return showToast(getInlineText({ ko: '피드백 내용을 입력해주세요.', en: 'Please enter your feedback.', fr: 'Veuillez saisir votre avis.', zh: '请输入反馈内容。', ja: 'フィードバックを入力してください。', es: 'Escribe tu comentario.' }));
+  const updated = { ...original, text, updatedAt: Date.now() };
+  pendingFeedbackEdits.set(id, updated);
+  state.feedbacks = normalizeFeedbackCollection([updated, ...state.feedbacks.filter(entry => entry.id !== id)]);
+  feedbackEditingId = null;
+  saveFeedbacksToStorage();
+  renderFeedbackList();
+  const saved = await pushToRemote();
+  pendingFeedbackEdits.delete(id);
+  if (!saved) {
+    state.feedbacks = normalizeFeedbackCollection([original, ...state.feedbacks.filter(entry => entry.id !== id)]);
+    saveFeedbacksToStorage();
+  }
+  renderFeedbackList();
+  showToast(getText(saved ? 'feedback_updated' : 'feedback_update_failed'));
+}
+
+async function deleteFeedback(feedbackId) {
+  const id = String(feedbackId || '');
+  if (!isOwnedFeedback(id) || pendingFeedbackEdits.has(id) || pendingFeedbackDeletes.has(id) || !confirm(getText('feedback_delete_confirm'))) return;
+  const original = (state.feedbacks || []).find(entry => entry.id === id);
+  if (!original || !isOwnedFeedback(id)) return;
+  pendingFeedbackDeletes.add(id);
+  state.feedbacks = state.feedbacks.filter(entry => entry.id !== id);
+  saveFeedbacksToStorage();
+  renderFeedbackList();
+  const saved = await pushToRemote({ deletedFeedbackIds: [id] });
+  pendingFeedbackDeletes.delete(id);
+  if (saved) {
+    ownedFeedbackIds.delete(id);
+    saveOwnedFeedbackIds();
+  } else {
+    state.feedbacks = normalizeFeedbackCollection([original, ...state.feedbacks]);
+    saveFeedbacksToStorage();
+    renderFeedbackList();
+  }
+  showToast(getText(saved ? 'feedback_deleted' : 'feedback_delete_failed'));
 }
 
 function renderFeedbackList() {
@@ -12329,14 +12502,23 @@ function renderFeedbackList() {
   if (!container) return;
   const entries = normalizeFeedbackCollection(state.feedbacks);
   if (!entries.length) {
-    container.innerHTML = `<div class="feedback-empty">${getInlineText({ ko: '\uC544\uC9C1 \uD53C\uB4DC\uBC31\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.', en: 'No feedback yet.', fr: 'Aucun avis pour le moment.', zh: '\u6682\u65E0\u53CD\u9988\u3002', ja: '\u307E\u3060\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\u306F\u3042\u308A\u307E\u305B\u3093\u3002', es: 'A\u00FAn no hay comentarios.' })}</div>`;
+    container.innerHTML = `<div class="feedback-empty">${escapeHtml(getInlineText({ ko: '아직 피드백이 없습니다.', en: 'No feedback yet.', fr: 'Aucun avis pour le moment.', zh: '暂无反馈。', ja: 'まだフィードバックはありません。', es: 'Aún no hay comentarios.' }))}</div>`;
     return;
   }
   container.innerHTML = entries.map(entry => {
-    const date = new Date(entry.timestamp);
-    const dateText = date.toLocaleDateString(normalizeLanguageCode(state.lang));
-    const stars = '\u2605'.repeat(entry.rating) + '\u2606'.repeat(5 - entry.rating);
-    return `<article class="feedback-card"><div class="feedback-card-header"><span class="feedback-author">${cleanUiText(entry.name)}</span><span class="feedback-date">${dateText}</span></div><div class="feedback-card-stars" aria-label="${entry.rating}/5">${stars}</div><div class="feedback-card-text">${cleanUiText(entry.text)}</div></article>`;
+    const id = escapeHtml(entry.id);
+    const dateText = new Date(entry.timestamp).toLocaleDateString(normalizeLanguageCode(state.lang));
+    const edited = entry.updatedAt ? `<span class="feedback-edited">${escapeHtml(getText('feedback_edited'))}</span>` : '';
+    const stars = '★'.repeat(entry.rating) + '☆'.repeat(5 - entry.rating);
+    const editing = feedbackEditingId === entry.id && isOwnedFeedback(entry);
+    const busy = pendingFeedbackEdits.has(entry.id) || pendingFeedbackDeletes.has(entry.id);
+    const body = editing
+      ? `<textarea class="form-control feedback-inline-editor" maxlength="500" data-feedback-editor="${id}">${escapeHtml(entry.text)}</textarea><div class="feedback-card-actions"><button type="button" class="feedback-action-btn feedback-save-btn" data-feedback-action="save" data-feedback-id="${id}">${escapeHtml(getText('feedback_save'))}</button><button type="button" class="feedback-action-btn" data-feedback-action="cancel" data-feedback-id="${id}">${escapeHtml(getText('feedback_cancel'))}</button></div>`
+      : `<div class="feedback-card-text">${escapeHtml(entry.text)}</div>`;
+    const controls = !editing && !busy && isOwnedFeedback(entry)
+      ? `<div class="feedback-card-actions"><button type="button" class="feedback-action-btn" data-feedback-action="edit" data-feedback-id="${id}">${escapeHtml(getText('feedback_edit'))}</button><button type="button" class="feedback-action-btn feedback-delete-btn" data-feedback-action="delete" data-feedback-id="${id}">${escapeHtml(getText('feedback_delete'))}</button></div>`
+      : '';
+    return `<article class="feedback-card"><div class="feedback-card-header"><span class="feedback-author">${escapeHtml(entry.name)}</span><span class="feedback-date">${escapeHtml(dateText)} ${edited}</span></div><div class="feedback-card-stars" aria-label="${entry.rating}/5">${stars}</div>${body}${controls}</article>`;
   }).join('');
 }
 
@@ -12925,7 +13107,7 @@ function renderSavedCoursesList() {
   });
 }
 
-function copyShareLink() {
+async function copyShareLink() {
   const course = state.activeCourse;
   if (!course) {
     showToast(getText('itinerary_none_to_share'));
@@ -12967,9 +13149,8 @@ function copyShareLink() {
       }))
     };
     
-    const base64Str = encodeSharePayload(compact);
-    // Use hash fragment (#itinerary=) instead of query param (?share=) to avoid 400 Bad Request from server
-    const shareUrl = window.location.href.split('?')[0].split('#')[0] + '#itinerary=' + base64Str;
+    const encodedPayload = await encodeSharePayloadForUrl(compact);
+    const shareUrl = buildCompactShareUrl('planner', encodedPayload);
     
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(shareUrl).then(() => {

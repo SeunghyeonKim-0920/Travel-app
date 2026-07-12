@@ -3652,11 +3652,14 @@ body.modal-open {
   .nav-tab-btn .nav-label-mobile {
     display: block;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: normal;
     font-size: 10px;
     line-height: 1.1;
+    text-align: center;
     letter-spacing: 0;
   }
 
@@ -3801,6 +3804,51 @@ body.modal-open {
   word-break: break-word;
 }
 
+.feedback-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.feedback-action-btn {
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.feedback-action-btn:hover,
+.feedback-action-btn:focus-visible {
+  border-color: var(--primary);
+  color: var(--primary-dark);
+  outline: none;
+}
+
+.feedback-save-btn {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+
+.feedback-inline-editor {
+  width: 100%;
+  min-height: 104px;
+  resize: vertical;
+  color: var(--text);
+  background: #fff;
+}
+
+.feedback-edited {
+  margin-left: 4px;
+  color: var(--text-muted);
+}
+
 .feedback-empty {
   text-align: center;
   color: var(--text-muted);
@@ -3809,19 +3857,13 @@ body.modal-open {
 }
 
 .feedback-delete-btn {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 13px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: var(--radius-sm);
-  transition: color 0.2s, background 0.2s;
+  color: #b42318;
 }
 
 .feedback-delete-btn:hover {
-  color: var(--accent);
-  background: rgba(255,0,0,0.06);
+  border-color: #b42318;
+  color: #8a1c13;
+  background: #fff5f4;
 }
 
 @media (max-width: 480px) {

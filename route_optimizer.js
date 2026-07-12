@@ -36,6 +36,60 @@ function decodeSharePayload(encoded) {
   return JSON.parse(decodeURIComponent(escape(binary)));
 }
 
+function shareBytesToBase64Url(bytes) {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i += 1) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+function shareBase64UrlToBytes(encoded) {
+  const normalized = String(encoded || '').replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+async function encodeSharePayloadForUrl(payload) {
+  const input = new TextEncoder().encode(JSON.stringify(payload));
+  if (typeof pako !== 'undefined' && typeof pako.gzip === 'function') {
+    return `g1.${shareBytesToBase64Url(pako.gzip(input))}`;
+  }
+  if (typeof CompressionStream === 'function' && typeof DecompressionStream === 'function') {
+    const stream = new Blob([input]).stream().pipeThrough(new CompressionStream('gzip'));
+    const compressed = new Uint8Array(await new Response(stream).arrayBuffer());
+    return `g1.${shareBytesToBase64Url(compressed)}`;
+  }
+  const fallback = `b1.${encodeSharePayload(payload)}`;
+  if (fallback.length > 6000) throw new Error('This shared result is too large for a reliable link.');
+  return fallback;
+}
+
+async function decodeSharePayloadFromUrl(encoded) {
+  const value = String(encoded || '');
+  if (value.startsWith('g1.')) {
+    const bytes = shareBase64UrlToBytes(value.slice(3));
+    if (typeof pako !== 'undefined' && typeof pako.ungzip === 'function') {
+      return JSON.parse(pako.ungzip(bytes, { to: 'string' }));
+    }
+    if (typeof DecompressionStream !== 'function') throw new Error('Compressed share links are not supported by this browser.');
+    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    return JSON.parse(await new Response(stream).text());
+  }
+  if (value.startsWith('b1.')) return decodeSharePayload(value.slice(3));
+  return decodeSharePayload(value);
+}
+
+function buildCompactShareUrl(view, encodedPayload) {
+  const url = new URL(window.location.href);
+  url.search = '';
+  url.hash = '';
+  url.searchParams.set('view', view);
+  url.searchParams.set('shared', encodedPayload);
+  return url.toString();
+}
+
 // Travel time database (door-to-door in minutes)
 // Format: { flight: {time, note?}, train: {time, note?}|null, bus: {time, note?}|null }
 // Flight door-to-door = city_to_airport(60) + checkin_security(120) + flight_time + baggage(30) + arrival_airport_to_city(60)
@@ -2215,26 +2269,23 @@ function saveRouteAsCourse() {
 }
 
 
-function shareRouteLink() {
+async function shareRouteLink() {
   const result = routeState.lastResult;
   if (!result) { showToast(getText('route_analyze_first')); return; }
   const isKo = state.lang === 'ko';
   const { optimized, totalTime } = result;
+  const sharedCities = serializeRouteCities(optimized);
   const payload = {
     type: 'route',
-    cities: serializeRouteCities(optimized),
-    optimized: serializeRouteCities(optimized),
-    displayCities: serializeRouteCities(optimized),
-    inputCities: serializeRouteCities(routeState.cities),
+    cities: sharedCities,
     totalTime,
     lang: state.lang,
     startCityId: routeState.startCityId || null,
-    endCityId: routeState.endCityId || null,
-    originalCities: serializeRouteCities(optimized)
+    endCityId: routeState.endCityId || null
   };
   try {
-    const base64Str = encodeSharePayload(payload);
-    const shareUrl = window.location.href.split('?')[0].split('#')[0] + '#share=' + base64Str;
+    const encodedPayload = await encodeSharePayloadForUrl(payload);
+    const shareUrl = buildCompactShareUrl('routeplanner', encodedPayload);
     
     const alertMsg = isKo ? '경로 공유 링크가 복사되었습니다.' : 'Route share link has been copied.';
     const promptMsg = isKo ? '아래 링크를 복사하세요:' : 'Copy:';

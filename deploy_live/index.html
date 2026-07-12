@@ -10,7 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TripTogether - AI Travel Planner & Companions</title>
   <meta name="description" content="Plan a personal AI itinerary and find travel companions when you need them.">
-  <link rel="stylesheet" href="style.css?v=1783886700">
+  <link rel="stylesheet" href="style.css?v=1783890000">
   <link rel="manifest" href="manifest.json">
   <!-- Leaflet CSS & JS for Mapping -->
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
@@ -18,7 +18,7 @@
   <!-- Inline SVG Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%238a5cf6%22/></svg>">
   <script>
-    window.WANDERSYNC_BUILD_VERSION = '1783850000';
+    window.WANDERSYNC_BUILD_VERSION = '1783890000';
     (function () {
       try {
         var refreshKey = 'wandersync_cache_refresh_' + window.WANDERSYNC_BUILD_VERSION;
@@ -141,7 +141,7 @@
     <button class="nav-tab-btn" data-target="planner" aria-label="AI 일정 생성" data-i18n-aria-label="nav_planner">
       <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
       <span class="nav-label-full" data-i18n="nav_planner">AI 일정 생성</span>
-      <span class="nav-label-mobile" data-i18n="nav_planner_short">코스</span>
+      <span class="nav-label-mobile" data-i18n="nav_planner_short">코스 생성</span>
     </button>
     <button class="nav-tab-btn" data-target="companions" aria-label="동행 매칭" data-i18n-aria-label="nav_companions">
       <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
@@ -151,7 +151,7 @@
     <button class="nav-tab-btn" data-target="routeplanner" aria-label="도시간 동선 짜기" data-i18n-aria-label="nav_routeplanner">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18 3 21V6l6-3 6 3 6-3v15l-6 3-6-3Zm0-15v15m6-12v15"/><path d="m7 10 2 2 3-4 3 2"/></svg>
       <span class="nav-label-full" data-i18n="nav_routeplanner">도시간 동선 짜기</span>
-      <span class="nav-label-mobile" data-i18n="nav_routeplanner_short">도시 경로</span>
+      <span class="nav-label-mobile" data-i18n="nav_routeplanner_short">도시간 경로</span>
     </button>
     <button class="nav-tab-btn" data-target="profile" aria-label="내 프로필" data-i18n-aria-label="nav_profile">
       <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -658,12 +658,13 @@
   <div class="toast" id="toastNotification" aria-live="polite"></div>
 
   <!-- Main JS Scripts -->
-  <script src="mockData.js?v=1783850000"></script>
-  <script src="mockdata_patch.js?v=1783850000"></script>
-  <script src="cities_new_patch.js?v=1783850000"></script>
-  <script src="route_optimizer.js?v=1783886700"></script>
-  <script src="app.js?v=1783886700"></script>
-  <script src="city_course_patch.js?v=1783850000"></script>
+  <script src="mockData.js?v=1783890000"></script>
+  <script src="mockdata_patch.js?v=1783890000"></script>
+  <script src="cities_new_patch.js?v=1783890000"></script>
+  <script src="vendor/pako/pako.min.js?v=1783890000"></script>
+  <script src="route_optimizer.js?v=1783890000"></script>
+  <script src="app.js?v=1783890000"></script>
+  <script src="city_course_patch.js?v=1783890000"></script>
   <script>
     (function () {
       if (window.__wanderHtmlNavFallbackInstalled) return;
