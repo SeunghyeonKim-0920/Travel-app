@@ -150,6 +150,7 @@ body[data-theme="departure"] .destination-grid article { border-bottom: 6px soli
   body[data-theme="departure"] .site-shell { padding-left: 0; }
   main { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
   .hero, body[data-theme="postcard"] .hero, body[data-theme="departure"] .hero { min-height: min(560px, 65dvh); align-items: flex-end; }
+  .hero > img { object-position: 68% 50%; }
   .hero-content { width: calc(100% - 28px); padding: 50px 0 34px; }
   .hero h1 { font-size: 36px; }
   .hero-content > p:not(.hero-kicker) { font-size: 15px; line-height: 1.55; }
