@@ -4282,3 +4282,84 @@ body.theme-postcard-pop :focus-visible {
     background-position: 64% 48%;
   }
 }
+
+/* Flat refinement: retain the Postcard palette without comic-style depth. */
+body.theme-postcard-pop {
+  --border: #d7dce5;
+  --shadow: none;
+}
+
+body.theme-postcard-pop * {
+  box-shadow: none !important;
+}
+
+body.theme-postcard-pop header,
+body.theme-postcard-pop .logo-icon,
+body.theme-postcard-pop .lang-toggle,
+body.theme-postcard-pop .user-status-widget,
+body.theme-postcard-pop .nav-tabs,
+body.theme-postcard-pop .hero-banner,
+body.theme-postcard-pop .btn-primary,
+body.theme-postcard-pop .btn-secondary,
+body.theme-postcard-pop .hero-cta .btn-secondary,
+body.theme-postcard-pop .route-add-btn,
+body.theme-postcard-pop .route-optimize-btn,
+body.theme-postcard-pop .chat-input-bar button,
+body.theme-postcard-pop .feedback-save-btn,
+body.theme-postcard-pop .onboarding-strip,
+body.theme-postcard-pop .onboarding-quickstart,
+body.theme-postcard-pop .onboarding-step,
+body.theme-postcard-pop .stat-card,
+body.theme-postcard-pop .planner-sidebar,
+body.theme-postcard-pop .planner-results,
+body.theme-postcard-pop .timeline-content,
+body.theme-postcard-pop .room-card,
+body.theme-postcard-pop .profile-card,
+body.theme-postcard-pop .route-sidebar,
+body.theme-postcard-pop .route-result-panel,
+body.theme-postcard-pop .route-map-card,
+body.theme-postcard-pop .route-summary-bar,
+body.theme-postcard-pop .feedback-form-card,
+body.theme-postcard-pop .feedback-card,
+body.theme-postcard-pop .chat-container,
+body.theme-postcard-pop .chat-sidebar,
+body.theme-postcard-pop .chat-area,
+body.theme-postcard-pop .chat-msg-card,
+body.theme-postcard-pop .modal-content,
+body.theme-postcard-pop .form-control,
+body.theme-postcard-pop input,
+body.theme-postcard-pop select,
+body.theme-postcard-pop textarea {
+  border-width: 1px;
+}
+
+body.theme-postcard-pop .hero-banner::after {
+  display: none;
+}
+
+body.theme-postcard-pop .dest-card,
+body.theme-postcard-pop .dest-card:nth-child(even),
+body.theme-postcard-pop .dest-card:hover {
+  border: 1px solid var(--border);
+  outline: none;
+  transform: none;
+}
+
+body.theme-postcard-pop .btn-primary:hover,
+body.theme-postcard-pop .btn-secondary:hover,
+body.theme-postcard-pop .route-add-btn:hover,
+body.theme-postcard-pop .route-optimize-btn:hover,
+body.theme-postcard-pop .chat-input-bar button:hover,
+body.theme-postcard-pop .nav-tab-btn:hover,
+body.theme-postcard-pop .stat-card:hover,
+body.theme-postcard-pop .room-card:hover,
+body.theme-postcard-pop .timeline-content:hover,
+body.theme-postcard-pop .feedback-card:hover {
+  transform: none;
+}
+
+@media (max-width: 800px), (max-width: 900px) and (orientation: landscape) {
+  body.theme-postcard-pop .nav-tabs {
+    border-width: 1px 0 0;
+  }
+}

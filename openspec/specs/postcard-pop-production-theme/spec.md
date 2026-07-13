@@ -4,7 +4,7 @@
 TBD - created by archiving change apply-postcard-pop-theme. Update Purpose after archive.
 ## Requirements
 ### Requirement: Production uses the selected Postcard Pop visual system
-The production application SHALL apply the Postcard Pop palette, typography, borders, shadows, and controls consistently across Home, Planner, Companion Matching, Route Planner, Profile, feedback, chat, itinerary, and modal surfaces.
+The production application SHALL apply the Postcard Pop palette, typography, flat borders, and controls consistently across Home, Planner, Companion Matching, Route Planner, Profile, feedback, chat, itinerary, and modal surfaces without dimensional shadows or rotated cards.
 
 #### Scenario: Core view navigation
 - **WHEN** a user navigates through each core production view
