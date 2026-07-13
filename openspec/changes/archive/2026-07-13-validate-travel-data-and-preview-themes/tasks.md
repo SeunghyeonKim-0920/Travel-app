@@ -21,4 +21,4 @@
 - [x] 4.1 Run JavaScript syntax, OpenSpec, place-data, duration, route, and root/deploy parity checks
 - [x] 4.2 Verify Dubai course generation, Munich-Barcelona routing, core views, and preview layouts locally with Playwright
 - [x] 4.3 Synchronize `deploy_live`, deploy to Surge, and verify the production site and preview gallery with Playwright
-- [ ] 4.4 Review all acceptance criteria, archive the OpenSpec change, commit, and push scoped files
+- [x] 4.4 Review all acceptance criteria, archive the OpenSpec change, commit, and push scoped files
