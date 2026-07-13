@@ -38,7 +38,7 @@ const browserStubs = `
 
 const runtime = new Function(
   browserStubs + runtimeFiles.map(read).join('\n') +
-  '\nreturn { CITIES, ATTRACTIONS, getTravelData, getBestTransport, isBlockedUnopenedPlace, buildCourseStructure, state, getAttractionCoords, getCanonicalPlaceCoordinate, isSyntheticAttractionCoordinate, hasUsableAttractionCoords };'
+  '\nreturn { CITIES, ATTRACTIONS, CITY_CLUSTERS, CITY_DEFAULT_COORDS, ROUTE_CITY_CENTERS, getTravelData, getBestTransport, getRecommendedStayDays, isBlockedUnopenedPlace, buildCourseStructure, state, getAttractionCoords, getCanonicalPlaceCoordinate, isSyntheticAttractionCoordinate, hasUsableAttractionCoords };'
 )();
 
 const failures = [];
@@ -112,6 +112,102 @@ assert(canonicalBuckingham && canonicalBuckingham.coordinateSource === 'canonica
   'Buckingham Palace map rendering must use the canonical coordinate override');
 assert(runtime.getCanonicalPlaceCoordinate({ name_en: 'Hyde Park Serpentine Lake Walk' }, 'london') === null,
   'non-Buckingham London places must not inherit the Buckingham Palace override');
+
+const addedDestinationExpectations = {
+  frankfurt: {
+    names: { ko: '프랑크푸르트', en: 'Frankfurt', fr: 'Francfort', zh: '法兰克福', ja: 'フランクフルト', es: 'Fráncfort' },
+    center: { x: 8.6821, y: 50.1109 },
+    minimumPlaces: 15
+  },
+  interlaken: {
+    names: { ko: '인터라켄', en: 'Interlaken', fr: 'Interlaken', zh: '因特拉肯', ja: 'インターラーケン', es: 'Interlaken' },
+    center: { x: 7.8632, y: 46.6863 },
+    minimumPlaces: 11
+  }
+};
+
+const normalizeIdentity = value => String(value || '')
+  .normalize('NFKD')
+  .toLowerCase()
+  .replace(/[^a-z0-9가-힣\u3040-\u30ff\u3400-\u9fff]+/g, ' ')
+  .trim();
+
+Object.entries(addedDestinationExpectations).forEach(([cityId, expected]) => {
+  const matches = runtime.CITIES.filter(city => city.id === cityId);
+  assert(matches.length === 1, `${cityId} must appear exactly once in CITIES`);
+  const city = matches[0] || {};
+  Object.entries(expected.names).forEach(([lang, label]) => {
+    assert(city[`name_${lang}`] === label, `${cityId} ${lang} name must be ${label}`);
+  });
+  assert(runtime.CITY_DEFAULT_COORDS[cityId] && runtime.CITY_DEFAULT_COORDS[cityId].x === expected.center.x && runtime.CITY_DEFAULT_COORDS[cityId].y === expected.center.y,
+    `${cityId} must have the verified itinerary center`);
+  assert(runtime.ROUTE_CITY_CENTERS[cityId] && runtime.ROUTE_CITY_CENTERS[cityId].lon === expected.center.x && runtime.ROUTE_CITY_CENTERS[cityId].lat === expected.center.y,
+    `${cityId} must have the verified route-planner center`);
+  assert(Array.isArray(runtime.CITY_CLUSTERS[cityId]) && runtime.CITY_CLUSTERS[cityId].length === 3,
+    `${cityId} must expose three local lodging clusters`);
+
+  const places = Object.values(runtime.ATTRACTIONS[cityId] || {}).flatMap(pool => Array.isArray(pool) ? pool : []);
+  assert(places.length >= expected.minimumPlaces, `${cityId} must have at least ${expected.minimumPlaces} curated places`);
+  const seenNames = new Set();
+  places.forEach(place => {
+    ['ko', 'en', 'fr', 'zh', 'ja', 'es'].forEach(lang => {
+      assert(Boolean(place[`name_${lang}`]), `${cityId} place ${place.name_en || place.name_ko} is missing name_${lang}`);
+      assert(Boolean(place[`desc_${lang}`]), `${cityId} place ${place.name_en || place.name_ko} is missing desc_${lang}`);
+    });
+    const identity = normalizeIdentity(place.name_en || place.name_ko);
+    assert(identity && !seenNames.has(identity), `${cityId} has a duplicate place identity: ${identity}`);
+    seenNames.add(identity);
+    assert(place.coordinateSource === 'curated-patch', `${cityId} ${place.name_en || place.name_ko} must use curated coordinates`);
+    assert(Number.isFinite(Number(place.x)) && Number.isFinite(Number(place.y)), `${cityId} ${place.name_en || place.name_ko} must have coordinates`);
+  });
+});
+
+const interlakenRegional = Object.values(runtime.ATTRACTIONS.interlaken || {})
+  .flatMap(pool => Array.isArray(pool) ? pool : [])
+  .filter(place => place.regionalEssential === true)
+  .sort((a, b) => Number(a.priorityRank) - Number(b.priorityRank));
+assert(interlakenRegional.length === 6, 'Interlaken must have six distinct regional full-day experiences');
+assert(interlakenRegional.every(place => Number(place.duration) >= 420), 'Every Interlaken regional experience must occupy a full day');
+
+['relaxed', 'moderate', 'packed'].forEach(pace => {
+  runtime.state.travelPace = pace;
+  runtime.state.regenConfig = { relaxed: pace === 'relaxed', packed: pace === 'packed', travelPace: pace };
+  ['frankfurt', 'interlaken'].forEach(cityId => {
+    for (let days = 1; days <= 7; days++) {
+      const course = runtime.buildCourseStructure(cityId, days, ['culture', 'healing', 'activity', 'shopping'], null, null);
+      assert(course.days.length === days, `${cityId} ${pace} ${days}-day course must preserve the requested day count`);
+      course.days.forEach((day, dayIndex) => {
+        const sightseeing = (day.items || []).filter(item => item && !item.isMeal && !item.isTransit && !item.isRest && !item.isLodging && !item.isFlexibleBreak);
+        if (cityId === 'interlaken' || dayIndex < 6) {
+          assert(sightseeing.length > 0, `${cityId} ${pace} day ${dayIndex + 1} must contain sightseeing`);
+        }
+      });
+    }
+  });
+});
+
+runtime.state.travelPace = 'moderate';
+runtime.state.regenConfig = {};
+const interlakenSevenDay = runtime.buildCourseStructure('interlaken', 7, ['culture', 'healing', 'activity'], null, null);
+const interlakenRegionalNames = interlakenSevenDay.days.slice(1).map(day => {
+  const sightseeing = (day.items || []).filter(item => item && !item.isMeal && !item.isTransit && !item.isRest && !item.isLodging);
+  assert(sightseeing.length === 1, 'Interlaken days 2-7 must each contain exactly one regional full-day experience');
+  return sightseeing[0] && sightseeing[0].name_en;
+});
+assert(interlakenRegionalNames.join('|') === [
+  'Lauterbrunnen Valley, Staubbach Falls & Wengen Full-Day',
+  'Grindelwald-First & Bachalpsee Full-Day',
+  'Jungfraujoch Top of Europe Full-Day',
+  'Mürren & Schilthorn Full-Day',
+  'Lake Brienz & Giessbach Falls Full-Day',
+  'Lake Thun, Spiez & Thun Old Town Full-Day'
+].join('|'), 'Interlaken regional full-day experiences must follow the curated geographic sequence');
+
+const frankfurtInterlakenRoute = runtime.getTravelData('frankfurt', 'interlaken');
+assert(frankfurtInterlakenRoute && frankfurtInterlakenRoute.train && frankfurtInterlakenRoute.train.time === 315,
+  'Frankfurt-Interlaken must use the official direct rail duration of about 5h15m');
+assert(runtime.getRecommendedStayDays('frankfurt', false) === '2-4 days', 'Frankfurt recommended stay must be 2-4 days');
+assert(runtime.getRecommendedStayDays('interlaken', false) === '4-7 days', 'Interlaken recommended stay must be 4-7 days');
 
 const estimatedLondonPoint = runtime.getAttractionCoords({ name_en: 'Unresolved Test Place' }, 'london');
 assert(estimatedLondonPoint.coordinateSource === 'estimated-cluster',

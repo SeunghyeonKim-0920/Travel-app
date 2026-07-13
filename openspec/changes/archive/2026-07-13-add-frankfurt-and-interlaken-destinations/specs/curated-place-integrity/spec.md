@@ -1,19 +1,4 @@
-# Curated Place Integrity
-
-## Purpose
-
-Ensure itinerary candidates are operational, schedulable places with structurally valid data.
-## Requirements
-### Requirement: Unopened development concepts are not scheduled
-The itinerary generator SHALL reject explicitly blocked development-area or unopened project labels and SHALL not present them as visitable attractions.
-
-#### Scenario: Dubai itinerary generation
-- **WHEN** a user generates any supported Dubai itinerary
-- **THEN** Dubailand and equivalent project-only labels do not appear in any day
-
-#### Scenario: Blocked-label audit
-- **WHEN** the attraction-data verification runs across every supported city pool
-- **THEN** no blocked exact or normalized label remains available to the scheduler
+## MODIFIED Requirements
 
 ### Requirement: Curated place records are structurally valid
 Every attraction candidate SHALL have a usable localized name, a positive duration, and a valid place-specific coordinate before it can be rendered as an embedded map marker. A patch that omits coordinates SHALL preserve an existing valid coordinate pair, estimated cluster coordinates SHALL be identified as estimates rather than curated GPS data, and the Frankfurt and Interlaken catalogs SHALL not contain duplicate normalized places or fictitious destinations.

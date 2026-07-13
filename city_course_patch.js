@@ -22,6 +22,24 @@
 
   addCity({ id: 'busan', name_ko: '부산', name_en: 'Busan', country_ko: '한국', country_en: 'South Korea', desc_ko: '바다, 시장, 산복도로 야경이 어우러진 한국 대표 항구 도시', desc_en: 'South Korea coastal city of beaches, markets, temples, and harbor views.' });
   addCity({ id: 'nice', name_ko: '니스', name_en: 'Nice', country_ko: '프랑스', country_en: 'France', desc_ko: '프렌치 리비에라의 해변 산책로와 구시가지가 빛나는 지중해 도시', desc_en: 'French Riviera city with Mediterranean promenades, old town lanes, and museums.' });
+  addCity({
+    id: 'frankfurt', name_ko: '프랑크푸르트', name_en: 'Frankfurt', name_fr: 'Francfort', name_zh: '法兰克福', name_ja: 'フランクフルト', name_es: 'Fráncfort',
+    country_ko: '독일', country_en: 'Germany', desc_ko: '뢰머베르크의 역사 지구와 마인강, 박물관 지구가 이어지는 독일의 국제 도시',
+    desc_en: 'A German city of the historic Römerberg, Main riverfront, museums, gardens, and skyline.',
+    desc_fr: 'Une ville allemande entre le Römerberg historique, le Main, les musées, les jardins et les gratte-ciel.',
+    desc_zh: '德国国际都市，拥有罗马广场老城、美因河畔、博物馆区、花园与天际线。',
+    desc_ja: '歴史あるレーマー広場、マイン川、博物館街、庭園、スカイラインを楽しめるドイツの都市です。',
+    desc_es: 'Ciudad alemana de casco histórico, ribera del Meno, museos, jardines y perfil urbano.'
+  });
+  addCity({
+    id: 'interlaken', name_ko: '인터라켄', name_en: 'Interlaken', name_fr: 'Interlaken', name_zh: '因特拉肯', name_ja: 'インターラーケン', name_es: 'Interlaken',
+    country_ko: '스위스', country_en: 'Switzerland', desc_ko: '두 호수 사이에서 라우터브루넨, 그린델발트, 융프라우 지역으로 이어지는 알프스 여행 거점',
+    desc_en: 'An Alpine base between two lakes for Interlaken and the Lauterbrunnen, Grindelwald, and Jungfrau regions.',
+    desc_fr: 'Une base alpine entre deux lacs pour découvrir Interlaken, Lauterbrunnen, Grindelwald et la région de la Jungfrau.',
+    desc_zh: '位于两湖之间的阿尔卑斯旅行基地，可前往劳特布龙嫩、格林德瓦和少女峰地区。',
+    desc_ja: '二つの湖の間に位置し、ラウターブルンネン、グリンデルワルト、ユングフラウ地方を巡る拠点です。',
+    desc_es: 'Base alpina entre dos lagos para recorrer Interlaken, Lauterbrunnen, Grindelwald y la región de Jungfrau.'
+  });
 
   if (typeof CITY_CLUSTERS !== 'undefined') {
     CITY_CLUSTERS.busan = CITY_CLUSTERS.busan || [
@@ -32,6 +50,16 @@
     CITY_CLUSTERS.nice = CITY_CLUSTERS.nice || [
       { name_ko: '영국인의 산책로/구시가지', name_en: 'Promenade/Old Nice', keywords: ['promenade', 'anglais', '영국인의 산책로', 'old nice', 'vieux nice', '구시가지', 'cours saleya'], x: 7.2656, y: 43.6953 },
       { name_ko: '샤토 언덕/시미에', name_en: 'Castle Hill/Cimiez', keywords: ['castle hill', 'colline du chateau', '샤토', 'cimiez', '시미에', 'matisse', 'chagall'], x: 7.2797, y: 43.6990 }
+    ];
+    CITY_CLUSTERS.frankfurt = CITY_CLUSTERS.frankfurt || [
+      { name_ko: '뢰머베르크/알트슈타트', name_en: 'Römerberg/Old Town', keywords: ['römer', 'romer', 'old town', 'altstadt', 'cathedral', 'paul', '뢰머', '구시가지', '대성당'], x: 8.6822, y: 50.1106 },
+      { name_ko: '박물관 지구/작센하우젠', name_en: 'Museumsufer/Sachsenhausen', keywords: ['museum', 'städel', 'stadel', 'sachsenhausen', 'eiserner', '박물관', '작센하우젠', '마인강'], x: 8.6770, y: 50.1048 },
+      { name_ko: '베스텐트/팔멘가르텐', name_en: 'Westend/Palmengarten', keywords: ['palmengarten', 'senckenberg', 'alte oper', 'main tower', '팔멘가르텐', '젠켄베르크', '알테 오퍼'], x: 8.6608, y: 50.1194 }
+    ];
+    CITY_CLUSTERS.interlaken = CITY_CLUSTERS.interlaken || [
+      { name_ko: '회에베크/회에마테', name_en: 'Höheweg/Höhematte', keywords: ['höheweg', 'hoheweg', 'höhematte', 'hohematte', '회에베크', '회에마테'], x: 7.8589, y: 46.6852 },
+      { name_ko: '인터라켄 오스트/하더 쿨름', name_en: 'Interlaken Ost/Harder Kulm', keywords: ['interlaken ost', 'harder kulm', 'lake brienz', '하더 쿨름', '브리엔츠'], x: 7.8700, y: 46.6905 },
+      { name_ko: '운터젠/인터라켄 베스트', name_en: 'Unterseen/Interlaken West', keywords: ['unterseen', 'interlaken west', 'lake thun', '운터젠', '툰 호수'], x: 7.8503, y: 46.6874 }
     ];
   }
 
@@ -68,9 +96,21 @@
           existing.coordinateSource = 'curated-patch';
         }
         existing.curatedEssential = true;
+        ['fr', 'zh', 'ja', 'es'].forEach(function (lang) {
+          if (entry[lang]) existing['name_' + lang] = entry[lang];
+          if (entry['desc_' + lang]) existing['desc_' + lang] = entry['desc_' + lang];
+        });
+        if (entry.regionalEssential === true) existing.regionalEssential = true;
         return;
       }
-      pools[cat].push({
+      var localizedNames = { fr: entry.fr, zh: entry.zh, ja: entry.ja, es: entry.es };
+      var localizedDescriptions = {
+        fr: entry.desc_fr || (entry.fr ? 'Visite de ' + entry.fr + ' avec un temps de découverte réaliste.' : ''),
+        zh: entry.desc_zh || (entry.zh ? '按合理的停留时间游览' + entry.zh + '。' : ''),
+        ja: entry.desc_ja || (entry.ja ? entry.ja + 'を無理のない滞在時間で巡ります。' : ''),
+        es: entry.desc_es || (entry.es ? 'Visita de ' + entry.es + ' con un tiempo de estancia realista.' : '')
+      };
+      var item = {
         name_ko: entry.ko,
         name_en: entry.en,
         duration: entry.dur || 120,
@@ -78,12 +118,19 @@
         priorityRank: entry.rank || (100 + idx),
         x: entry.x,
         y: entry.y,
-        open: entry.open || 540,
-        close: entry.close || 1200,
+        open: Number.isFinite(entry.open) ? entry.open : 540,
+        close: Number.isFinite(entry.close) ? entry.close : 1200,
         desc_ko: entry.desc_ko || entry.ko + '을(를) 중심으로 실제 방문 동선에 맞춰 관람하는 대표 일정입니다.',
         desc_en: entry.desc_en || 'A real, city-specific sightseeing stop planned around visitor-friendly routing.',
-        curatedEssential: true
+        curatedEssential: true,
+        regionalEssential: entry.regionalEssential === true,
+        coordinateSource: Number.isFinite(entry.x) && Number.isFinite(entry.y) ? 'curated-patch' : undefined
+      };
+      ['fr', 'zh', 'ja', 'es'].forEach(function (lang) {
+        if (localizedNames[lang]) item['name_' + lang] = localizedNames[lang];
+        if (localizedDescriptions[lang]) item['desc_' + lang] = localizedDescriptions[lang];
       });
+      pools[cat].push(item);
     });
     ['healing', 'culture', 'activity', 'shopping'].forEach(function (cat) {
       pools[cat].sort(function (a, b) {
@@ -116,6 +163,38 @@
       { cat: 'culture', ko: '니스 러시아 정교회 대성당', en: 'St Nicholas Orthodox Cathedral Nice', dur: 90, rank: 8, x: 7.2531, y: 43.7039 },
       { cat: 'healing', ko: '시미에 수도원 정원', en: 'Cimiez Monastery Garden', dur: 90, rank: 9, x: 7.2767, y: 43.7198 },
       { cat: 'activity', ko: '에즈와 모나코 당일치기', en: 'Eze & Monaco Day Trip', dur: 480, rank: 40, x: 7.3619, y: 43.7278, desc_ko: '니스 후반부 일정에 어울리는 에즈 마을과 모나코 근교 하루 코스입니다.', desc_en: 'A full-day side trip from Nice to Eze village and Monaco.' }
+    ],
+    frankfurt: [
+      { cat: 'culture', ko: '뢰머베르크와 신 구시가지', en: 'Römerberg & New Old Town', fr: 'Römerberg et nouvelle vieille ville', zh: '罗马广场与新老城', ja: 'レーマー広場と新旧市街', es: 'Römerberg y nuevo casco antiguo', dur: 180, rank: 1, x: 8.6822, y: 50.1106, desc_ko: '프랑크푸르트의 역사 중심지인 뢰머베르크와 복원된 신 구시가지를 함께 걷는 일정입니다.', desc_en: 'Walk Frankfurt historic center across Römerberg and the reconstructed New Old Town.' },
+      { cat: 'culture', ko: '프랑크푸르트 황제 대성당', en: 'Frankfurt Imperial Cathedral', fr: 'Cathédrale impériale de Francfort', zh: '法兰克福皇帝大教堂', ja: 'フランクフルト大聖堂', es: 'Catedral Imperial de Fráncfort', dur: 120, rank: 2, x: 8.6850, y: 50.1106, desc_ko: '독일 왕과 황제의 선출·대관 역사로 알려진 성 바르톨로메오 대성당을 둘러봅니다.', desc_en: 'Visit St Bartholomew Cathedral, linked to the election and coronation history of German rulers.' },
+      { cat: 'culture', ko: '프랑크푸르트 성 바울 교회', en: 'St Paul Church Frankfurt', fr: 'Église Saint-Paul de Francfort', zh: '法兰克福圣保罗教堂', ja: 'フランクフルト・パウルス教会', es: 'Iglesia de San Pablo de Fráncfort', dur: 90, rank: 3, x: 8.6808, y: 50.1111, desc_ko: '독일 민주주의 역사에서 중요한 성 바울 교회의 전시와 내부를 봅니다.', desc_en: 'Explore St Paul Church and its role in the history of German democracy.' },
+      { cat: 'activity', ko: '마인 타워 전망대', en: 'Main Tower Observation Deck', fr: 'Belvédère de la Main Tower', zh: '美因塔观景台', ja: 'マインタワー展望台', es: 'Mirador de la Torre Main', dur: 120, rank: 4, x: 8.6719, y: 50.1122, desc_ko: '마인 타워 전망대에서 프랑크푸르트 도심과 스카이라인을 조망합니다.', desc_en: 'See Frankfurt city center and skyline from the Main Tower observation deck.' },
+      { cat: 'culture', ko: '박물관강변과 슈테델 미술관', en: 'Museumsufer & Städel Museum', fr: 'Rive des musées et musée Städel', zh: '博物馆河岸与施泰德艺术馆', ja: 'ムゼウムスウーファーとシュテーデル美術館', es: 'Ribera de los Museos y Museo Städel', dur: 300, rank: 5, x: 8.6738, y: 50.1035, desc_ko: '마인강 박물관 지구를 산책하고 슈테델 미술관의 주요 소장품을 충분히 관람합니다.', desc_en: 'Walk the Museumsufer and allow a substantial visit to the Städel Museum collection.' },
+      { cat: 'culture', ko: '괴테 하우스', en: 'Goethe House Frankfurt', fr: 'Maison de Goethe à Francfort', zh: '法兰克福歌德故居', ja: 'フランクフルトのゲーテハウス', es: 'Casa de Goethe en Fráncfort', dur: 150, rank: 6, x: 8.6775, y: 50.1111, desc_ko: '요한 볼프강 폰 괴테의 생가와 시대별 전시를 관람합니다.', desc_en: 'Tour the birthplace of Johann Wolfgang von Goethe and its period rooms and exhibitions.' },
+      { cat: 'healing', ko: '팔멘가르텐 식물원', en: 'Palmengarten Frankfurt', fr: 'Palmengarten de Francfort', zh: '法兰克福棕榈园', ja: 'フランクフルト・パルメンガルテン', es: 'Palmengarten de Fráncfort', dur: 180, rank: 7, x: 8.6556, y: 50.1236, desc_ko: '대형 온실과 계절 정원을 갖춘 팔멘가르텐을 여유 있게 둘러봅니다.', desc_en: 'Explore Palmengarten glasshouses and seasonal gardens at a relaxed pace.' },
+      { cat: 'culture', ko: '젠켄베르크 자연사박물관', en: 'Senckenberg Natural History Museum', fr: 'Musée d’histoire naturelle Senckenberg', zh: '森肯贝格自然博物馆', ja: 'ゼンケンベルク自然博物館', es: 'Museo de Historia Natural Senckenberg', dur: 210, rank: 8, x: 8.6518, y: 50.1175, desc_ko: '공룡 골격과 생물 다양성 전시로 유명한 자연사박물관을 충분히 관람합니다.', desc_en: 'Allow a substantial visit for the dinosaur and biodiversity galleries at Senckenberg.' },
+      { cat: 'culture', ko: '알테 오퍼와 오페른 광장', en: 'Alte Oper & Opernplatz', fr: 'Alte Oper et Opernplatz', zh: '老歌剧院与歌剧院广场', ja: 'アルテ・オーパーとオペラ広場', es: 'Alte Oper y Opernplatz', dur: 90, rank: 9, x: 8.6719, y: 50.1158, landmark: false, desc_ko: '복원된 알테 오퍼 외관과 오페른 광장 주변을 산책합니다.', desc_en: 'Walk around the restored Alte Oper facade and Opernplatz.' },
+      { cat: 'healing', ko: '아이제르너 슈테크와 마인강 산책', en: 'Eiserner Steg & Main River Walk', fr: 'Eiserner Steg et promenade du Main', zh: '铁桥与美因河畔漫步', ja: 'アイゼルナー・シュテークとマイン川散策', es: 'Eiserner Steg y paseo del Meno', dur: 120, rank: 10, x: 8.6822, y: 50.1081, landmark: false, desc_ko: '아이제르너 슈테크를 건너 마인강 양쪽의 스카이라인과 강변을 걷습니다.', desc_en: 'Cross Eiserner Steg and walk the Main riverfront for skyline views.' },
+      { cat: 'activity', ko: '프랑크푸르트 동물원', en: 'Frankfurt Zoo', fr: 'Zoo de Francfort', zh: '法兰克福动物园', ja: 'フランクフルト動物園', es: 'Zoológico de Fráncfort', dur: 240, rank: 11, x: 8.7032, y: 50.1155, landmark: false, desc_ko: '다양한 동물 전시를 갖춘 프랑크푸르트 동물원에 반나절을 배정합니다.', desc_en: 'Set aside a half day for the varied animal habitats at Frankfurt Zoo.' },
+      { cat: 'culture', ko: '작센하우젠 역사 지구', en: 'Historic Sachsenhausen District', fr: 'Quartier historique de Sachsenhausen', zh: '萨克森豪森历史街区', ja: 'ザクセンハウゼン歴史地区', es: 'Barrio histórico de Sachsenhausen', dur: 150, rank: 12, x: 8.6890, y: 50.1053, landmark: false, desc_ko: '마인강 남쪽 작센하우젠의 역사적인 거리와 광장을 둘러봅니다.', desc_en: 'Explore the historic streets and squares of Sachsenhausen south of the Main.' },
+      { cat: 'shopping', ko: '클라인마르크트할레 시장', en: 'Kleinmarkthalle Market', fr: 'Marché Kleinmarkthalle', zh: '小市场大厅', ja: 'クラインマルクトハレ市場', es: 'Mercado Kleinmarkthalle', dur: 90, rank: 13, x: 8.6843, y: 50.1120, landmark: false, desc_ko: '도심 실내시장인 클라인마르크트할레의 식재료와 현지 먹거리를 둘러봅니다.', desc_en: 'Browse local produce and food stalls inside central Kleinmarkthalle.' },
+      { cat: 'shopping', ko: '차일 거리와 마이차일', en: 'Zeil & MyZeil', fr: 'Zeil et MyZeil', zh: '采尔大街与MyZeil', ja: 'ツァイル通りとマイツァイル', es: 'Zeil y MyZeil', dur: 150, rank: 14, x: 8.6839, y: 50.1146, landmark: false, desc_ko: '프랑크푸르트 대표 보행 쇼핑 거리인 차일과 마이차일을 둘러봅니다.', desc_en: 'Explore Frankfurt main pedestrian shopping street and the MyZeil center.' },
+      { cat: 'culture', ko: '프랑크푸르트 현대미술관', en: 'Museum of Modern Art Frankfurt', fr: 'Musée d’art moderne de Francfort', zh: '法兰克福现代艺术博物馆', ja: 'フランクフルト近代美術館', es: 'Museo de Arte Moderno de Fráncfort', dur: 150, rank: 15, x: 8.6854, y: 50.1118, landmark: false, desc_ko: '독특한 건축과 현대미술 소장품으로 알려진 MMK를 관람합니다.', desc_en: 'Visit MMK for its distinctive architecture and modern art collection.' },
+      { cat: 'activity', ko: '하이델베르크 구시가지 당일치기', en: 'Heidelberg Old Town Day Trip', fr: 'Excursion dans la vieille ville de Heidelberg', zh: '海德堡老城一日游', ja: 'ハイデルベルク旧市街日帰り旅行', es: 'Excursión al casco antiguo de Heidelberg', dur: 480, rank: 50, x: 8.7156, y: 49.4106, landmark: false, desc_ko: '프랑크푸르트에서 철도로 이동해 하이델베르크 성과 구시가지를 둘러보는 후반부 하루 일정입니다.', desc_en: 'A later full-day rail excursion from Frankfurt to Heidelberg Castle and Old Town.' },
+      { cat: 'activity', ko: '마인츠 구시가지와 라인강 당일치기', en: 'Mainz Old Town & Rhine Day Trip', fr: 'Excursion à Mayence et sur le Rhin', zh: '美因茨老城与莱茵河一日游', ja: 'マインツ旧市街とライン川日帰り旅行', es: 'Excursión a Maguncia y el Rin', dur: 480, rank: 51, x: 8.2742, y: 49.9990, landmark: false, desc_ko: '가까운 마인츠의 대성당과 구시가지, 라인강변을 묶어 둘러보는 후반부 하루 일정입니다.', desc_en: 'A later full-day rail excursion to Mainz Cathedral, Old Town, and the Rhine waterfront.' }
+    ],
+    interlaken: [
+      { cat: 'healing', ko: '회에마테 공원과 회에베크 산책', en: 'Höhematte Park & Höheweg Walk', fr: 'Parc Höhematte et promenade Höheweg', zh: '荷黑马特公园与荷黑威格漫步', ja: 'ヘーエマッテ公園とヘーエ通り散策', es: 'Parque Höhematte y paseo Höheweg', dur: 120, rank: 1, x: 7.8589, y: 46.6852, desc_ko: '인터라켄 중심의 넓은 공원과 산책로에서 융프라우 방향의 전망을 즐깁니다.', desc_en: 'Walk Interlaken central park and boulevard with views toward the Jungfrau massif.' },
+      { cat: 'culture', ko: '운터젠 구시가지', en: 'Unterseen Old Town', fr: 'Vieille ville d’Unterseen', zh: '下森老城', ja: 'ウンターゼーン旧市街', es: 'Casco antiguo de Unterseen', dur: 120, rank: 2, x: 7.8503, y: 46.6874, desc_ko: '아레강 건너 운터젠의 역사적인 광장과 골목을 천천히 둘러봅니다.', desc_en: 'Explore the historic square and lanes of Unterseen across the Aare.' },
+      { cat: 'activity', ko: '하더 쿨름 전망대', en: 'Harder Kulm Viewpoint', fr: 'Belvédère de Harder Kulm', zh: '哈德昆观景台', ja: 'ハーダー・クルム展望台', es: 'Mirador de Harder Kulm', dur: 210, rank: 3, x: 7.8500, y: 46.6977, desc_ko: '인터라켄에서 푸니쿨라로 올라 두 호수와 아이거·묀히·융프라우 전망을 봅니다.', desc_en: 'Ride the funicular from Interlaken for views of both lakes and the Eiger, Mönch, and Jungfrau.' },
+      { cat: 'culture', ko: '성 베아투스 동굴', en: 'St Beatus Caves', fr: 'Grottes de Saint-Béat', zh: '圣贝阿图斯洞穴', ja: 'ザンクト・ベアトゥス洞窟', es: 'Cuevas de San Beato', dur: 210, rank: 4, x: 7.7810, y: 46.6848, desc_ko: '툰 호숫가의 성 베아투스 동굴과 폭포, 전시 공간을 반나절 동안 둘러봅니다.', desc_en: 'Spend a half day at the St Beatus cave system, waterfalls, and exhibition by Lake Thun.' },
+      { cat: 'culture', ko: '인터라켄 수도원과 성', en: 'Interlaken Monastery & Castle', fr: 'Monastère et château d’Interlaken', zh: '因特拉肯修道院与城堡', ja: 'インターラーケン修道院と城', es: 'Monasterio y castillo de Interlaken', dur: 100, rank: 5, x: 7.8661, y: 46.6861, landmark: false, desc_ko: '인터라켄 중심의 옛 수도원과 성, 주변 역사 지구를 둘러봅니다.', desc_en: 'Visit the former monastery, castle, and surrounding historic area in central Interlaken.' },
+      { cat: 'activity', ko: '라우터브루넨 계곡·슈타우프바흐 폭포·벵엔 전일 코스', en: 'Lauterbrunnen Valley, Staubbach Falls & Wengen Full-Day', fr: 'Journée à Lauterbrunnen, aux chutes de Staubbach et à Wengen', zh: '劳特布龙嫩山谷、施陶河瀑布与文根一日行程', ja: 'ラウターブルンネン渓谷・シュタウプバッハ滝・ヴェンゲン終日コース', es: 'Día completo en Lauterbrunnen, Staubbach y Wengen', dur: 480, rank: 20, x: 7.9073, y: 46.5894, regionalEssential: true, desc_ko: '인터라켄에서 라우터브루넨으로 이동해 계곡과 슈타우프바흐 폭포를 보고 벵엔까지 연결하는 하루 일정입니다.', desc_en: 'Use a full day from Interlaken for Lauterbrunnen Valley, Staubbach Falls, and Wengen.' },
+      { cat: 'activity', ko: '그린델발트 퍼스트와 바흐알프제 전일 코스', en: 'Grindelwald-First & Bachalpsee Full-Day', fr: 'Journée à Grindelwald-First et au Bachalpsee', zh: '格林德瓦菲斯特与巴赫阿尔卑湖一日行程', ja: 'グリンデルワルト・フィルストとバッハアルプゼー終日コース', es: 'Día completo en Grindelwald-First y Bachalpsee', dur: 480, rank: 21, x: 8.0537, y: 46.6603, regionalEssential: true, desc_ko: '그린델발트와 퍼스트 전망 구역, 바흐알프제 방향을 하나의 전일 산악 일정으로 구성합니다.', desc_en: 'Dedicate one full day to Grindelwald, the First area, and the route toward Bachalpsee.' },
+      { cat: 'activity', ko: '융프라우요흐 톱 오브 유럽 전일 코스', en: 'Jungfraujoch Top of Europe Full-Day', fr: 'Journée au Jungfraujoch, Top of Europe', zh: '少女峰欧洲之巅一日行程', ja: 'ユングフラウヨッホ・トップ・オブ・ヨーロッパ終日コース', es: 'Día completo en Jungfraujoch, Top of Europe', dur: 540, rank: 22, x: 7.9853, y: 46.5475, regionalEssential: true, desc_ko: '인터라켄에서 왕복 이동과 고지대 관람 시간을 포함해 융프라우요흐에 하루 전체를 배정합니다.', desc_en: 'Reserve the full day for round-trip travel from Interlaken and an unhurried Jungfraujoch visit.' },
+      { cat: 'activity', ko: '뮈렌과 쉴트호른 전일 코스', en: 'Mürren & Schilthorn Full-Day', fr: 'Journée à Mürren et au Schilthorn', zh: '米伦与雪朗峰一日行程', ja: 'ミューレンとシルトホルン終日コース', es: 'Día completo en Mürren y Schilthorn', dur: 480, rank: 23, x: 7.8350, y: 46.5570, regionalEssential: true, desc_ko: '차 없는 산악 마을 뮈렌과 쉴트호른 방향을 다른 산악 일정과 분리해 하루로 구성합니다.', desc_en: 'Give the car-free village of Mürren and the Schilthorn route their own full day.' },
+      { cat: 'activity', ko: '브리엔츠 호수와 기스바흐 폭포 전일 코스', en: 'Lake Brienz & Giessbach Falls Full-Day', fr: 'Journée au lac de Brienz et aux chutes de Giessbach', zh: '布里恩茨湖与吉斯巴赫瀑布一日行程', ja: 'ブリエンツ湖とギースバッハ滝終日コース', es: 'Día completo en el lago de Brienz y las cascadas Giessbach', dur: 480, rank: 24, x: 8.0220, y: 46.7330, regionalEssential: true, desc_ko: '브리엔츠 호수 이동과 기스바흐 폭포 일대를 묶어 호수 동쪽의 하루 일정으로 구성합니다.', desc_en: 'Combine Lake Brienz travel and the Giessbach Falls area into one coherent lakeside day.' },
+      { cat: 'activity', ko: '툰 호수·슈피츠·툰 구시가지 전일 코스', en: 'Lake Thun, Spiez & Thun Old Town Full-Day', fr: 'Journée au lac de Thoune, à Spiez et dans la vieille ville de Thoune', zh: '图恩湖、施皮茨与图恩老城一日行程', ja: 'トゥーン湖・シュピーツ・トゥーン旧市街終日コース', es: 'Día completo en el lago de Thun, Spiez y el casco antiguo de Thun', dur: 480, rank: 25, x: 7.6915, y: 46.6882, regionalEssential: true, desc_ko: '툰 호수 서쪽의 슈피츠 성과 호숫가, 툰 구시가지를 묶어 여유 있는 하루 일정으로 구성합니다.', desc_en: 'Use a full day for Lake Thun, Spiez Castle, and Thun Old Town west of Interlaken.' }
     ],
     london: [
       { cat: 'culture', ko: '버킹엄 궁전과 근위병 교대', en: 'Buckingham Palace & Changing of the Guard', dur: 120, rank: 1, x: -0.14194444, y: 51.50083333 },

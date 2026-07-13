@@ -638,6 +638,7 @@ const CITY_LOCALIZED_NAMES = {
   dublin: { fr: 'Dublin', zh: '都柏林', ja: 'ダブリン', es: 'Dublín' },
   edinburgh: { fr: 'Édimbourg', zh: '爱丁堡', ja: 'エディンバラ', es: 'Edimburgo' },
   florence: { fr: 'Florence', zh: '佛罗伦萨', ja: 'フィレンツェ', es: 'Florencia' },
+  frankfurt: { fr: 'Francfort', zh: '法兰克福', ja: 'フランクフルト', es: 'Fráncfort' },
   geneva: { fr: 'Genève', zh: '日内瓦', ja: 'ジュネーブ', es: 'Ginebra' },
   hanoi: { fr: 'Hanoï', zh: '河内', ja: 'ハノイ', es: 'Hanói' },
   hawaii: { fr: 'Hawaï', zh: '夏威夷', ja: 'ハワイ', es: 'Hawái' },
@@ -645,6 +646,7 @@ const CITY_LOCALIZED_NAMES = {
   hongkong: { fr: 'Hong Kong', zh: '香港', ja: '香港', es: 'Hong Kong' },
   houston: { fr: 'Houston', zh: '休斯敦', ja: 'ヒューストン', es: 'Houston' },
   istanbul: { fr: 'Istanbul', zh: '伊斯坦布尔', ja: 'イスタンブール', es: 'Estambul' },
+  interlaken: { fr: 'Interlaken', zh: '因特拉肯', ja: 'インターラーケン', es: 'Interlaken' },
   jeju: { fr: 'Jeju', zh: '济州', ja: '済州', es: 'Jeju' },
   kualalumpur: { fr: 'Kuala Lumpur', zh: '吉隆坡', ja: 'クアラルンプール', es: 'Kuala Lumpur' },
   lasvegas: { fr: 'Las Vegas', zh: '拉斯维加斯', ja: 'ラスベガス', es: 'Las Vegas' },
@@ -701,9 +703,11 @@ const CITY_DEFAULT_COORDS = {
   cairo: { x: 31.2357, y: 30.0444 }, cancun: { x: -86.8515, y: 21.1619 }, capetown: { x: 18.4241, y: -33.9249 },
   casablanca: { x: -7.5898, y: 33.5731 }, chicago: { x: -87.6298, y: 41.8781 }, copenhagen: { x: 12.5683, y: 55.6761 },
   doha: { x: 51.5310, y: 25.2854 }, dubai: { x: 55.2708, y: 25.2048 }, dublin: { x: -6.2603, y: 53.3498 },
-  edinburgh: { x: -3.1883, y: 55.9533 }, florence: { x: 11.2558, y: 43.7696 }, geneva: { x: 6.1432, y: 46.2044 },
+  edinburgh: { x: -3.1883, y: 55.9533 }, florence: { x: 11.2558, y: 43.7696 }, frankfurt: { x: 8.6821, y: 50.1109 },
+  geneva: { x: 6.1432, y: 46.2044 },
   hanoi: { x: 105.8342, y: 21.0278 }, hawaii: { x: -157.8583, y: 21.3069 }, helsinki: { x: 24.9384, y: 60.1699 },
-  hongkong: { x: 114.1694, y: 22.3193 }, houston: { x: -95.3698, y: 29.7604 }, istanbul: { x: 28.9784, y: 41.0082 },
+  hongkong: { x: 114.1694, y: 22.3193 }, houston: { x: -95.3698, y: 29.7604 }, interlaken: { x: 7.8632, y: 46.6863 },
+  istanbul: { x: 28.9784, y: 41.0082 },
   jeju: { x: 126.5312, y: 33.4996 }, kualalumpur: { x: 101.6869, y: 3.1390 }, lasvegas: { x: -115.1398, y: 36.1699 },
   lima: { x: -77.0428, y: -12.0464 }, lisbon: { x: -9.1393, y: 38.7223 }, london: { x: -0.1276, y: 51.5074 },
   losangeles: { x: -118.2437, y: 34.0522 }, luxembourg: { x: 6.1296, y: 49.6116 }, madrid: { x: -3.7038, y: 40.4168 },
@@ -10523,7 +10527,8 @@ function deleteFeedback(feedbackId) {
       ];
       return allPools.find(item => {
         if (hasVisited(item)) return false;
-        if (isFullDayTripItem(item) && !(days >= 5 && d >= 5)) return false;
+        const isInterlakenRegionalEssential = cityId === 'interlaken' && item.regionalEssential === true;
+        if (isFullDayTripItem(item) && !isInterlakenRegionalEssential && !(days >= 5 && d >= 5)) return false;
         return (item.duration || 0) >= 240; // 4+ hours
       }) || null;
     };
@@ -11302,7 +11307,9 @@ function deleteFeedback(feedbackId) {
     let isFullDayAttractionDay = false;
     let fullDayAttraction = null;
 
-    const allowFullDayAttractionToday = days >= 5 && d >= 5 && !hasPendingDaytimePriorityTarget() && !hasPendingRegularCitySightseeing();
+    const allowInterlakenRegionalEssentialToday = cityId === 'interlaken' && d >= 2;
+    const allowFullDayAttractionToday = allowInterlakenRegionalEssentialToday ||
+      (days >= 5 && d >= 5 && !hasPendingDaytimePriorityTarget() && !hasPendingRegularCitySightseeing());
     if (allowFullDayAttractionToday) {
       const allSightseeing = [
         ...unvisitedLandmarks,
@@ -11311,7 +11318,8 @@ function deleteFeedback(feedbackId) {
       ];
       fullDayAttraction = allSightseeing.find(item => {
         if (hasVisited(item)) return false;
-        return isFullDayTripItem(item);
+        if (!isFullDayTripItem(item)) return false;
+        return !allowInterlakenRegionalEssentialToday || item.regionalEssential === true;
       });
 
       if (fullDayAttraction) {
