@@ -835,7 +835,7 @@ const ATTRACTIONS = {
       { name_ko: "딥 다이브 두바이 기네스 깊이 다이빙", name_en: "Deep Dive Dubai Underwater City", duration: 150, desc_ko: "세계에서 가장 깊은 60m 침몰 도시 테마 실내 수영장에서 체험 스쿠버 다이빙 스릴", desc_en: "Explore a sunken city street replica inside the world's deepest indoor dive pool" }
     ],
     shopping: [
-      { name_ko: "두바이 몰 분수 쇼 & 수족관 관람", name_en: "The Dubai Mall & Aquarium", duration: 180, desc_ko: "축구장 200개 크기 세계 최대 몰 쇼핑 및 거대 아쿠아리움 터널 관람", desc_en: "Shop international luxury labels and watch the giant indoor aquarium window" },
+      { name_ko: "두바이 몰 분수 쇼 & 수족관 관람", name_en: "The Dubai Mall & Aquarium", duration: 240, durationSource: "curated-venue-guidance", desc_ko: "축구장 200개 크기 세계 최대 몰 쇼핑 및 거대 아쿠아리움 터널 관람", desc_en: "Shop international luxury labels and watch the giant indoor aquarium window" },
       { name_ko: "금 시장 & 향신료 수크 투어", name_en: "Gold Souk & Spice Souk Walking", duration: 120, desc_ko: "전통 아브라 목조 배를 타고 건너가 반짝이는 금장신구 시장과 매콤한 향신료 골목 구경", desc_en: "Ride traditional abra boat to browse gold window displays and saffron bags" },
       { name_ko: "수크 마디나 주메이라 운하 시장", name_en: "Souk Madinat Jumeirah Shopping", duration: 120, desc_ko: "전통 아라비안 요새 분위기의 세련된 몰에서 향수, 공예품 쇼핑 및 하천 아브라 탑승", desc_en: "Explore a modern bazaar with traditional wind-tower design and canal boat rides" },
       { name_ko: "에미레이트 몰 스키 두바이 실내 스노우", name_en: "Mall of the Emirates Ski Dubai", duration: 150, desc_ko: "한여름 사막 도시 속 거대한 실내 스키장 펭귄 관람 및 스포츠 의류 쇼핑", desc_en: "Shop premium activewear and visit the massive indoor snow slopes with penguins" },

@@ -258,6 +258,27 @@
     if (removedIds.indexOf(cityId) === -1) addEntries(cityId, E[cityId]);
   });
 
+  // Apply high-impact venue guidance after every base and curated pool has loaded.
+  // Unknown or unopened development concepts are omitted rather than treated as attractions.
+  Object.keys(ATTRACTIONS).forEach(function (cityId) {
+    var pools = ATTRACTIONS[cityId] || {};
+    Object.keys(pools).forEach(function (category) {
+      if (!Array.isArray(pools[category])) return;
+      pools[category] = pools[category].filter(function (item) {
+        if (typeof isBlockedUnopenedPlace === 'function') return !isBlockedUnopenedPlace(item);
+        var title = String((item && (item.name_en || item.name_ko || item.name)) || '').toLowerCase();
+        return !/^(?:the\s+)?dubai\s*land$/.test(title.trim());
+      });
+      pools[category].forEach(function (item) {
+        var title = String((item && (item.name_en || item.name_ko || item.name)) || '').toLowerCase();
+        if (/(?:the\s+)?dubai mall/.test(title) || /\uB450\uBC14\uC774\s*\uBAB0/.test(title)) {
+          item.duration = Math.max(Number(item.duration) || 0, 240);
+          item.durationSource = 'curated-venue-guidance';
+        }
+      });
+    });
+  });
+
   CITIES.sort(function (a, b) {
     return String(a.name_en || a.id).localeCompare(String(b.name_en || b.id));
   });

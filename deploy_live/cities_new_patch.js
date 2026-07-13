@@ -239,7 +239,7 @@ var _CITIES_REMOVE_IDS = ['kyiv','vaduz','andorra_la_vella','kuwait_city','algie
       { name_ko:'주메이라 비치 일광욕',          name_en:'Jumeirah Beach & JBR Walk',            duration:120, x:55.1354, y:25.1392, open:540, close:1200, desc_ko:'두바이 대표 공공 해변 주메이라 비치, JBR 비치워크 쇼핑·식사', desc_en:'Dubai\'s public beach with the JBR Walk of restaurants and boutiques' }
     ],
     shopping: [
-      { name_ko:'두바이 몰 & 두바이 분수쇼',    name_en:'Dubai Mall & Dubai Fountain Show',     duration:180, x:55.2796, y:25.1972, open:540, close:1440, desc_ko:'세계 최대 쇼핑몰, 실내 스케이트장·수족관·두바이 분수쇼', desc_en:'World\'s largest mall with ice rink, aquarium, and Dubai Fountain show' },
+      { name_ko:'두바이 몰 & 두바이 분수쇼',    name_en:'Dubai Mall & Dubai Fountain Show',     duration:240, durationSource:'curated-venue-guidance', x:55.2796, y:25.1972, open:600, close:1440, desc_ko:'세계 최대 쇼핑몰, 실내 스케이트장·수족관·두바이 분수쇼', desc_en:'World\'s largest mall with ice rink, aquarium, and Dubai Fountain show' },
       { name_ko:'금 시장 & 향신료 시장',        name_en:'Gold Souk & Spice Souk',               duration:90, x:55.2993, y:25.2689, open:540, close:1200, desc_ko:'두바이 전통 금 시장과 향신료 수크, 중동 시장 쇼핑 체험',   desc_en:'Traditional gold and spice market in old Dubai for authentic souk shopping' }
     ],
     gourmet: [

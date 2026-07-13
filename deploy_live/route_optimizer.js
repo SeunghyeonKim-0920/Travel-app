@@ -155,7 +155,8 @@ const TRAVEL_DB = {
   'barcelona|vienna':     { flight: { time: 390 }, train: null, bus: null },
   'barcelona|prague':     { flight: { time: 390 }, train: null, bus: null },
   'barcelona|budapest':   { flight: { time: 390 }, train: null, bus: null },
-  'barcelona|munich':     { train: { time: 420, note: 'TGV+ICE 7h' }, flight: { time: 390 }, bus: null },
+  'munich|barcelona':     { train: { time: 880, connectionType: 'via', note_ko: '\uD30C\uB9AC \uD658\uC2B9 \uC5F4\uCC28 14\uC2DC\uAC04 40\uBD84', note_en: 'Connecting train via Paris 14h40m' }, flight: { time: 390 }, bus: null },
+  'barcelona|munich':     { train: { time: 820, connectionType: 'via', note_ko: '2\uD68C \uD658\uC2B9 \uC5F4\uCC28 13\uC2DC\uAC04 40\uBD84', note_en: 'Connecting train with two changes 13h40m' }, flight: { time: 390 }, bus: null },
   'barcelona|lisbon':     { flight: { time: 390 }, train: { time: 720, note: '12h (Trenhotel 야간)' }, bus: null },
   'barcelona|istanbul':   { flight: { time: 450 }, train: null, bus: null },
 

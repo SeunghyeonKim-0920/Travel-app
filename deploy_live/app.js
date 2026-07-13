@@ -3394,8 +3394,24 @@ function isTooFarFromBaseCity(item, cityId) {
   return distanceKm > limitKm;
 }
 
+const BLOCKED_UNOPENED_PLACE_PATTERNS = [
+  /^(?:the\s+)?dubai\s*land$/i,
+  /^dubai\s*land\s+(?:theme\s*park|entertainment\s*complex|project)$/i,
+  /^universal\s+studios\s+dubai(?:land)?$/i,
+  /^\uB450\uBC14\uC774\s*\uB79C\uB4DC(?:\s*(?:\uD14C\uB9C8\uD30C\uD06C|\uAC1C\uBC1C\uC9C0))?$/
+];
+
+function isBlockedUnopenedPlace(item) {
+  if (!item || item.isTransit || item.isLodging || item.isRest) return false;
+  const titles = [item.name_en, item.name_ko, item.name]
+    .filter(Boolean)
+    .map(value => repairMojibakeText(String(value)).replace(/[\s_-]+/g, ' ').trim());
+  return titles.some(title => BLOCKED_UNOPENED_PLACE_PATTERNS.some(pattern => pattern.test(title)));
+}
+
 function isInvalidGeneratedPlaceForCity(item, cityId) {
   if (!item || item.isTransit || item.isLodging || item.isRest) return false;
+  if (isBlockedUnopenedPlace(item)) return true;
   if (matchesPlaceSpecificForeignPattern(item, cityId)) return true;
   if (titleMentionsForeignCity(item, cityId)) return true;
   if (isTooFarFromBaseCity(item, cityId)) return true;
@@ -7290,12 +7306,9 @@ function inferWikiDuration(category, title, extract) {
 
 function shouldSupplementAttractionsFromWiki(cityId) {
   const isKnownCity = cityId !== 'custom' && Array.isArray(CITIES) && CITIES.some(city => city.id === cityId);
-  if (cityId !== 'custom' && (isKnownCity || ATTRACTIONS[cityId])) {
-    const pools = ATTRACTIONS[cityId] || {};
-    const curatedSightseeingCount = ['healing', 'culture', 'activity', 'shopping']
-      .reduce((sum, cat) => sum + ((pools[cat] || []).length), 0);
-    return curatedSightseeingCount < 18;
-  }
+  // Supported cities must stay on maintained place records. Wikipedia category
+  // pages do not provide a reliable open/closed or public-access status.
+  if (cityId !== 'custom' && (isKnownCity || ATTRACTIONS[cityId])) return false;
   return true;
 }
 
@@ -7341,6 +7354,7 @@ function fetchWikiAttractions(cityName, cityId, lang) {
 
   const WIKI_META_TITLE_PATTERN = /^(?:user|user talk|사용자|사용자토론|wikipedia|위키백과|template|틀|category|분류|file|파일|mediawiki|module|모듈|talk|토론|wikiproject|portal|draft|help|special)\s*:/i;
   const WIKI_META_NOISE_PATTERN = /(\/wikivault\/|wikivault|sandbox|연습장|user page|사용자 문서|wiki project|wikiproject|draft:|template:|category:|사용자:|위키백과:|분류:|파일:)/i;
+  const WIKI_NON_OPERATIONAL_PATTERN = /\b(?:permanently closed|closed (?:in|since|to the public)|defunct|demolished|never opened|not open to the public|under construction|still under development|planned (?:theme park|development|complex)|private residence)\b/i;
   const isRejectedWikiTitle = (title) => {
     const clean = repairMojibakeText(String(title || '')).trim();
     if (!clean) return true;
@@ -7586,6 +7600,7 @@ function fetchWikiAttractions(cityName, cityId, lang) {
 
       // Exclude non-attraction articles
       if (excludeKeywords.some(kw => articleText.includes(kw))) return;
+      if (WIKI_NON_OPERATIONAL_PATTERN.test(articleText)) return;
       if (mentionsOtherKnownCity(cleanTitle, desc || extract)) return;
       if (/\bbts\b/.test(articleText)) return;
       if (lat == null || lon == null) return;
@@ -9147,6 +9162,11 @@ function isOutletOrFarShoppingItem(item) {
   ].some(kw => text.includes(kw));
 }
 
+function supportsOnSiteMealBreak(item) {
+  const text = getAttractionSearchText(item).toLowerCase();
+  return /(?:the\s+)?dubai mall|\uB450\uBC14\uC774\s*\uBAB0/i.test(text);
+}
+
 function isNearbyDayTripItem(item) {
   if (!item || item.isTransit || item.isLodging || item.isRest || isMealBreakItem(item) || isFlexibleBreakItem(item)) return false;
   const nameText = `${item.name_ko || ''} ${item.name_en || ''} ${item.name || ''}`.toLowerCase();
@@ -9172,6 +9192,16 @@ function normalizeVisitDurationByType(item) {
   const text = getAttractionSearchText(item).toLowerCase();
   const current = Number(item.duration) || 90;
   let minDuration = current;
+
+  const majorVenueOverride = [
+    { pattern: /(?:the\s+)?dubai mall|\uB450\uBC14\uC774\s*\uBAB0/i, minutes: 240 }
+  ].find(rule => rule.pattern.test(text));
+
+  if (majorVenueOverride) {
+    item.duration = Math.max(current, majorVenueOverride.minutes);
+    item.durationSource = 'curated-venue-guidance';
+    return item;
+  }
 
   if (isOutletOrFarShoppingItem(item)) {
     minDuration = Math.max(minDuration, 480);
@@ -10036,6 +10066,7 @@ function buildCourseStructure(cityId, days, preferences, customCityName, wikiPoo
 
   const getItemDuration = (item) => {
     const dur = item.duration || 90;
+    if (item.durationSource === 'curated-venue-guidance') return dur;
     // Full-day attractions (theme parks, big day trips) keep their actual duration
     // These places dominate an entire day intentionally
     const FULL_DAY_THRESHOLD = 300; // 5 hours or more = full day attraction
@@ -11070,19 +11101,21 @@ function deleteFeedback(feedbackId) {
       return true;
     };
 
-    // Helper: check if a candidate fits before Lunch (Lunch must start by 13:30 = 810)
+    // Helper: check if a candidate fits before Lunch (Lunch must start by 14:00 = 840)
     const fitsBeforeLunch = (candidate, duration) => {
       const transitToCand = lastItem ? calculateTransit(lastItem, candidate).duration : 0;
       const lunchItem = peekDinerSpot('lunch', candidate) || { x: 5.0, y: 5.0 };
       if (!lunchItem) return false;
-      const transitCandToLunch = calculateTransit(candidate, lunchItem).duration;
+      const transitCandToLunch = supportsOnSiteMealBreak(candidate)
+        ? 0
+        : calculateTransit(candidate, lunchItem).duration;
       
       const hours = getOperatingHours(candidate);
       const arrival = currentTime + transitToCand;
       const minStart = Math.max(arrival, hours.open);
       const minEnd = minStart + duration;
       
-      if (minEnd > hours.close || minEnd + transitCandToLunch > 810) {
+      if (minEnd > hours.close || minEnd + transitCandToLunch > 840) {
         return false;
       }
       return true;
