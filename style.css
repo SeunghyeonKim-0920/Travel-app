@@ -4170,7 +4170,6 @@ body.theme-postcard-pop .route-line {
 
 body.theme-postcard-pop .timeline-marker,
 body.theme-postcard-pop .route-map-pin-dot,
-body.theme-postcard-pop .route-stop-marker,
 body.theme-postcard-pop .route-city-chip .city-num {
   border-color: var(--border);
   background: var(--accent);

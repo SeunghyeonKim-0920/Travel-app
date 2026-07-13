@@ -38,7 +38,7 @@ const browserStubs = `
 
 const runtime = new Function(
   browserStubs + runtimeFiles.map(read).join('\n') +
-  '\nreturn { CITIES, ATTRACTIONS, getTravelData, getBestTransport, isBlockedUnopenedPlace, buildCourseStructure, state };'
+  '\nreturn { CITIES, ATTRACTIONS, getTravelData, getBestTransport, isBlockedUnopenedPlace, buildCourseStructure, state, getAttractionCoords, getCanonicalPlaceCoordinate, isSyntheticAttractionCoordinate, hasUsableAttractionCoords };'
 )();
 
 const failures = [];
@@ -47,6 +47,8 @@ const assert = (condition, message) => {
 };
 const appSource = read('app.js');
 const cityPatchSource = read('cities_new_patch.js');
+const coursePatchSource = read('city_course_patch.js');
+const styleSource = read('style.css');
 
 let placeCount = 0;
 runtime.CITIES.forEach(city => {
@@ -89,6 +91,40 @@ assert(/supportsOnSiteMealBreak\(candidate\)[\s\S]{0,500}minEnd \+ transitCandTo
   'lunch fit logic must preserve an on-site Dubai Mall meal through 14:00');
 assert(/if \(cityId !== 'custom' && \(isKnownCity \|\| ATTRACTIONS\[cityId\]\)\) return false;/.test(appSource),
   'supported cities must not use unverified Wikipedia place supplementation');
+
+assert(!/delete existing\.x;[\s\S]{0,80}delete existing\.y;/.test(coursePatchSource),
+  'city-course patches must not erase valid existing coordinates when an update omits x/y');
+
+const buckingham = Object.values(runtime.ATTRACTIONS.london || {})
+  .flatMap(pool => Array.isArray(pool) ? pool : [])
+  .find(item => /buckingham palace/i.test(item.name_en || ''));
+assert(Boolean(buckingham), 'Buckingham Palace must exist in the London attraction pool');
+assert(buckingham && Math.abs(Number(buckingham.x) - (-0.14194444)) < 0.000001,
+  `Buckingham Palace longitude must be verified, got ${buckingham && buckingham.x}`);
+assert(buckingham && Math.abs(Number(buckingham.y) - 51.50083333) < 0.000001,
+  `Buckingham Palace latitude must be verified, got ${buckingham && buckingham.y}`);
+
+const canonicalBuckingham = runtime.getCanonicalPlaceCoordinate({
+  name_en: 'Buckingham Palace & Changing of the Guard',
+  name_ko: '버킹엄 궁전과 근위병 교대'
+}, 'london');
+assert(canonicalBuckingham && canonicalBuckingham.coordinateSource === 'canonical-override',
+  'Buckingham Palace map rendering must use the canonical coordinate override');
+assert(runtime.getCanonicalPlaceCoordinate({ name_en: 'Hyde Park Serpentine Lake Walk' }, 'london') === null,
+  'non-Buckingham London places must not inherit the Buckingham Palace override');
+
+const estimatedLondonPoint = runtime.getAttractionCoords({ name_en: 'Unresolved Test Place' }, 'london');
+assert(estimatedLondonPoint.coordinateSource === 'estimated-cluster',
+  'missing place coordinates must be labelled as estimated-cluster');
+assert(runtime.isSyntheticAttractionCoordinate({
+  name_en: 'Unresolved Test Place',
+  x: estimatedLondonPoint.x,
+  y: estimatedLondonPoint.y
+}, 'london'), 'legacy deterministic cluster coordinates must be detected as synthetic');
+assert(/await resolveVerifiedMapCoordinate\(item, cityId\)/.test(appSource),
+  'itinerary map rendering must resolve verified coordinates before adding markers');
+assert(!/body\.theme-postcard-pop \.route-stop-marker,/.test(styleSource),
+  'Postcard Pop must not paint the route-stop marker column as an accent block');
 
 const outbound = runtime.getTravelData('munich', 'barcelona');
 const inbound = runtime.getTravelData('barcelona', 'munich');

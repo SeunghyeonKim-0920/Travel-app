@@ -23,3 +23,10 @@ The selected production theme SHALL fit portrait-phone and landscape-phone viewp
 #### Scenario: Portrait and landscape phones
 - **WHEN** the app is viewed at 390x844 or 844x390
 - **THEN** all core views fit the viewport and their primary controls remain visible and interactive
+
+### Requirement: Route stop columns do not render as solid accent blocks
+The Postcard Pop route planner SHALL keep the route-stop marker column transparent while preserving the connector line and individual stop markers.
+
+#### Scenario: Intercity route results are displayed
+- **WHEN** a generated route is viewed on desktop or mobile
+- **THEN** no solid yellow rectangle appears behind the departure or numbered stop markers

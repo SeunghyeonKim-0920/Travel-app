@@ -8797,7 +8797,7 @@ const CITY_CLUSTERS = {
 };
 
 function getAttractionCoords(item, preferredCityId) {
-  if (!item) return { x: 5.0, y: 5.0 };
+  if (!item) return { x: 5.0, y: 5.0, coordinateSource: 'estimated-cluster' };
 
   // Resolve cityId
   let cityId = preferredCityId || item.cityId;
@@ -8820,7 +8820,11 @@ function getAttractionCoords(item, preferredCityId) {
   }
 
   if (hasUsableAttractionCoords(item, cityId)) {
-    return { x: item.x, y: item.y };
+    return {
+      x: Number(item.x),
+      y: Number(item.y),
+      coordinateSource: item.coordinateSource || 'curated-data'
+    };
   }
   
   const centerCluster = getCityCenterCluster(cityId);
@@ -8857,7 +8861,8 @@ function getAttractionCoords(item, preferredCityId) {
   
   return {
     x: Math.max(-180, Math.min(180, targetCluster.x + jitterX)),
-    y: Math.max(-90, Math.min(90, targetCluster.y + jitterY))
+    y: Math.max(-90, Math.min(90, targetCluster.y + jitterY)),
+    coordinateSource: 'estimated-cluster'
   };
 }
 
@@ -8927,6 +8932,175 @@ function hasUsableAttractionCoords(item, cityId) {
     ? 700
     : ((isNearbyDayTripItem(item) || item.isAllDayTrip) ? MAX_REASONABLE_DAY_TRIP_KM : 90);
   return distanceFromCenter <= maxKm;
+}
+
+const VERIFIED_PLACE_COORDINATES = Object.freeze({
+  london: Object.freeze([
+    Object.freeze({
+      aliases: Object.freeze(['buckingham palace', '버킹엄 궁전']),
+      x: -0.14194444,
+      y: 51.50083333,
+      source: 'canonical-override'
+    })
+  ])
+});
+
+const VERIFIED_COORDINATE_CACHE_KEY = 'wandersync_verified_place_coordinates_v1';
+let verifiedCoordinateCache = null;
+
+function normalizeCoordinateLookupText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9가-힣]+/g, ' ')
+    .trim();
+}
+
+function getCoordinateLookupName(item) {
+  return String((item && (item.name_en || item.name_ko || item.name)) || '')
+    .replace(/\s*\([^)]*\)\s*/g, ' ')
+    .replace(/\s+(?:&|and)\s+.*$/i, '')
+    .trim();
+}
+
+function getCanonicalPlaceCoordinate(item, cityId) {
+  const candidates = VERIFIED_PLACE_COORDINATES[cityId] || [];
+  const names = normalizeCoordinateLookupText([
+    item && item.name_en,
+    item && item.name_ko,
+    item && item.name
+  ].filter(Boolean).join(' '));
+  const match = candidates.find(candidate => candidate.aliases.some(alias => {
+    const aliasKey = normalizeCoordinateLookupText(alias);
+    return Boolean(aliasKey && names.includes(aliasKey));
+  }));
+  return match ? { x: match.x, y: match.y, coordinateSource: match.source } : null;
+}
+
+function getLegacyEstimatedCoordinate(item, cityId) {
+  if (!item) return null;
+  const estimateInput = Object.assign({}, item);
+  delete estimateInput.x;
+  delete estimateInput.y;
+  delete estimateInput.coordinateSource;
+  return getAttractionCoords(estimateInput, cityId);
+}
+
+function isSyntheticAttractionCoordinate(item, cityId) {
+  if (!item) return true;
+  if (item.coordinateSource === 'estimated-cluster') return true;
+  if (!Number.isFinite(Number(item.x)) || !Number.isFinite(Number(item.y))) return true;
+  const estimated = getLegacyEstimatedCoordinate(item, cityId);
+  return Boolean(estimated &&
+    Math.abs(Number(item.x) - estimated.x) < 0.0000001 &&
+    Math.abs(Number(item.y) - estimated.y) < 0.0000001);
+}
+
+function getVerifiedCoordinateCache() {
+  if (verifiedCoordinateCache) return verifiedCoordinateCache;
+  const parsed = safeGetStoredJson(VERIFIED_COORDINATE_CACHE_KEY, {});
+  verifiedCoordinateCache = parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  return verifiedCoordinateCache;
+}
+
+function cacheVerifiedPlaceCoordinate(cacheKey, coordinate) {
+  const cache = getVerifiedCoordinateCache();
+  cache[cacheKey] = {
+    x: coordinate.x,
+    y: coordinate.y,
+    coordinateSource: coordinate.coordinateSource,
+    cachedAt: Date.now()
+  };
+  const keys = Object.keys(cache);
+  if (keys.length > 240) {
+    keys.sort((a, b) => Number(cache[a].cachedAt || 0) - Number(cache[b].cachedAt || 0))
+      .slice(0, keys.length - 240)
+      .forEach(key => delete cache[key]);
+  }
+  safeSetLocalStorage(VERIFIED_COORDINATE_CACHE_KEY, JSON.stringify(cache));
+}
+
+function isCoordinatePlausibleForPlace(coordinate, item, cityId) {
+  if (!isPlausibleGeoCoord(coordinate)) return false;
+  const center = getCityCenterCluster(cityId);
+  if (!center || !isPlausibleGeoCoord(center)) return true;
+  const distance = getHaversineDistance(coordinate.y, coordinate.x, center.y, center.x);
+  const maxKm = cityId === 'reykjavik'
+    ? 700
+    : ((isNearbyDayTripItem(item) || item.isAllDayTrip) ? MAX_REASONABLE_DAY_TRIP_KM : 90);
+  return distance <= maxKm;
+}
+
+async function lookupWikipediaPlaceCoordinate(item, cityId) {
+  const placeName = getCoordinateLookupName(item);
+  if (!placeName || item.isLodging || item.isRest || item.isTransit) return null;
+  const city = Array.isArray(CITIES) ? CITIES.find(candidate => candidate.id === cityId) : null;
+  const cityName = (city && (city.name_en || city.name_ko)) || cityId || '';
+  const cacheKey = `${cityId || 'custom'}:${normalizeCoordinateLookupText(placeName)}`;
+  const cached = getVerifiedCoordinateCache()[cacheKey];
+  if (cached && isCoordinatePlausibleForPlace(cached, item, cityId)) {
+    return { x: Number(cached.x), y: Number(cached.y), coordinateSource: 'wikipedia-cache' };
+  }
+
+  const params = new URLSearchParams({
+    action: 'query',
+    format: 'json',
+    origin: '*',
+    generator: 'search',
+    gsrnamespace: '0',
+    gsrlimit: '6',
+    gsrsearch: `${placeName} ${cityName}`.trim(),
+    prop: 'coordinates'
+  });
+
+  try {
+    const response = await fetch(`https://en.wikipedia.org/w/api.php?${params.toString()}`);
+    if (!response.ok) return null;
+    const payload = await response.json();
+    const pages = Object.values((payload.query && payload.query.pages) || {})
+      .sort((a, b) => Number(a.index || 999) - Number(b.index || 999));
+    const targetTokens = normalizeCoordinateLookupText(placeName).split(' ').filter(token => token.length >= 3);
+    const ranked = pages.map(page => {
+      const pageCoordinate = page.coordinates && page.coordinates[0]
+        ? { x: Number(page.coordinates[0].lon), y: Number(page.coordinates[0].lat) }
+        : null;
+      const titleTokens = normalizeCoordinateLookupText(page.title).split(' ').filter(token => token.length >= 3);
+      const overlap = targetTokens.length
+        ? targetTokens.filter(token => titleTokens.includes(token)).length / targetTokens.length
+        : 0;
+      return { page, pageCoordinate, overlap };
+    }).filter(result =>
+      result.pageCoordinate &&
+      result.overlap >= 0.34 &&
+      isCoordinatePlausibleForPlace(result.pageCoordinate, item, cityId)
+    ).sort((a, b) => b.overlap - a.overlap || Number(a.page.index || 999) - Number(b.page.index || 999));
+
+    if (!ranked.length) return null;
+    const resolved = {
+      x: ranked[0].pageCoordinate.x,
+      y: ranked[0].pageCoordinate.y,
+      coordinateSource: 'wikipedia-place'
+    };
+    cacheVerifiedPlaceCoordinate(cacheKey, resolved);
+    return resolved;
+  } catch (error) {
+    console.warn('Place coordinate lookup failed:', placeName, error);
+    return null;
+  }
+}
+
+async function resolveVerifiedMapCoordinate(item, cityId) {
+  const canonical = getCanonicalPlaceCoordinate(item, cityId);
+  if (canonical) return canonical;
+
+  const lookedUp = await lookupWikipediaPlaceCoordinate(item, cityId);
+  if (lookedUp) return lookedUp;
+
+  if (hasUsableAttractionCoords(item, cityId) && !isSyntheticAttractionCoordinate(item, cityId)) {
+    return { x: Number(item.x), y: Number(item.y), coordinateSource: item.coordinateSource || 'curated-data' };
+  }
+  return null;
 }
 
 function getDistance(item1, item2) {
@@ -9683,6 +9857,7 @@ function buildCourseStructure(cityId, days, preferences, customCityName, wikiPoo
         const coords = getAttractionCoords(item, cityId);
         item.x = coords.x;
         item.y = coords.y;
+        item.coordinateSource = coords.coordinateSource;
       });
     }
   }
@@ -10307,6 +10482,7 @@ function deleteFeedback(feedbackId) {
       const coords = getAttractionCoords(item, cityId);
       item.x = coords.x;
       item.y = coords.y;
+      item.coordinateSource = coords.coordinateSource;
     }
   };
 
@@ -10370,6 +10546,7 @@ function deleteFeedback(feedbackId) {
         const coords = getAttractionCoords(item, cityId);
         item.x = coords.x;
         item.y = coords.y;
+        item.coordinateSource = coords.coordinateSource;
       }
     };
 
@@ -12728,8 +12905,25 @@ function getAttractionDetails(item, cityId) {
 let leafletMap = null;
 let leafletMarkersGroup = null;
 let leafletPolyline = null;
+let itineraryMapRenderSequence = 0;
 
-function renderMapForDay(dayIndex) {
+function setItineraryMapStatus(message) {
+  const mapContainer = document.getElementById('itineraryMapContainer');
+  if (!mapContainer) return;
+  let status = document.getElementById('itineraryMapStatus');
+  if (!status) {
+    status = document.createElement('div');
+    status.id = 'itineraryMapStatus';
+    status.setAttribute('role', 'status');
+    status.style.cssText = 'position:absolute;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;background:rgba(255,255,255,.9);color:var(--text-muted);pointer-events:none;';
+    mapContainer.appendChild(status);
+  }
+  status.textContent = message || '';
+  status.style.display = message ? 'flex' : 'none';
+}
+
+async function renderMapForDay(dayIndex) {
+  const renderSequence = ++itineraryMapRenderSequence;
   const mapContainer = document.getElementById('itineraryMapContainer');
   if (!mapContainer) return;
   
@@ -12743,39 +12937,53 @@ function renderMapForDay(dayIndex) {
   
   const dayPlan = course.days[dayIndex];
   const cityId = course.cityId;
-  const points = [];
-  const attractions = [];
-  
-  dayPlan.items.forEach(item => {
-    if (!item.isTransit) {
-      // Skip meal time items (lunch/dinner) from map
-      const nameKo = (item.name_ko || '').toLowerCase();
-      const nameEn = (item.name_en || '').toLowerCase();
-      if (nameKo === '점심시간' || nameKo === '저녁시간' || nameEn === 'lunch time' || nameEn === 'dinner time') {
-        return;
-      }
-      // Also skip rest blocks
-      if (item.isRest) return;
-      const coords = getAttractionCoords(item, cityId);
-      points.push([coords.y, coords.x]); // [lat, lon]
-      attractions.push({ item, coords });
-    }
+  const candidates = dayPlan.items.filter(item => {
+    if (item.isTransit || item.isRest) return false;
+    const nameKo = (item.name_ko || '').toLowerCase();
+    const nameEn = (item.name_en || '').toLowerCase();
+    return nameKo !== '점심시간' && nameKo !== '저녁시간' && nameEn !== 'lunch time' && nameEn !== 'dinner time';
   });
-  
+
+  setItineraryMapStatus(getInlineText({
+    ko: '장소 위치를 확인하고 있습니다.',
+    en: 'Verifying place locations...',
+    fr: 'Vérification des lieux...',
+    zh: '正在核对地点位置…',
+    ja: '場所の位置を確認しています…',
+    es: 'Verificando las ubicaciones...'
+  }));
+
+  const resolved = await Promise.all(candidates.map(async item => ({
+    item,
+    coords: await resolveVerifiedMapCoordinate(item, cityId)
+  })));
+  if (renderSequence !== itineraryMapRenderSequence) return;
+
+  const attractions = resolved.filter(entry => entry.coords);
+  const points = attractions.map(entry => [entry.coords.y, entry.coords.x]);
   if (points.length === 0) {
-    mapContainer.style.display = 'none';
+    if (leafletMarkersGroup && leafletMap) leafletMap.removeLayer(leafletMarkersGroup);
+    if (leafletPolyline && leafletMap) leafletMap.removeLayer(leafletPolyline);
+    leafletMarkersGroup = null;
+    leafletPolyline = null;
+    setItineraryMapStatus(getInlineText({
+      ko: '확인된 위치가 없어 지도 핀을 표시하지 않습니다. 각 장소의 지도 보기 링크를 이용해 주세요.',
+      en: 'No verified locations are available. Use each place\'s View Map link instead.',
+      fr: 'Aucun lieu vérifié. Utilisez le lien Voir la carte de chaque lieu.',
+      zh: '没有可验证的位置，请使用各地点的“查看地图”链接。',
+      ja: '確認済みの位置がありません。各場所の「地図を見る」リンクをご利用ください。',
+      es: 'No hay ubicaciones verificadas. Usa el enlace Ver mapa de cada lugar.'
+    }));
     return;
   }
   
   try {
     if (typeof L === 'undefined') {
-      document.getElementById('itineraryMap').innerHTML = `
-        <div style="height:100%; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.03); border-radius:16px; color:var(--text-muted); padding: 20px; text-align:center;">
-          <span>${getInlineText({ ko: '지도를 불러올 수 없습니다. 인터넷 연결을 확인해주세요.', en: 'Unable to load the map. Check your internet connection.', fr: 'Impossible de charger la carte. Vérifiez votre connexion Internet.', zh: '无法加载地图，请检查网络连接。', ja: '地図を読み込めません。インターネット接続を確認してください。', es: 'No se pudo cargar el mapa. Comprueba la conexión a Internet.' })}</span>
-        </div>
-      `;
+      setItineraryMapStatus(getInlineText({ ko: '지도를 불러올 수 없습니다. 인터넷 연결을 확인해주세요.', en: 'Unable to load the map. Check your internet connection.', fr: 'Impossible de charger la carte. Vérifiez votre connexion Internet.', zh: '无法加载地图，请检查网络连接。', ja: '地図を読み込めません。インターネット接続を確認してください。', es: 'No se pudo cargar el mapa. Comprueba la conexión a Internet.' }));
       return;
     }
+
+    setItineraryMapStatus('');
     
     if (!leafletMap) {
       leafletMap = L.map('itineraryMap', {
@@ -12804,7 +13012,7 @@ function renderMapForDay(dayIndex) {
     leafletMarkersGroup = L.layerGroup().addTo(leafletMap);
     
     points.forEach((pt, idx) => {
-      const { item } = attractions[idx];
+      const { item, coords } = attractions[idx];
       const name = getLocalizedItineraryField(item, 'name');
       const desc = getLocalizedItineraryField(item, 'desc');
       const displayTime = getDisplayTimeSlot(item);
@@ -12815,14 +13023,14 @@ function renderMapForDay(dayIndex) {
       const numIcon = L.divIcon({
         className: 'custom-map-pin',
         html: `
-          <div class="pin-badge" style="background-color: ${pinColor};">${isLodging ? '🏨' : idx + 1}</div>
+          <div class="pin-badge" data-verified-lat="${coords.y}" data-verified-lng="${coords.x}" data-coordinate-source="${escapeHtml(coords.coordinateSource || 'verified')}" style="background-color: ${pinColor};">${isLodging ? '🏨' : idx + 1}</div>
           <div class="pin-title">${escapeHtml(name)}</div>
         `,
         iconSize: [30, 42],
         iconAnchor: [15, 20]
       });
       
-      L.marker(pt, { icon: numIcon })
+      const marker = L.marker(pt, { icon: numIcon })
         .addTo(leafletMarkersGroup)
         .bindPopup(`
           <div style="color: #000; font-family: sans-serif; font-size:12.5px;">
@@ -12831,6 +13039,13 @@ function renderMapForDay(dayIndex) {
             ${desc ? `<span style="color:#555;">${escapeHtml(desc)}</span>` : ''}
           </div>
         `);
+      const markerElement = marker.getElement();
+      if (markerElement) {
+        markerElement.dataset.verifiedLat = String(coords.y);
+        markerElement.dataset.verifiedLng = String(coords.x);
+        markerElement.dataset.coordinateSource = coords.coordinateSource || 'verified';
+        markerElement.setAttribute('aria-label', name);
+      }
     });
     
     if (points.length > 1) {

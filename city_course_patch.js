@@ -65,9 +65,7 @@
         if (Number.isFinite(entry.x) && Number.isFinite(entry.y)) {
           existing.x = entry.x;
           existing.y = entry.y;
-        } else {
-          delete existing.x;
-          delete existing.y;
+          existing.coordinateSource = 'curated-patch';
         }
         existing.curatedEssential = true;
         return;
@@ -120,7 +118,7 @@
       { cat: 'activity', ko: '에즈와 모나코 당일치기', en: 'Eze & Monaco Day Trip', dur: 480, rank: 40, x: 7.3619, y: 43.7278, desc_ko: '니스 후반부 일정에 어울리는 에즈 마을과 모나코 근교 하루 코스입니다.', desc_en: 'A full-day side trip from Nice to Eze village and Monaco.' }
     ],
     london: [
-      { cat: 'culture', ko: '버킹엄 궁전과 근위병 교대', en: 'Buckingham Palace & Changing of the Guard', dur: 120, rank: 1 },
+      { cat: 'culture', ko: '버킹엄 궁전과 근위병 교대', en: 'Buckingham Palace & Changing of the Guard', dur: 120, rank: 1, x: -0.14194444, y: 51.50083333 },
       { cat: 'culture', ko: '타워 오브 런던', en: 'Tower of London', dur: 210, rank: 2 },
       { cat: 'culture', ko: '웨스트민스터 사원과 국회의사당', en: 'Westminster Abbey & Houses of Parliament', dur: 180, rank: 3 },
       { cat: 'culture', ko: '대영박물관', en: 'British Museum', dur: 240, rank: 4 },
