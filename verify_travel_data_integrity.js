@@ -162,12 +162,24 @@ Object.entries(addedDestinationExpectations).forEach(([cityId, expected]) => {
   });
 });
 
-const interlakenRegional = Object.values(runtime.ATTRACTIONS.interlaken || {})
-  .flatMap(pool => Array.isArray(pool) ? pool : [])
-  .filter(place => place.regionalEssential === true)
-  .sort((a, b) => Number(a.priorityRank) - Number(b.priorityRank));
-assert(interlakenRegional.length === 6, 'Interlaken must have six distinct regional full-day experiences');
-assert(interlakenRegional.every(place => Number(place.duration) >= 420), 'Every Interlaken regional experience must occupy a full day');
+const interlakenAllAttractions = Object.values(runtime.ATTRACTIONS.interlaken || {})
+  .flatMap(pool => Array.isArray(pool) ? pool : []);
+const interlakenSplitPlaces = [
+  'Lauterbrunnen Valley', 'Staubbach Falls', 'Wengen Village Walk',
+  'Grindelwald Village', 'Grindelwald-First Viewpoint', 'Bachalpsee Hiking Trail',
+  'Jungfraujoch Top of Europe', 'Mürren Village Walk', 'Schilthorn Viewpoint',
+  'Lake Brienz Cruise', 'Giessbach Falls', 'Spiez Castle & Lakefront', 'Thun Old Town Walk'
+];
+interlakenSplitPlaces.forEach(name => {
+  assert(
+    interlakenAllAttractions.some(p => (p.name_en || '') === name),
+    `Interlaken must have individual attraction: ${name}`
+  );
+});
+assert(
+  !interlakenAllAttractions.some(p => p.regionalEssential === true),
+  'Interlaken must not have any regionalEssential full-day bundles'
+);
 
 ['relaxed', 'moderate', 'packed'].forEach(pace => {
   runtime.state.travelPace = pace;
@@ -178,7 +190,7 @@ assert(interlakenRegional.every(place => Number(place.duration) >= 420), 'Every 
       assert(course.days.length === days, `${cityId} ${pace} ${days}-day course must preserve the requested day count`);
       course.days.forEach((day, dayIndex) => {
         const sightseeing = (day.items || []).filter(item => item && !item.isMeal && !item.isTransit && !item.isRest && !item.isLodging && !item.isFlexibleBreak);
-        if (cityId === 'interlaken' || dayIndex < 6) {
+        if (dayIndex < 6) {
           assert(sightseeing.length > 0, `${cityId} ${pace} day ${dayIndex + 1} must contain sightseeing`);
         }
       });
@@ -189,19 +201,11 @@ assert(interlakenRegional.every(place => Number(place.duration) >= 420), 'Every 
 runtime.state.travelPace = 'moderate';
 runtime.state.regenConfig = {};
 const interlakenSevenDay = runtime.buildCourseStructure('interlaken', 7, ['culture', 'healing', 'activity'], null, null);
-const interlakenRegionalNames = interlakenSevenDay.days.slice(1).map(day => {
+assert(interlakenSevenDay.days.length === 7, 'Interlaken 7-day course must have 7 days');
+interlakenSevenDay.days.forEach((day, dayIndex) => {
   const sightseeing = (day.items || []).filter(item => item && !item.isMeal && !item.isTransit && !item.isRest && !item.isLodging);
-  assert(sightseeing.length === 1, 'Interlaken days 2-7 must each contain exactly one regional full-day experience');
-  return sightseeing[0] && sightseeing[0].name_en;
+  assert(sightseeing.length > 0, `Interlaken moderate day ${dayIndex + 1} must contain sightseeing`);
 });
-assert(interlakenRegionalNames.join('|') === [
-  'Lauterbrunnen Valley, Staubbach Falls & Wengen Full-Day',
-  'Grindelwald-First & Bachalpsee Full-Day',
-  'Jungfraujoch Top of Europe Full-Day',
-  'Mürren & Schilthorn Full-Day',
-  'Lake Brienz & Giessbach Falls Full-Day',
-  'Lake Thun, Spiez & Thun Old Town Full-Day'
-].join('|'), 'Interlaken regional full-day experiences must follow the curated geographic sequence');
 
 const frankfurtInterlakenRoute = runtime.getTravelData('frankfurt', 'interlaken');
 assert(frankfurtInterlakenRoute && frankfurtInterlakenRoute.train && frankfurtInterlakenRoute.train.time === 315,

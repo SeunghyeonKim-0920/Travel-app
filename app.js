@@ -6920,9 +6920,12 @@ function renderPopularDestinations() {
   const destinationPhotos = {
     paris: 'assets/travel/paris.jpg',
     newyork: 'assets/travel/new-york.jpg',
-    tokyo: 'assets/travel/tokyo.jpg'
+    tokyo: 'assets/travel/tokyo.jpg',
+    rome: 'assets/travel/rome.jpg',
+    seoul: 'assets/travel/seoul.jpg',
+    losangeles: 'assets/travel/losangeles.jpg'
   };
-  const featuredCities = ['paris', 'newyork', 'tokyo']
+  const featuredCities = ['paris', 'newyork', 'tokyo', 'rome', 'seoul', 'losangeles']
     .map(id => getSortedSupportedDestinationCities().find(city => city.id === id))
     .filter(Boolean);
 
@@ -10527,8 +10530,7 @@ function deleteFeedback(feedbackId) {
       ];
       return allPools.find(item => {
         if (hasVisited(item)) return false;
-        const isInterlakenRegionalEssential = cityId === 'interlaken' && item.regionalEssential === true;
-        if (isFullDayTripItem(item) && !isInterlakenRegionalEssential && !(days >= 5 && d >= 5)) return false;
+        if (isFullDayTripItem(item) && !(days >= 5 && d >= 5)) return false;
         return (item.duration || 0) >= 240; // 4+ hours
       }) || null;
     };
@@ -11307,8 +11309,7 @@ function deleteFeedback(feedbackId) {
     let isFullDayAttractionDay = false;
     let fullDayAttraction = null;
 
-    const allowInterlakenRegionalEssentialToday = cityId === 'interlaken' && d >= 2;
-    const allowFullDayAttractionToday = allowInterlakenRegionalEssentialToday ||
+    const allowFullDayAttractionToday =
       (days >= 5 && d >= 5 && !hasPendingDaytimePriorityTarget() && !hasPendingRegularCitySightseeing());
     if (allowFullDayAttractionToday) {
       const allSightseeing = [
@@ -11319,7 +11320,7 @@ function deleteFeedback(feedbackId) {
       fullDayAttraction = allSightseeing.find(item => {
         if (hasVisited(item)) return false;
         if (!isFullDayTripItem(item)) return false;
-        return !allowInterlakenRegionalEssentialToday || item.regionalEssential === true;
+        return true;
       });
 
       if (fullDayAttraction) {
