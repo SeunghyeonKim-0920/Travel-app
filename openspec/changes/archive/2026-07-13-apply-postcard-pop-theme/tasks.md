@@ -13,4 +13,4 @@
 
 - [x] 3.1 Synchronize root and `deploy_live` files and run static regression checks
 - [x] 3.2 Verify Home, Planner, Companion Matching, Route Planner, and Profile at desktop and mobile viewports with Playwright
-- [ ] 3.3 Deploy to Surge, verify the live production site, archive OpenSpec, and commit/push scoped files
+- [x] 3.3 Deploy to Surge, verify the live production site, archive OpenSpec, and commit/push scoped files
