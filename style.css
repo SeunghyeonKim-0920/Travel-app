@@ -3884,3 +3884,401 @@ body.modal-open {
     font-size: 22px;
   }
 }
+
+/* ===== Postcard Pop production theme ===== */
+body.theme-postcard-pop {
+  --primary: #2457e6;
+  --primary-dark: #183ba5;
+  --primary-glow: rgba(36, 87, 230, 0.24);
+  --secondary: #169d95;
+  --secondary-glow: rgba(22, 157, 149, 0.20);
+  --accent: #f4c928;
+  --accent-glow: rgba(244, 201, 40, 0.28);
+  --bg-main: #fffdf8;
+  --bg-card: #ffffff;
+  --bg-card-hover: #ffffff;
+  --bg-input: #ffffff;
+  --border: #17223b;
+  --border-focus: #2457e6;
+  --text-main: #17223b;
+  --text-muted: #626b80;
+  --text-dark: #111a30;
+  --radius-lg: 5px;
+  --radius-md: 5px;
+  --radius-sm: 4px;
+  --shadow: 6px 6px 0 #17223b;
+  --transition: all 0.2s ease;
+  background: #fffdf8;
+  color: var(--text-main);
+}
+
+body.theme-postcard-pop header {
+  background: rgba(255, 255, 255, 0.97);
+  border-bottom: 3px solid var(--border);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.theme-postcard-pop .logo-icon {
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  background: var(--accent);
+  box-shadow: 3px 3px 0 var(--border);
+}
+
+body.theme-postcard-pop .logo-icon svg {
+  fill: var(--text-dark);
+}
+
+body.theme-postcard-pop .logo-text {
+  color: var(--text-dark);
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: currentColor;
+  font-family: Georgia, "Noto Serif KR", "Malgun Gothic", serif;
+  letter-spacing: 0;
+}
+
+body.theme-postcard-pop .lang-toggle,
+body.theme-postcard-pop .user-status-widget {
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--text-main);
+}
+
+body.theme-postcard-pop .user-status-widget .dot {
+  background: var(--secondary);
+  box-shadow: none;
+}
+
+body.theme-postcard-pop .nav-tabs {
+  gap: 3px;
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  background: #ffffff;
+  box-shadow: 5px 5px 0 var(--border);
+}
+
+body.theme-postcard-pop .nav-tab-btn {
+  border-radius: 3px;
+  color: var(--text-muted);
+  font-weight: 750;
+}
+
+body.theme-postcard-pop .nav-tab-btn:hover {
+  color: var(--text-dark);
+  background: #fff3b8;
+  transform: none;
+}
+
+body.theme-postcard-pop .nav-tab-btn.active,
+body.theme-postcard-pop .nav-tab-btn.active:hover {
+  color: #ffffff;
+  background: var(--primary);
+  box-shadow: none;
+  transform: none;
+}
+
+body.theme-postcard-pop .hero-banner {
+  min-height: min(520px, 66vh);
+  padding: 64px 42px;
+  border: 3px solid var(--border);
+  border-radius: 5px;
+  background: url('assets/travel/hero-arrival-v2.jpg') no-repeat 62% 50% / cover;
+  box-shadow: 8px 8px 0 var(--border);
+}
+
+body.theme-postcard-pop .hero-banner::before {
+  display: block;
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(18, 27, 51, 0.42);
+  mask-image: none;
+  pointer-events: none;
+}
+
+body.theme-postcard-pop .hero-banner::after {
+  display: block;
+  content: '';
+  position: absolute;
+  inset: 12px;
+  z-index: 1;
+  width: auto;
+  height: auto;
+  border: 2px solid rgba(255, 255, 255, 0.76);
+  background: transparent;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+body.theme-postcard-pop .hero-banner h1,
+body.theme-postcard-pop .hero-banner p,
+body.theme-postcard-pop .hero-banner .hero-cta {
+  position: relative;
+  z-index: 2;
+}
+
+body.theme-postcard-pop .hero-banner h1 {
+  font-family: Georgia, "Noto Serif KR", "Malgun Gothic", serif;
+  letter-spacing: 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.64);
+}
+
+body.theme-postcard-pop .hero-banner p {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.68);
+}
+
+body.theme-postcard-pop .btn-primary,
+body.theme-postcard-pop .route-add-btn,
+body.theme-postcard-pop .route-optimize-btn,
+body.theme-postcard-pop .chat-input-bar button,
+body.theme-postcard-pop .feedback-save-btn {
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  color: #ffffff;
+  background: var(--primary);
+  box-shadow: 3px 3px 0 var(--border);
+}
+
+body.theme-postcard-pop .btn-primary:hover,
+body.theme-postcard-pop .route-add-btn:hover,
+body.theme-postcard-pop .route-optimize-btn:hover,
+body.theme-postcard-pop .chat-input-bar button:hover {
+  background: var(--primary-dark);
+  box-shadow: 1px 1px 0 var(--border);
+  transform: translate(2px, 2px);
+}
+
+body.theme-postcard-pop .btn-secondary,
+body.theme-postcard-pop .hero-cta .btn-secondary {
+  border: 2px solid var(--border) !important;
+  border-radius: 4px;
+  color: var(--text-dark) !important;
+  background: var(--accent) !important;
+  box-shadow: 3px 3px 0 var(--border);
+  text-shadow: none;
+}
+
+body.theme-postcard-pop .hero-cta .btn-secondary:hover {
+  color: var(--text-dark) !important;
+  border-color: var(--border) !important;
+  background: #ffe46f !important;
+}
+
+body.theme-postcard-pop h1,
+body.theme-postcard-pop h2,
+body.theme-postcard-pop .section-title,
+body.theme-postcard-pop .route-title,
+body.theme-postcard-pop .modal-header h3 {
+  letter-spacing: 0;
+}
+
+body.theme-postcard-pop .onboarding-strip,
+body.theme-postcard-pop .onboarding-quickstart,
+body.theme-postcard-pop .onboarding-step,
+body.theme-postcard-pop .stat-card,
+body.theme-postcard-pop .planner-sidebar,
+body.theme-postcard-pop .planner-results,
+body.theme-postcard-pop .timeline-content,
+body.theme-postcard-pop .room-card,
+body.theme-postcard-pop .profile-card,
+body.theme-postcard-pop .route-sidebar,
+body.theme-postcard-pop .route-result-panel,
+body.theme-postcard-pop .route-map-card,
+body.theme-postcard-pop .route-summary-bar,
+body.theme-postcard-pop .feedback-form-card,
+body.theme-postcard-pop .feedback-card,
+body.theme-postcard-pop .chat-container,
+body.theme-postcard-pop .chat-sidebar,
+body.theme-postcard-pop .chat-area,
+body.theme-postcard-pop .chat-msg-card,
+body.theme-postcard-pop .modal-content {
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  background: #ffffff;
+  background-image: none;
+  box-shadow: 5px 5px 0 var(--border);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.theme-postcard-pop .onboarding-strip {
+  background: #fff5c9;
+}
+
+body.theme-postcard-pop .onboarding-eyebrow,
+body.theme-postcard-pop .room-badge,
+body.theme-postcard-pop .room-tag,
+body.theme-postcard-pop .timeline-info-badge,
+body.theme-postcard-pop .route-type-badge,
+body.theme-postcard-pop .route-alt-chip {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-dark);
+  background: #fff3b8;
+}
+
+body.theme-postcard-pop .form-control,
+body.theme-postcard-pop input,
+body.theme-postcard-pop select,
+body.theme-postcard-pop textarea,
+body.theme-postcard-pop .route-city-select,
+body.theme-postcard-pop .route-custom-input,
+body.theme-postcard-pop .route-city-search-input,
+body.theme-postcard-pop .timeline-duration-input,
+body.theme-postcard-pop .chat-input-bar input {
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-main);
+  background: #ffffff;
+  box-shadow: none;
+}
+
+body.theme-postcard-pop .form-control:focus,
+body.theme-postcard-pop input:focus,
+body.theme-postcard-pop select:focus,
+body.theme-postcard-pop textarea:focus {
+  border-color: var(--primary);
+  outline: 3px solid rgba(36, 87, 230, 0.18);
+  box-shadow: none;
+}
+
+body.theme-postcard-pop .dest-card {
+  border: 3px solid #ffffff;
+  border-radius: 3px;
+  outline: 2px solid var(--border);
+  box-shadow: 6px 6px 0 var(--border);
+  transform: rotate(-0.45deg);
+}
+
+body.theme-postcard-pop .dest-card:nth-child(even) {
+  transform: rotate(0.45deg);
+}
+
+body.theme-postcard-pop .dest-card:hover {
+  transform: translateY(-3px) rotate(0);
+  box-shadow: 8px 8px 0 var(--border);
+}
+
+body.theme-postcard-pop .timeline::before,
+body.theme-postcard-pop .route-line {
+  background: var(--secondary);
+}
+
+body.theme-postcard-pop .timeline-marker,
+body.theme-postcard-pop .route-map-pin-dot,
+body.theme-postcard-pop .route-stop-marker,
+body.theme-postcard-pop .route-city-chip .city-num {
+  border-color: var(--border);
+  background: var(--accent);
+  color: var(--text-dark);
+  box-shadow: 2px 2px 0 var(--border);
+}
+
+body.theme-postcard-pop .timeline-time-badge,
+body.theme-postcard-pop .timeline-item:nth-child(even) .timeline-time-badge {
+  color: var(--primary-dark);
+  background: #e8eeff;
+  border-color: var(--primary);
+}
+
+body.theme-postcard-pop .route-city-chip,
+body.theme-postcard-pop .route-stop,
+body.theme-postcard-pop .route-segment,
+body.theme-postcard-pop .room-meet-summary,
+body.theme-postcard-pop .chat-header,
+body.theme-postcard-pop .chat-input-bar,
+body.theme-postcard-pop .modal-header,
+body.theme-postcard-pop .modal-footer {
+  border-color: var(--border);
+  background: #ffffff;
+}
+
+body.theme-postcard-pop .chat-msg-bubble.incoming {
+  border: 1px solid var(--border);
+  border-radius: 5px 5px 5px 0;
+  background: #fff5c9;
+}
+
+body.theme-postcard-pop .chat-msg-bubble.outgoing {
+  border: 1px solid var(--primary-dark);
+  border-radius: 5px 5px 0 5px;
+  background: var(--primary);
+}
+
+body.theme-postcard-pop .chat-safety-notice {
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  color: #713515;
+  background: #fff3b8;
+}
+
+body.theme-postcard-pop .feedback-action-btn,
+body.theme-postcard-pop .timeline-link-btn,
+body.theme-postcard-pop .timeline-add-place-btn,
+body.theme-postcard-pop .route-action-btn,
+body.theme-postcard-pop .profile-photo-reset-btn {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dark);
+  background: #ffffff;
+}
+
+body.theme-postcard-pop :focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 800px), (max-width: 900px) and (orientation: landscape) {
+  body.theme-postcard-pop .nav-tabs {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-width: 2px 0 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: #ffffff;
+  }
+
+  body.theme-postcard-pop .nav-tab-btn {
+    border-radius: 0;
+  }
+
+  body.theme-postcard-pop .hero-banner {
+    min-height: min(540px, 68dvh);
+    padding: 42px 24px;
+    background-position: 68% 50%;
+    box-shadow: 5px 5px 0 var(--border);
+  }
+
+  body.theme-postcard-pop .onboarding-strip,
+  body.theme-postcard-pop .planner-sidebar,
+  body.theme-postcard-pop .planner-results,
+  body.theme-postcard-pop .room-card,
+  body.theme-postcard-pop .profile-card,
+  body.theme-postcard-pop .route-sidebar,
+  body.theme-postcard-pop .route-result-panel,
+  body.theme-postcard-pop .feedback-form-card,
+  body.theme-postcard-pop .feedback-card,
+  body.theme-postcard-pop .modal-content {
+    border-width: 1px;
+    box-shadow: 3px 3px 0 var(--border);
+  }
+
+  body.theme-postcard-pop .dest-card,
+  body.theme-postcard-pop .dest-card:nth-child(even),
+  body.theme-postcard-pop .dest-card:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  body.theme-postcard-pop .hero-banner {
+    min-height: 300px;
+    padding: 24px;
+    background-position: 64% 48%;
+  }
+}
