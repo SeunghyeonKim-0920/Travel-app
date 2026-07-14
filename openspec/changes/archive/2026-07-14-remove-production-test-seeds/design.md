@@ -16,7 +16,7 @@ Production D1 currently contains no rooms, feedback, chat logs, or city requests
 ## Decisions
 
 - Replace mock fallbacks with empty arrays and remove the post-pull auto-seed block.
-- Clear legacy sample exports at initialization so unused simulator data cannot enter runtime state.
+- Remove the legacy sample fixture block and export empty profile, room, and simulator collections.
 - Apply the same exact legacy-room predicate in the browser and Worker.
 - Match only IDs `1` through `5` and explicit QA title prefixes; no broad substring such as `test` is used.
 

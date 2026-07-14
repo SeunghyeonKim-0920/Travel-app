@@ -30,7 +30,7 @@ const checks = [
   ['legacy QA feedback is removed from every browser', files.app.includes("'mobile feedback verification'") && files.app.includes("'anonymous-feedback-qa'") && files.app.includes("safeSetLocalStorage('wander_feedbacks', JSON.stringify(state.feedbacks))")],
   ['empty remote state is never seeded with mock rooms', !files.app.includes('seed it with the default mock rooms') && files.app.includes('state.rooms = safeGetStoredJson(\'wander_rooms\', []);')],
   ['legacy test rooms are pruned from browser state', files.app.includes('LEGACY_TEST_ROOM_IDS') && files.app.includes('isRoomExpired(room) || isLegacyTestRoom(room)')],
-  ['legacy companion fixtures are disabled at runtime', files.mock.includes('MOCK_COMPANION_ROOMS.length = 0') && files.mock.includes('delete CHAT_SIMULATOR_RESPONSES[roomId]')],
+  ['legacy companion fixtures are absent', files.mock.includes('const MOCK_USER_PROFILES = [];') && files.mock.includes('const MOCK_COMPANION_ROOMS = [];') && files.mock.includes('const CHAT_SIMULATOR_RESPONSES = {};')],
   ['route icon is map based', files.html.includes('M9 18 3 21V6l6-3 6 3 6-3v15')],
   ['mobile labels exist', (files.html.match(/class="nav-label-mobile"/g) || []).length === 5],
   ['Korean mobile labels are explicit', files.app.includes("nav_planner_short: '코스 생성'") && files.app.includes("nav_routeplanner_short: '도시간 경로'")],
