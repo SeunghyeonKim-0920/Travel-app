@@ -13,6 +13,15 @@ const GOOGLE_ROUTES_API_KEY = String(process.env.GOOGLE_ROUTES_API_KEY || '').tr
 const GTFS_PROVIDER_URL = String(process.env.WANDERSYNC_GTFS_API_URL || process.env.WANDERSYNC_TRANSIT_API_URL || '').trim();
 const FLIGHT_PROVIDER_URL = String(process.env.WANDERSYNC_FLIGHT_API_URL || '').trim();
 const GOOGLE_ROUTES_URL = 'https://routes.googleapis.com/directions/v2:computeRoutes';
+const LEGACY_TEST_FEEDBACK_IDS = new Set([
+  'feedback-1783887539379-t59ej7',
+  'feedback-1783885879766-9zl97i',
+  'feedback-1783857619640-5pivdc'
+]);
+const LEGACY_TEST_FEEDBACK_TEXTS = new Set([
+  'anonymous-feedback-qa',
+  'mobile feedback verification'
+]);
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -61,6 +70,12 @@ function normalizeRoom(room) {
   };
 }
 
+function isLegacyTestFeedback(entry) {
+  if (!entry || typeof entry !== 'object') return false;
+  if (LEGACY_TEST_FEEDBACK_IDS.has(String(entry.id || ''))) return true;
+  return LEGACY_TEST_FEEDBACK_TEXTS.has(String(entry.text || '').trim().toLowerCase());
+}
+
 function normalizeState(payload) {
   const source = payload && typeof payload === 'object' ? payload : {};
   const rooms = (Array.isArray(source.rooms) ? source.rooms : []).map(normalizeRoom).filter(room => room && !isExpiredRoom(room));
@@ -78,7 +93,9 @@ function normalizeState(payload) {
       }));
     });
   }
-  const feedbacks = Array.isArray(source.feedbacks) ? source.feedbacks.slice(-1000) : [];
+  const feedbacks = Array.isArray(source.feedbacks)
+    ? source.feedbacks.filter(entry => !isLegacyTestFeedback(entry)).slice(-1000)
+    : [];
   const cityRequests = Array.isArray(source.cityRequests) ? source.cityRequests.slice(-500) : [];
   return { rooms, chatLogs, cityRequests, feedbacks, updatedAt: Date.now() };
 }

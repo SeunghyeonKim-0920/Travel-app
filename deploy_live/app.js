@@ -2529,14 +2529,26 @@ function pruneExpiredRemotePayload(payload) {
 
 const LEGACY_TEST_FEEDBACK_IDS = new Set([
   'feedback-1783887539379-t59ej7',
-  'feedback-1783885879766-9zl97i'
+  'feedback-1783885879766-9zl97i',
+  'feedback-1783857619640-5pivdc'
 ]);
+
+const LEGACY_TEST_FEEDBACK_TEXTS = new Set([
+  'anonymous-feedback-qa',
+  'mobile feedback verification'
+]);
+
+function isLegacyTestFeedback(entry) {
+  if (!entry || typeof entry !== 'object') return false;
+  if (LEGACY_TEST_FEEDBACK_IDS.has(String(entry.id || ''))) return true;
+  return LEGACY_TEST_FEEDBACK_TEXTS.has(String(entry.text || '').trim().toLowerCase());
+}
 
 function normalizeFeedbackCollection(entries) {
   const byId = new Map();
   (Array.isArray(entries) ? entries : []).forEach(entry => {
     if (!entry || !entry.id) return;
-    if (LEGACY_TEST_FEEDBACK_IDS.has(String(entry.id))) return;
+    if (isLegacyTestFeedback(entry)) return;
     const timestamp = Number(entry.timestamp) || 0;
     byId.set(String(entry.id), {
       id: String(entry.id),
@@ -13056,7 +13068,11 @@ function isOwnedFeedback(entryOrId) {
 }
 
 function loadFeedbacksFromStorage() {
-  state.feedbacks = normalizeFeedbackCollection(safeGetStoredJson('wander_feedbacks', []));
+  const stored = safeGetStoredJson('wander_feedbacks', []);
+  state.feedbacks = normalizeFeedbackCollection(stored);
+  if (JSON.stringify(stored) !== JSON.stringify(state.feedbacks)) {
+    safeSetLocalStorage('wander_feedbacks', JSON.stringify(state.feedbacks));
+  }
 }
 
 function saveFeedbacksToStorage() {

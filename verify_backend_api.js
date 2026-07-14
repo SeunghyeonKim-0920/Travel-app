@@ -57,13 +57,24 @@ async function main() {
   const saved = await fetch(`${base}/api/state`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ json_payload: { rooms: [room], chatLogs: { 'qa-room-1': [{ id: 'm1', sender: 'QA', text: 'hello' }] }, feedbacks: [] } })
+    body: JSON.stringify({
+      json_payload: {
+        rooms: [room],
+        chatLogs: { 'qa-room-1': [{ id: 'm1', sender: 'QA', text: 'hello' }] },
+        feedbacks: [
+          { id: 'feedback-keep', text: 'Useful traveler feedback', rating: 5 },
+          { id: 'feedback-test', text: 'Mobile feedback verification', rating: 5 }
+        ]
+      }
+    })
   });
   assert.equal(saved.status, 200);
 
   const loaded = await fetch(`${base}/api/state`).then(response => response.json());
   assert.equal(loaded.rooms.some(item => item.id === room.id), true);
   assert.equal(loaded.chatLogs['qa-room-1'][0].text, 'hello');
+  assert.equal(loaded.feedbacks.some(item => item.id === 'feedback-keep'), true);
+  assert.equal(loaded.feedbacks.some(item => item.id === 'feedback-test'), false);
 
   const invalid = await fetch(`${base}/api/state`, {
     method: 'PUT',
