@@ -5032,6 +5032,200 @@ function normalizeOpenEndedDinnerSlots(items) {
   });
 }
 
+function isSunsetItineraryItem(item) {
+  if (!item || item.isTransit || item.isLodging || isMealBreakItem(item)) return false;
+  if (item.sunsetActivity === true) return true;
+  const rawText = [item.name_en, item.name_ko, item.name, item.desc_en, item.desc_ko]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  const text = normalizePlaceIntentText(item);
+  return /\bsunset(?: view| walk| viewpoint| cruise)?\b|\bgolden hour\b/.test(text)
+    || /\bsunset(?: view| walk| viewpoint| cruise)?\b|\bgolden hour\b/.test(rawText)
+    || /\uC77C\uBAB0|\uC11D\uC591|\uB178\uC744|\uC11C\uB178\uC744/.test(rawText);
+}
+
+function isNightViewItineraryItem(item) {
+  if (!item || item.isTransit || item.isLodging || isMealBreakItem(item)) return false;
+  if (item.eveningAfterDinner === true || item.nightView === true) return true;
+  if (isSunsetItineraryItem(item)) return false;
+  const rawText = [item.name_en, item.name_ko, item.name, item.desc_en, item.desc_ko]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  const text = normalizePlaceIntentText(item);
+  return /\b(?:night view|night scenery|night walk|night market|after dark|evening lights|illuminated|skyline at night)\b/.test(text)
+    || /\b(?:night view|night scenery|night walk|night market|after dark|evening lights|illuminated|skyline at night)\b/.test(rawText)
+    || /\uC57C\uACBD|\uC57C\uAC04|\uC57C\uC2DC\uC7A5|\uC57C\uACBD\uBA85\uC18C|\uC57C\uAC04\uC870\uBA85/.test(rawText)
+    || /\bhungarian parliament\b/.test(text);
+}
+
+function getCourseSunsetStartMinutes(course, dayPlan, cityId) {
+  const explicit = Number(dayPlan && dayPlan.sunsetStartMin);
+  if (Number.isFinite(explicit)) return Math.min(1260, Math.max(1020, Math.round(explicit / 10) * 10));
+
+  // Planner dates are optional. When present, keep a stable local-evening
+  // estimate; otherwise use a conservative 18:30 fallback that stays inside
+  // the existing dinner window and never pushes a stop into the morning.
+  const rawDate = course && (course.startDate || course.travelDate || course.tripStartDate);
+  if (!rawDate) return 1110;
+  const date = new Date(rawDate);
+  if (!Number.isFinite(date.getTime())) return 1110;
+  const center = getCityCenterCluster(cityId);
+  if (!center || !isPlausibleGeoCoord(center)) return 1110;
+
+  const dayOfYear = Math.floor((Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0)) / 86400000) + ((Number(dayPlan && dayPlan.day) || 1) - 1);
+  const declination = 23.44 * Math.sin((2 * Math.PI * (dayOfYear - 81)) / 365);
+  const latitude = Number(center.y) * Math.PI / 180;
+  const dec = declination * Math.PI / 180;
+  const cosHour = (Math.cos(90.833 * Math.PI / 180) - Math.sin(latitude) * Math.sin(dec)) / (Math.cos(latitude) * Math.cos(dec));
+  if (!Number.isFinite(cosHour) || cosHour <= -1 || cosHour >= 1) return 1110;
+  const hourAngle = Math.acos(cosHour) * 180 / Math.PI;
+  const solarUtcHour = 18 + (hourAngle / 15) - (Number(center.x) / 15);
+  const timezoneMap = {
+    paris: 'Europe/Paris', london: 'Europe/London', budapest: 'Europe/Budapest',
+    sydney: 'Australia/Sydney', reykjavik: 'Atlantic/Reykjavik', interlaken: 'Europe/Zurich'
+  };
+  const zone = timezoneMap[cityId] || 'UTC';
+  const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), Math.floor(solarUtcHour), Math.round((solarUtcHour % 1) * 60)));
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone: zone, hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(utcDate);
+  const localHour = Number(parts.find(part => part.type === 'hour') && parts.find(part => part.type === 'hour').value);
+  const localMinute = Number(parts.find(part => part.type === 'minute') && parts.find(part => part.type === 'minute').value);
+  const minutes = localHour * 60 + localMinute;
+  return Number.isFinite(minutes) ? Math.min(1260, Math.max(1020, Math.round(minutes / 10) * 10)) : 1110;
+}
+
+function normalizeEveningIntentForDay(dayPlan, course) {
+  if (!dayPlan || !Array.isArray(dayPlan.items)) return false;
+  const original = dayPlan.items;
+  const nonTransit = original.filter(item => item && !item.isTransit);
+  const sunsetItems = nonTransit.filter(isSunsetItineraryItem);
+  const nightItems = nonTransit.filter(item => isNightViewItineraryItem(item) && !sunsetItems.includes(item));
+  if (!sunsetItems.length && !nightItems.length) return false;
+
+  const movable = new Set([...sunsetItems, ...nightItems]);
+  const base = nonTransit.filter(item => !movable.has(item));
+  const dinnerIndex = base.findIndex(isDinnerMealBreakItem);
+  const endLodgingIndex = base.findIndex(item => isReturnToLodgingItem(item));
+  const fallbackIndex = endLodgingIndex >= 0 ? endLodgingIndex : base.length;
+  const beforeDinnerIndex = dinnerIndex >= 0 ? dinnerIndex : fallbackIndex;
+  const afterDinnerIndex = dinnerIndex >= 0 ? dinnerIndex + 1 : fallbackIndex;
+
+  const sunsetStart = getCourseSunsetStartMinutes(course, dayPlan, course && course.cityId);
+  let lockedStartChanged = false;
+  sunsetItems.forEach(item => {
+    if (!Number.isFinite(Number(item.lockedStartMin))) {
+      item.lockedStartMin = sunsetStart;
+      lockedStartChanged = true;
+    }
+  });
+
+  const ordered = [
+    ...base.slice(0, beforeDinnerIndex),
+    ...sunsetItems,
+    ...base.slice(beforeDinnerIndex, afterDinnerIndex),
+    ...nightItems,
+    ...base.slice(afterDinnerIndex)
+  ];
+  const orderChanged = ordered.length !== nonTransit.length
+    || ordered.some((item, index) => item !== nonTransit[index]);
+  if (!orderChanged && !lockedStartChanged) return false;
+  dayPlan.items = ordered;
+  return true;
+}
+
+function normalizeEveningIntentForCourse(course) {
+  if (!course || !Array.isArray(course.days)) return false;
+  let changed = false;
+  course.days.forEach(dayPlan => {
+    changed = normalizeEveningIntentForDay(dayPlan, course) || changed;
+  });
+  return changed;
+}
+
+const ICELAND_RING_ROAD_STOP_GROUPS = Object.freeze([
+  Object.freeze({ day: 2, region: 'golden-circle', aliases: Object.freeze(['thingvellir', 'geysir geothermal', 'gullfoss']) }),
+  Object.freeze({ day: 3, region: 'south-coast', aliases: Object.freeze(['seljalandsfoss', 'skogafoss', 'reynisfjara']) }),
+  Object.freeze({ day: 4, region: 'southeast', aliases: Object.freeze(['skaftafell', 'jokulsarlon', 'glacier lagoon']) }),
+  Object.freeze({ day: 5, region: 'north', aliases: Object.freeze(['godafoss', 'lake myvatn', 'myvatn geothermal', 'akureyri']) }),
+  Object.freeze({ day: 6, region: 'west-snaefellsnes', aliases: Object.freeze(['kirkjufell']) })
+]);
+
+function getIcelandRingRoadSourceItems() {
+  if (typeof ATTRACTIONS === 'undefined' || !ATTRACTIONS.reykjavik) return [];
+  const all = ['healing', 'culture', 'activity', 'shopping']
+    .flatMap(category => Array.isArray(ATTRACTIONS.reykjavik[category]) ? ATTRACTIONS.reykjavik[category] : []);
+  const found = [];
+  ICELAND_RING_ROAD_STOP_GROUPS.forEach(group => {
+    group.aliases.forEach(alias => {
+      const key = normalizeCoordinateLookupText(alias);
+      const item = all.find(candidate => {
+        const text = normalizePlaceIntentText(candidate);
+        return text.includes(key) && !found.includes(candidate);
+      });
+      if (item) found.push(item);
+    });
+  });
+  return found;
+}
+
+function isSameIcelandRingRoadStop(item, source) {
+  if (!item || !source) return false;
+  const itemText = normalizePlaceIntentText(item);
+  const sourceText = normalizePlaceIntentText(source);
+  return itemText === sourceText || itemText.includes(sourceText) || sourceText.includes(itemText);
+}
+
+function normalizeIcelandRingRoadDays(course) {
+  if (!course || course.cityId !== 'reykjavik' || !Array.isArray(course.days) || course.ringRoadNormalized) return;
+  const sources = getIcelandRingRoadSourceItems();
+  if (!sources.length) return;
+
+  const ringStops = new Set(sources);
+  course.days.forEach(dayPlan => {
+    if (!dayPlan || !Array.isArray(dayPlan.items)) return;
+    dayPlan.items = dayPlan.items.filter(item => {
+      if (!item || item.isTransit) return false;
+      return !sources.some(source => isSameIcelandRingRoadStop(item, source));
+    });
+  });
+
+  ICELAND_RING_ROAD_STOP_GROUPS.forEach(group => {
+    const dayPlan = course.days.find(day => Number(day.day) === group.day);
+    if (!dayPlan) return;
+    const stops = group.aliases.map(alias => {
+      const key = normalizeCoordinateLookupText(alias);
+      return sources.find(source => normalizePlaceIntentText(source).includes(key));
+    }).filter((item, index, items) => item && items.indexOf(item) === index);
+    if (!stops.length) return;
+
+    const existingStart = dayPlan.items.find(item => item && item.isLodging && item.isStart) || null;
+    const existingEnd = dayPlan.items.find(item => item && item.isLodging && item.isEnd) || null;
+    const ordered = existingStart ? [existingStart] : [];
+    stops.forEach((source, index) => {
+      const item = {
+        ...source,
+        cityId: 'reykjavik',
+        ringRoadRegion: group.region,
+        ringRoadDay: group.day,
+        duration: Number(source.duration) || (index === 0 ? 150 : 120)
+      };
+      delete item.isAllDayTrip;
+      delete item.hideDuration;
+      delete item.timeSlot;
+      ordered.push(item);
+      if (index === 1) ordered.push(createFallbackMealBreakItem('lunch'));
+    });
+    if (!ordered.some(isLunchMealBreakItem)) ordered.splice(Math.min(2, ordered.length), 0, createFallbackMealBreakItem('lunch'));
+    ordered.push(createFallbackMealBreakItem('dinner'));
+    if (existingEnd) ordered.push(existingEnd);
+    dayPlan.items = ordered;
+    if (typeof recalculateDayPlanTimes === 'function') recalculateDayPlanTimes(dayPlan, 'reykjavik');
+  });
+
+  course.ringRoadNormalized = true;
+}
+
 function getRealSightseeingItems(dayPlan) {
   if (!dayPlan || !Array.isArray(dayPlan.items)) return [];
   return dayPlan.items.filter(item => {
@@ -6340,6 +6534,11 @@ function repairEmptySightseeingDays(course) {
 
 function normalizeCourseTimeDisplay(course) {
   if (!course || !Array.isArray(course.days)) return course;
+  if (normalizeEveningIntentForCourse(course)) {
+    course.days.forEach(dayPlan => {
+      if (typeof recalculateDayPlanTimes === 'function') recalculateDayPlanTimes(dayPlan, course.cityId);
+    });
+  }
   rebalanceSparseItineraryDays(course);
   compactFutureSightseeingIntoEarlierGaps(course);
   removeDuplicateSightseeingAcrossDays(course);
@@ -6389,6 +6588,12 @@ function normalizeCourseTimeDisplay(course) {
   removeDuplicateSightseeingAcrossDays(course);
   enforceNearbyTripPolicy(course);
   normalizeInterlakenRegionalDays(course);
+  normalizeIcelandRingRoadDays(course);
+  if (normalizeEveningIntentForCourse(course)) {
+    course.days.forEach(dayPlan => {
+      if (typeof recalculateDayPlanTimes === 'function') recalculateDayPlanTimes(dayPlan, course.cityId);
+    });
+  }
   return course;
 }
 
@@ -8884,6 +9089,13 @@ function getAttractionCoords(item, preferredCityId) {
     cityId = (state && state.activeCourse && state.activeCourse.cityId) || 'paris';
   }
 
+  // Reuse canonical landmark coordinates for both route calculations and map
+  // rendering. Older records may still carry a synthetic cluster coordinate.
+  if (typeof getCanonicalPlaceCoordinate === 'function') {
+    const canonical = getCanonicalPlaceCoordinate(item, cityId);
+    if (canonical) return canonical;
+  }
+
   if (hasUsableAttractionCoords(item, cityId)) {
     return {
       x: Number(item.x),
@@ -9007,8 +9219,141 @@ const VERIFIED_PLACE_COORDINATES = Object.freeze({
       y: 51.50083333,
       source: 'canonical-override'
     })
+  ]),
+  sydney: Object.freeze([
+    Object.freeze({
+      aliases: Object.freeze(['sydney opera house', 'opera house inside tour']),
+      x: 151.2153,
+      y: -33.8568,
+      source: 'canonical-override'
+    }),
+    Object.freeze({
+      aliases: Object.freeze(['sydney bridgeclimb', 'sydney harbour bridge', 'harbour bridge']),
+      x: 151.2108,
+      y: -33.8523,
+      source: 'canonical-override'
+    })
   ])
 });
+
+// Display-only map corrections for water activities. Transit calculations keep
+// the attraction's route coordinate, while the marker uses a nearby shore or
+// boarding point so it never appears in open water.
+const MAP_LAND_COORDINATE_OVERRIDES = Object.freeze({
+  sydney: Object.freeze([
+    Object.freeze({ aliases: Object.freeze(['darling harbour jet boat', 'darling harbour jet boat spin']), x: 151.2012, y: -33.8745, source: 'land-boarding-point' }),
+    Object.freeze({ aliases: Object.freeze(['sydney harbour cruise', 'harbour cruise']), x: 151.2150, y: -33.8565, source: 'land-boarding-point' })
+  ]),
+  interlaken: Object.freeze([
+    Object.freeze({ aliases: Object.freeze(['lake brienz cruise']), x: 7.8537, y: 46.6872, source: 'land-boarding-point' }),
+    Object.freeze({ aliases: Object.freeze(['lake thun cruise']), x: 7.6296, y: 46.7580, source: 'land-boarding-point' })
+  ]),
+  reykjavik: Object.freeze([
+    Object.freeze({ aliases: Object.freeze(['lake myvatn', 'myvatn geothermal']), x: -16.9186, y: 65.6414, source: 'land-shore-point' }),
+    Object.freeze({ aliases: Object.freeze(['jokulsarlon', 'glacier lagoon', 'diamond beach']), x: -16.2306, y: 64.0481, source: 'land-shore-point' }),
+    Object.freeze({ aliases: Object.freeze(['blue lagoon']), x: -22.4495, y: 63.8804, source: 'land-shore-point' })
+  ]),
+  paris: Object.freeze([
+    Object.freeze({ aliases: Object.freeze(['seine river cruise', 'bateaux parisiens']), x: 2.2945, y: 48.8584, source: 'land-boarding-point' })
+  ]),
+  venice: Object.freeze([
+    Object.freeze({ aliases: Object.freeze(['grand canal vaporetto', 'vaporetto ride']), x: 12.3359, y: 45.4380, source: 'land-boarding-point' })
+  ])
+});
+
+const INTRA_CITY_TRANSIT_OVERRIDES = Object.freeze({
+  sydney: Object.freeze([
+    Object.freeze({
+      from: Object.freeze(['sydney opera house', 'opera house inside tour']),
+      to: Object.freeze(['sydney bridgeclimb', 'sydney harbour bridge', 'harbour bridge']),
+      distance: 0.7,
+      duration: 10,
+      type_ko: '\uB3C4\uBCF4',
+      type_en: 'Walk',
+      source: 'curated-adjacent-landmarks'
+    }),
+    Object.freeze({
+      from: Object.freeze(['sydney opera house', 'opera house inside tour']),
+      to: Object.freeze(['royal botanic garden', 'royal botanic garden walk']),
+      distance: 0.5,
+      duration: 10,
+      type_ko: '\uB3C4\uBCF4',
+      type_en: 'Walk',
+      source: 'curated-adjacent-landmarks'
+    })
+  ])
+});
+
+function normalizePlaceIntentText(item) {
+  return normalizeCoordinateLookupText([
+    item && item.name_en,
+    item && item.name_ko,
+    item && item.name,
+    item && item.desc_en,
+    item && item.desc_ko
+  ].filter(Boolean).join(' '));
+}
+
+function findPlaceCoordinateOverride(item, cityId, table) {
+  const candidates = table[cityId] || [];
+  const text = normalizePlaceIntentText(item);
+  const match = candidates.find(candidate => candidate.aliases.some(alias => {
+    const key = normalizeCoordinateLookupText(alias);
+    return key && text.includes(key);
+  }));
+  return match ? { x: match.x, y: match.y, coordinateSource: match.source } : null;
+}
+
+function getMapLandCoordinateOverride(item, cityId) {
+  if (item && item.mapOnlyLandFallback && isPlausibleGeoCoord({ x: Number(item.mapX), y: Number(item.mapY) })) {
+    return {
+      x: Number(item.mapX),
+      y: Number(item.mapY),
+      coordinateSource: item.mapCoordinateSource || 'curated-nearby-land'
+    };
+  }
+  return findPlaceCoordinateOverride(item, cityId, MAP_LAND_COORDINATE_OVERRIDES);
+}
+
+function isWaterBasedMapItem(item) {
+  const text = normalizePlaceIntentText(item);
+  return /\b(?:lake|river|cruise|boat|ferry|harbour|harbor|waterfront|bay|lagoon|canal|vaporetto)\b/.test(text)
+    || /\uD638\uC218|\uAC15|\uD06C\uB8E8\uC988|\uBC30|\uD398\uB9AC|\uD574\uC548|\uB9CC|\uC6B4\uD558/.test(text);
+}
+
+function getLandMapFallbackCoordinate(item, cityId) {
+  const override = getMapLandCoordinateOverride(item, cityId);
+  if (override) return override;
+  const center = getCityCenterCluster(cityId);
+  if (isWaterBasedMapItem(item) && center && isPlausibleGeoCoord(center)) {
+    return { x: center.x, y: center.y, coordinateSource: 'land-cluster-fallback' };
+  }
+  const coords = getAttractionCoords(item, cityId);
+  const source = coords.coordinateSource === 'estimated-cluster'
+    ? 'map-cluster-fallback'
+    : (coords.coordinateSource || 'map-fallback');
+  return isPlausibleGeoCoord(coords)
+    ? { x: Number(coords.x), y: Number(coords.y), coordinateSource: source }
+    : null;
+}
+
+function getIntraCityTransitOverride(item1, item2, cityId) {
+  const rules = INTRA_CITY_TRANSIT_OVERRIDES[cityId] || [];
+  const text1 = normalizePlaceIntentText(item1);
+  const text2 = normalizePlaceIntentText(item2);
+  const matches = (aliases, text) => aliases.some(alias => text.includes(normalizeCoordinateLookupText(alias)));
+  const rule = rules.find(candidate =>
+    (matches(candidate.from, text1) && matches(candidate.to, text2))
+    || (matches(candidate.from, text2) && matches(candidate.to, text1))
+  );
+  return rule ? {
+    distance: rule.distance,
+    duration: rule.duration,
+    type_ko: rule.type_ko,
+    type_en: rule.type_en,
+    source: rule.source
+  } : null;
+}
 
 const VERIFIED_COORDINATE_CACHE_KEY = 'wandersync_verified_place_coordinates_v1';
 let verifiedCoordinateCache = null;
@@ -9156,6 +9501,9 @@ async function lookupWikipediaPlaceCoordinate(item, cityId) {
 }
 
 async function resolveVerifiedMapCoordinate(item, cityId) {
+  const landOverride = getMapLandCoordinateOverride(item, cityId);
+  if (landOverride) return landOverride;
+
   const canonical = getCanonicalPlaceCoordinate(item, cityId);
   if (canonical) return canonical;
 
@@ -9185,6 +9533,11 @@ function calculateTransit(item1, item2) {
   }
   
   const preferredCityId = item1.cityId || item2.cityId || (state && state.activeCourse && state.activeCourse.cityId) || null;
+  const curatedOverride = preferredCityId
+    ? getIntraCityTransitOverride(item1, item2, preferredCityId)
+    : null;
+  if (curatedOverride) return curatedOverride;
+
   let c1 = getAttractionCoords(item1, preferredCityId);
   let c2 = getAttractionCoords(item2, preferredCityId);
   
@@ -11773,6 +12126,10 @@ function deleteFeedback(feedbackId) {
   draftCourse.durationDays = days;
   enforceNearbyTripPolicy(draftCourse);
   normalizeInterlakenRegionalDays(draftCourse);
+  normalizeIcelandRingRoadDays(draftCourse);
+  if (normalizeEveningIntentForCourse(draftCourse)) {
+    draftCourse.days.forEach(dayPlan => recalculateDayPlanTimes(dayPlan, cityId));
+  }
   return draftCourse;
 }
 
@@ -13088,7 +13445,8 @@ async function renderMapForDay(dayIndex) {
   const dayPlan = course.days[dayIndex];
   const cityId = course.cityId;
   const candidates = dayPlan.items.filter(item => {
-    if (item.isTransit || item.isRest) return false;
+    if (item.isTransit || item.isRest || item.isLodging) return false;
+    if (typeof isMealBreakItem === 'function' && isMealBreakItem(item)) return false;
     const nameKo = (item.name_ko || '').toLowerCase();
     const nameEn = (item.name_en || '').toLowerCase();
     return nameKo !== '점심시간' && nameKo !== '저녁시간' && nameEn !== 'lunch time' && nameEn !== 'dinner time';
@@ -13105,7 +13463,7 @@ async function renderMapForDay(dayIndex) {
 
   const resolved = await Promise.all(candidates.map(async item => ({
     item,
-    coords: await resolveVerifiedMapCoordinate(item, cityId)
+    coords: (await resolveVerifiedMapCoordinate(item, cityId)) || getLandMapFallbackCoordinate(item, cityId)
   })));
   if (renderSequence !== itineraryMapRenderSequence) return;
 
@@ -13208,7 +13566,8 @@ async function renderMapForDay(dayIndex) {
     }
     
     const bounds = L.latLngBounds(points);
-    leafletMap.fitBounds(bounds, { padding: [50, 50] });
+    // Fit the entire selected day, including compact landmark pairs.
+    leafletMap.fitBounds(bounds, { padding: [60, 60], maxZoom: 14 });
     
   } catch (err) {
     console.error("Error rendering map:", err);

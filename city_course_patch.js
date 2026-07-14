@@ -77,6 +77,19 @@
     return String(value || '').toLowerCase().replace(/[^a-z0-9가-힣]+/g, ' ').trim();
   }
 
+  var explicitMetadataFields = [
+    'nightView', 'sunsetActivity',
+    'waterActivity', 'isWaterActivity', 'harborMarker', 'isHarborMarker',
+    'mapX', 'mapY', 'mapCoordinateSource', 'mapOnlyLandFallback',
+    'regionalGroup'
+  ];
+
+  function copyExplicitMetadata(target, source) {
+    explicitMetadataFields.forEach(function (field) {
+      if (source[field] !== undefined) target[field] = source[field];
+    });
+  }
+
   function addEntries(cityId, entries) {
     var pools = ensurePools(cityId);
     entries.forEach(function (entry, idx) {
@@ -90,6 +103,8 @@
         existing.priorityRank = Math.min(Number(existing.priorityRank) || 5000, entry.rank || (100 + idx));
         existing.isLandmark = existing.isLandmark || entry.landmark !== false;
         existing.duration = Math.max(Number(existing.duration) || 0, entry.dur || 120);
+        if (Number.isFinite(entry.open)) existing.open = entry.open;
+        if (Number.isFinite(entry.close)) existing.close = entry.close;
         if (Number.isFinite(entry.x) && Number.isFinite(entry.y)) {
           existing.x = entry.x;
           existing.y = entry.y;
@@ -104,6 +119,7 @@
         ['regionalRoute', 'regionalRouteOrder', 'regionalStopOrder', 'regionalVisitDuration', 'regionalLunchAfter'].forEach(function (field) {
           if (entry[field] !== undefined) existing[field] = entry[field];
         });
+        copyExplicitMetadata(existing, entry);
         return;
       }
       var localizedNames = { fr: entry.fr, zh: entry.zh, ja: entry.ja, es: entry.es };
@@ -132,6 +148,17 @@
         regionalStopOrder: entry.regionalStopOrder,
         regionalVisitDuration: entry.regionalVisitDuration,
         regionalLunchAfter: entry.regionalLunchAfter === true,
+        nightView: entry.nightView === true,
+        sunsetActivity: entry.sunsetActivity === true,
+        waterActivity: entry.waterActivity === true,
+        isWaterActivity: entry.isWaterActivity === true,
+        harborMarker: entry.harborMarker === true,
+        isHarborMarker: entry.isHarborMarker === true,
+        mapX: entry.mapX,
+        mapY: entry.mapY,
+        mapCoordinateSource: entry.mapCoordinateSource,
+        mapOnlyLandFallback: entry.mapOnlyLandFallback === true,
+        regionalGroup: entry.regionalGroup,
         coordinateSource: Number.isFinite(entry.x) && Number.isFinite(entry.y) ? 'curated-patch' : undefined
       };
       ['fr', 'zh', 'ja', 'es'].forEach(function (lang) {
@@ -301,6 +328,42 @@
       { cat: 'activity', ko: '팀랩 플래닛 도쿄', en: 'teamLab Planets Tokyo', dur: 150, rank: 6 },
       { cat: 'shopping', ko: '긴자 쇼핑 거리', en: 'Ginza Shopping District', dur: 150, rank: 7 },
       { cat: 'healing', ko: '신주쿠 교엔', en: 'Shinjuku Gyoen National Garden', dur: 120, rank: 8 }
+    ],
+    sydney: [
+      { cat: 'culture', ko: 'Sydney Opera House Inside Tour', en: 'Sydney Opera House Inside Tour', dur: 90, rank: 1, x: 151.215256, y: -33.856784, landmark: true },
+      { cat: 'activity', ko: 'Sydney Harbour Bridge BridgeClimb', en: 'Sydney BridgeClimb Adventure', dur: 180, rank: 2, x: 151.210787, y: -33.852306, landmark: true, mapX: 151.2059, mapY: -33.8568, mapCoordinateSource: 'curated-nearby-land', mapOnlyLandFallback: true },
+      { cat: 'healing', ko: 'Royal Botanic Garden Walk', en: 'Royal Botanic Garden Walk', dur: 90, rank: 3, x: 151.2168, y: -33.8640, landmark: false },
+      { cat: 'healing', ko: 'Taronga Zoo Ferry Ocean View', en: 'Taronga Zoo Ferry Ocean View', dur: 80, rank: 4, x: 151.2150, y: -33.8550, landmark: false, waterActivity: true, isWaterActivity: true, harborMarker: true, isHarborMarker: true, mapX: 151.2150, mapY: -33.8550, mapCoordinateSource: 'curated-nearby-land', mapOnlyLandFallback: true },
+      { cat: 'gourmet', ko: 'Sydney Fish Market Oyster Lunch', en: 'Sydney Fish Market Oyster Lunch', dur: 90, rank: 5, x: 151.1985, y: -33.8690, landmark: false, harborMarker: true, isHarborMarker: true, mapX: 151.1985, mapY: -33.8690, mapCoordinateSource: 'curated-nearby-land', mapOnlyLandFallback: true },
+      { cat: 'activity', ko: 'Darling Harbour Jet Boat Spin', en: 'Darling Harbour Jet Boat Spin', dur: 80, rank: 6, x: 151.2029, y: -33.8698, landmark: false, waterActivity: true, isWaterActivity: true, harborMarker: true, isHarborMarker: true, mapX: 151.2029, mapY: -33.8698, mapCoordinateSource: 'curated-nearby-land', mapOnlyLandFallback: true },
+      { cat: 'gourmet', ko: 'Hurricanes Grill Darling Harbour Ribs', en: 'Hurricanes Grill Darling Harbour Ribs', dur: 90, rank: 7, x: 151.2014, y: -33.8730, landmark: false, harborMarker: true, isHarborMarker: true, mapX: 151.2014, mapY: -33.8730, mapCoordinateSource: 'curated-nearby-land', mapOnlyLandFallback: true },
+      { cat: 'shopping', ko: 'Birkenhead Point Outlet Centre', en: 'Birkenhead Point Outlet Centre', dur: 180, rank: 8, x: 151.1837, y: -33.8534, landmark: false, harborMarker: true, isHarborMarker: true, mapX: 151.1837, mapY: -33.8534, mapCoordinateSource: 'curated-nearby-land', mapOnlyLandFallback: true },
+      { cat: 'culture', ko: 'Museum of Contemporary Art MCA', en: 'Museum of Contemporary Art MCA', dur: 80, rank: 9, x: 151.2074, y: -33.8560, landmark: false },
+      { cat: 'gourmet', ko: 'The Rocks Cafe Pavlova Dessert', en: 'The Rocks Cafe Pavlova Dessert', dur: 80, rank: 10, x: 151.2068, y: -33.8585, landmark: false, harborMarker: true, isHarborMarker: true, mapX: 151.2068, mapY: -33.8585, mapCoordinateSource: 'curated-nearby-land', mapOnlyLandFallback: true }
+    ],
+    budapest: [
+      { cat: 'culture', ko: 'Hungarian Parliament Building', en: 'Hungarian Parliament Building', dur: 120, rank: 1, x: 19.0456, y: 47.5070, landmark: true, open: 540, close: 1320, nightView: true, desc_en: 'Neo-Gothic parliament on the Danube; its illuminated facade is a Budapest night-view landmark.' }
+    ],
+    reykjavik: [
+      { cat: 'culture', ko: 'Hallgrimskirkja Church', en: 'Hallgrimskirkja Church', dur: 90, rank: 1, x: -21.9426, y: 64.1417, regionalEssential: true, regionalRoute: 'reykjavik', regionalRouteOrder: 1, regionalStopOrder: 1, regionalVisitDuration: 90, regionalGroup: 'Reykjavik' },
+      { cat: 'culture', ko: 'Harpa Concert Hall', en: 'Harpa Concert Hall', dur: 90, rank: 2, x: -21.9326, y: 64.1500, regionalEssential: true, regionalRoute: 'reykjavik', regionalRouteOrder: 1, regionalStopOrder: 2, regionalVisitDuration: 90, regionalGroup: 'Reykjavik' },
+      { cat: 'culture', ko: 'Sun Voyager', en: 'Sun Voyager', dur: 60, rank: 3, x: -21.9227, y: 64.1472, regionalEssential: true, regionalRoute: 'reykjavik', regionalRouteOrder: 1, regionalStopOrder: 3, regionalVisitDuration: 60, regionalGroup: 'Reykjavik' },
+      { cat: 'culture', ko: 'Perlan Museum', en: 'Perlan Museum', dur: 120, rank: 4, x: -21.9183, y: 64.1290, regionalEssential: true, regionalRoute: 'reykjavik', regionalRouteOrder: 1, regionalStopOrder: 4, regionalVisitDuration: 120, regionalGroup: 'Reykjavik' },
+      { cat: 'gourmet', ko: 'Reykjavik Harbor & Baejarins Beztu', en: 'Reykjavik Harbor & Baejarins Beztu', dur: 90, rank: 5, x: -21.9406, y: 64.1480, regionalEssential: true, regionalRoute: 'reykjavik', regionalRouteOrder: 1, regionalStopOrder: 5, regionalVisitDuration: 90, regionalLunchAfter: true, regionalGroup: 'Reykjavik' },
+      { cat: 'healing', ko: 'Blue Lagoon Geothermal Spa', en: 'Blue Lagoon Geothermal Spa', dur: 180, rank: 6, x: -22.4495, y: 63.8804, regionalEssential: true, regionalRoute: 'reykjavik', regionalRouteOrder: 1, regionalStopOrder: 6, regionalVisitDuration: 180, regionalGroup: 'Reykjavik & Reykjanes' },
+      { cat: 'healing', ko: 'Blue Lagoon Iceland', en: 'Blue Lagoon Iceland', dur: 180, rank: 7, x: -22.4495, y: 63.8804, regionalEssential: true, regionalRoute: 'reykjavik', regionalRouteOrder: 1, regionalStopOrder: 7, regionalVisitDuration: 180, regionalGroup: 'Reykjavik & Reykjanes' },
+      { cat: 'culture', ko: 'Thingvellir National Park', en: 'Thingvellir National Park', dur: 180, rank: 8, x: -21.1300, y: 64.2559, regionalEssential: true, regionalRoute: 'golden-circle', regionalRouteOrder: 2, regionalStopOrder: 1, regionalVisitDuration: 180, regionalGroup: 'Golden Circle' },
+      { cat: 'culture', ko: 'Geysir Geothermal Area', en: 'Geysir Geothermal Area', dur: 120, rank: 9, x: -20.3000, y: 64.3104, regionalEssential: true, regionalRoute: 'golden-circle', regionalRouteOrder: 2, regionalStopOrder: 2, regionalVisitDuration: 120, regionalLunchAfter: true, regionalGroup: 'Golden Circle' },
+      { cat: 'culture', ko: 'Gullfoss Waterfall', en: 'Gullfoss Waterfall', dur: 120, rank: 10, x: -20.1200, y: 64.3271, regionalEssential: true, regionalRoute: 'golden-circle', regionalRouteOrder: 2, regionalStopOrder: 3, regionalVisitDuration: 120, regionalGroup: 'Golden Circle' },
+      { cat: 'healing', ko: 'Seljalandsfoss Waterfall', en: 'Seljalandsfoss Waterfall', dur: 120, rank: 11, x: -19.9886, y: 63.6156, regionalEssential: true, regionalRoute: 'south-coast', regionalRouteOrder: 3, regionalStopOrder: 1, regionalVisitDuration: 120, regionalGroup: 'South Coast' },
+      { cat: 'healing', ko: 'Skogafoss Waterfall', en: 'Skogafoss Waterfall', dur: 120, rank: 12, x: -19.5114, y: 63.5321, regionalEssential: true, regionalRoute: 'south-coast', regionalRouteOrder: 3, regionalStopOrder: 2, regionalVisitDuration: 120, regionalLunchAfter: true, regionalGroup: 'South Coast' },
+      { cat: 'healing', ko: 'Reynisfjara Black Sand Beach', en: 'Reynisfjara Black Sand Beach', dur: 120, rank: 13, x: -19.0443, y: 63.4043, regionalEssential: true, regionalRoute: 'south-coast', regionalRouteOrder: 3, regionalStopOrder: 3, regionalVisitDuration: 120, regionalGroup: 'South Coast' },
+      { cat: 'activity', ko: 'Skaftafell Glacier View Hike', en: 'Skaftafell Glacier View Hike', dur: 180, rank: 14, x: -16.9667, y: 64.0167, regionalEssential: true, regionalRoute: 'southeast', regionalRouteOrder: 4, regionalStopOrder: 1, regionalVisitDuration: 180, regionalGroup: 'Southeast' },
+      { cat: 'activity', ko: 'Jokulsarlon Glacier Lagoon & Diamond Beach', en: 'Jokulsarlon Glacier Lagoon & Diamond Beach', dur: 240, rank: 15, x: -16.2306, y: 64.0481, regionalEssential: true, regionalRoute: 'southeast', regionalRouteOrder: 4, regionalStopOrder: 2, regionalVisitDuration: 240, regionalLunchAfter: true, regionalGroup: 'Southeast' },
+      { cat: 'activity', ko: 'Godafoss Waterfall', en: 'Godafoss Waterfall', dur: 90, rank: 16, x: -17.5496, y: 65.6828, regionalEssential: true, regionalRoute: 'north', regionalRouteOrder: 5, regionalStopOrder: 1, regionalVisitDuration: 90, regionalGroup: 'North' },
+      { cat: 'culture', ko: 'Lake Myvatn Geothermal Area', en: 'Lake Myvatn Geothermal Area', dur: 180, rank: 17, x: -16.9961, y: 65.6039, regionalEssential: true, regionalRoute: 'north', regionalRouteOrder: 5, regionalStopOrder: 2, regionalVisitDuration: 180, regionalLunchAfter: true, regionalGroup: 'North' },
+      { cat: 'shopping', ko: 'Akureyri Old Town & Harbor Walk', en: 'Akureyri Old Town & Harbor Walk', dur: 120, rank: 18, x: -18.0907, y: 65.6885, regionalEssential: true, regionalRoute: 'north', regionalRouteOrder: 5, regionalStopOrder: 3, regionalVisitDuration: 120, regionalGroup: 'North' },
+      { cat: 'activity', ko: 'Kirkjufell Mountain on Snaefellsnes', en: 'Kirkjufell Mountain on Snaefellsnes', dur: 180, rank: 19, x: -23.3119, y: 64.9417, regionalEssential: true, regionalRoute: 'west-snaefellsnes', regionalRouteOrder: 6, regionalStopOrder: 1, regionalVisitDuration: 180, regionalGroup: 'West / Snaefellsnes' }
     ]
   };
 

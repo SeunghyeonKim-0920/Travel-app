@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-07-14
+goal: Make generated itineraries geographically coherent and easier to inspect,
+  with realistic evening timing and transport estimates.
