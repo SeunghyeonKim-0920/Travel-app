@@ -1914,6 +1914,102 @@ function renderRouteResultMap(optimized, segments) {
   routeLeafletMap.fitBounds(L.latLngBounds(latLngs), { padding: [42, 42] });
 }
 
+function getLiveRouteApiEndpoint() {
+  if (typeof window === 'undefined') return '';
+  if (window.WANDERSYNC_LIVE_ROUTING !== true) return '';
+  const configuredBase = String(window.WANDERSYNC_API_BASE || '').replace(/\/$/, '');
+  if (configuredBase) return `${configuredBase}/api/route`;
+  if (window.WANDERSYNC_REMOTE_SYNC && window.WANDERSYNC_REMOTE_SYNC.getUrl) return '/api/route';
+  return '';
+}
+
+function getLiveRoutePoint(city) {
+  const center = city && typeof getCityCenter === 'function' ? getCityCenter(city.id) : null;
+  if (!center || !Number.isFinite(Number(center.lat)) || !Number.isFinite(Number(center.lon))) return null;
+  return { lat: Number(center.lat), lon: Number(center.lon) };
+}
+
+async function requestLiveRouteOption(from, to, mode) {
+  const endpoint = getLiveRouteApiEndpoint();
+  const fromPoint = getLiveRoutePoint(from);
+  const toPoint = getLiveRoutePoint(to);
+  if (!endpoint || !fromPoint || !toPoint || typeof fetch !== 'function') return null;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mode,
+        from: fromPoint,
+        to: toPoint,
+        fromCityId: from && from.id,
+        toCityId: to && to.id,
+        preferDirect: true
+      })
+    });
+    if (!response.ok) return null;
+    const result = await response.json();
+    return result && result.available ? result : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+async function fetchLiveRouteSegments(optimized) {
+  if (!getLiveRouteApiEndpoint() || !Array.isArray(optimized) || optimized.length < 2) return [];
+  const pairs = optimized.slice(0, -1).map((from, index) => ({ from, to: optimized[index + 1] }));
+  return Promise.all(pairs.map(async ({ from, to }) => {
+    const straightKm = typeof getRouteDistanceKm === 'function' ? getRouteDistanceKm(from.id, to.id) : 0;
+    const modes = ['TRANSIT'];
+    if (Number(straightKm) >= 500) modes.push('FLIGHT');
+    const results = (await Promise.all(modes.map(mode => requestLiveRouteOption(from, to, mode)))).filter(Boolean);
+    if (!results.length) return null;
+    return results.sort((a, b) => Number(a.durationMinutes || Infinity) - Number(b.durationMinutes || Infinity))[0];
+  }));
+}
+
+function mergeLiveRouteOption(data, live) {
+  if (!live || !live.transportType || !Number.isFinite(Number(live.durationMinutes))) return data;
+  const merged = cloneTravelData(data) || {};
+  const type = live.transportType === 'flight'
+    ? 'flight'
+    : live.transportType === 'bus'
+      ? 'bus'
+      : live.transportType === 'mixed'
+        ? 'mixed'
+        : 'train';
+  merged[type] = {
+    ...(merged[type] || {}),
+    time: roundRouteMinutes(Number(live.durationMinutes)),
+    distanceKm: Number(live.distanceKm) || undefined,
+    connectionType: live.connectionType || 'direct',
+    actualFlightTime: Number(live.actualFlightTime) || undefined,
+    transferTime: Number(live.transferTime) || undefined,
+    waitTime: Number(live.waitTime) || undefined,
+    baggageTime: Number(live.baggageTime) || undefined,
+    layoverTime: Number(live.layoverTime) || undefined,
+    provider: live.provider,
+    source: live.source,
+    capturedAt: live.capturedAt,
+    isLive: live.isLive !== false,
+    evidenceClass: live.evidenceClass || 'live-provider',
+    note_en: live.connectionType === 'via' ? 'Connecting route; live provider duration.' : 'Direct route; live provider duration.',
+    note_ko: live.connectionType === 'via' ? '경유 경로이며 실시간 교통 제공자 소요시간입니다.' : '직통 경로이며 실시간 교통 제공자 소요시간입니다.'
+  };
+  return merged;
+}
+
+function getRouteEvidenceText(transport, lang) {
+  if (!transport) return '';
+  const live = transport.evidenceClass === 'live-provider' || transport.isLive === true;
+  if (lang === 'ko') return live ? '실시간 제공자 데이터' : '저장된 검증 경로 데이터';
+  if (lang === 'fr') return live ? 'Données du fournisseur en direct' : 'Données d’itinéraire vérifiées';
+  if (lang === 'zh') return live ? '实时服务商数据' : '已验证的缓存路线数据';
+  if (lang === 'ja') return live ? 'ライブ提供者データ' : '検証済み保存ルートデータ';
+  if (lang === 'es') return live ? 'Datos del proveedor en tiempo real' : 'Datos de ruta verificados';
+  return live ? 'Live provider data' : 'Verified cached route data';
+}
+
 // ===== Render Route Result =====
 function renderRouteResult() {
   const placeholder = document.getElementById('routeResultPlaceholder');
@@ -1924,7 +2020,7 @@ function renderRouteResult() {
   content.style.display = 'block';
   content.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:40px;">🔄 ${getRouteUiText('optimizing', '도시간 동선 짜는 중...', 'Optimizing route...')}</p>`;
 
-  setTimeout(() => {
+  setTimeout(async () => {
     const isKo = state.lang === 'ko';
     const routeLang = getRouteCurrentLang();
     let optimized;
@@ -1940,9 +2036,11 @@ function renderRouteResult() {
       optimized = optimizeRoute([...routeState.cities], startId, endId);
     }
     optimized = ensureOptimizedRouteIntegrity(optimized, routeState.cities, startId, endId);
+    const liveSegments = await fetchLiveRouteSegments(optimized);
 
     for (let i = 0; i < optimized.length - 1; i++) {
-      const data = getTravelData(optimized[i].id, optimized[i + 1].id);
+      const fallbackData = getTravelData(optimized[i].id, optimized[i + 1].id);
+      const data = mergeLiveRouteOption(fallbackData, liveSegments[i]);
       const opt = getBestTransport(data);
       if (opt) {
         totalTime += opt.best.time;
@@ -2088,6 +2186,10 @@ function renderRouteResult() {
             }
           } else {
             noteHTML = b.note ? `<div class="segment-note">💡 ${formatRouteNoteForDisplay(b.note, b, routeLang)}</div>` : '';
+          }
+          const evidenceText = getRouteEvidenceText(b, routeLang);
+          if (evidenceText) {
+            noteHTML += `<div class="segment-note route-evidence" data-evidence-class="${escapeHtml(String(b.evidenceClass || 'cached-verified'))}">${escapeHtml(evidenceText)}</div>`;
           }
           const rtBadge = rt.cls ? `<span class="route-type-badge ${rt.cls}">${rt.label}</span>` : '';
           const distanceText = formatDistanceKm(b.distanceKm || (seg.data && seg.data[b.type] && seg.data[b.type].distanceKm), routeLang);

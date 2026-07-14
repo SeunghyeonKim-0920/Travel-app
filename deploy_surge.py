@@ -10,9 +10,10 @@ import base64
 import json
 import mimetypes
 
-DOMAIN = "wandersync-travel-1779355803.surge.sh"
-TOKEN = "6a8bbf987174297a28e613df622429a1"
-EMAIL = "wandersync-family-sharing@outlook.com"
+DEFAULT_DOMAIN = "wandersync-travel-1779355803.surge.sh"
+TOKEN = os.environ.get("SURGE_TOKEN", "").strip()
+EMAIL = os.environ.get("SURGE_LOGIN", os.environ.get("SURGE_EMAIL", "")).strip()
+DOMAIN = os.environ.get("SURGE_DOMAIN", DEFAULT_DOMAIN).strip()
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 SOURCE_DIR = os.path.join(PROJECT_DIR, 'deploy_live')
 
@@ -73,13 +74,14 @@ def deploy(zip_data):
         print(f"Response: {body[:500]}")
         return False
     except Exception as ex:
-        try:
-            print(f"Error: {ex}")
-        except Exception:
-            print(f"Error: {repr(ex)}")
+        safe_error = str(ex).encode('ascii', 'backslashreplace').decode('ascii')
+        print(f"Error: {safe_error}")
         return False
 
 if __name__ == '__main__':
+    if not EMAIL or not TOKEN:
+        print("Missing SURGE_LOGIN/SURGE_TOKEN. Set deployment credentials in the environment before publishing.")
+        sys.exit(2)
     print(f"Collecting production files from: {SOURCE_DIR}")
     files = collect_files()
     print(f"Found {len(files)} files:")

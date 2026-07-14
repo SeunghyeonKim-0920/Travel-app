@@ -2,8 +2,14 @@ const fs = require('fs');
 const https = require('https');
 
 const DOMAIN = "wandersync-travel-1779355803.surge.sh";
-const TOKEN = "6a8bbf987174297a28e613df622429a1";
-const EMAIL = "wandersync-family-sharing@outlook.com";
+const TOKEN = String(process.env.SURGE_TOKEN || '').trim();
+const EMAIL = String(process.env.SURGE_LOGIN || process.env.SURGE_EMAIL || '').trim();
+const DEPLOY_DOMAIN = String(process.env.SURGE_DOMAIN || DOMAIN).trim();
+
+if (!TOKEN || !EMAIL) {
+  console.error('Missing SURGE_LOGIN/SURGE_TOKEN. Set deployment credentials in the environment before publishing.');
+  process.exit(2);
+}
 
 if (!fs.existsSync('project.zip')) {
   console.error("Error: project.zip not found! Please run zip command first.");
@@ -13,7 +19,7 @@ if (!fs.existsSync('project.zip')) {
 const zipData = fs.readFileSync('project.zip');
 const auth = Buffer.from(`${EMAIL}:${TOKEN}`).toString('base64');
 
-console.log(`Deploying project.zip to ${DOMAIN}...`);
+console.log(`Deploying project.zip to ${DEPLOY_DOMAIN}...`);
 
 const options = {
   hostname: 'surge.surge.sh',
@@ -23,7 +29,7 @@ const options = {
   headers: {
     'Authorization': `Basic ${auth}`,
     'Content-Type': 'application/zip',
-    'Domain': DOMAIN,
+    'Domain': DEPLOY_DOMAIN,
     'Content-Length': zipData.length
   }
 };

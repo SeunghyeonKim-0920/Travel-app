@@ -1,7 +1,9 @@
 {
   "scripts": {
     "test:data": "node verify_travel_data_integrity.js && node verify_course_coverage.js",
-    "test:accuracy": "node verify_night_map_route_accuracy.js"
+    "test:accuracy": "node verify_night_map_route_accuracy.js",
+    "test:backend": "node verify_backend_api.js",
+    "test:providers": "node verify_route_providers.js"
   },
   "devDependencies": {
     "surge": "^0.27.4"
