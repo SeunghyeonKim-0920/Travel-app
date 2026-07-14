@@ -144,18 +144,36 @@ function mergeMessageLists(first = [], second = []) {
   return Array.from(byId.values()).sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0)).slice(-500);
 }
 
-function mergeState(current, incoming) {
+function mergeState(current, incoming, options = {}) {
   const oldState = pruneState(current);
   const nextState = normalizeState(incoming);
-  const rooms = new Map(oldState.rooms.map(room => [room.id, room]));
-  nextState.rooms.forEach(room => rooms.set(room.id, room));
+  const deletedRoomIds = new Set((options.deletedRoomIds || []).map(String));
+  const deletedFeedbackIds = new Set((options.deletedFeedbackIds || []).map(String));
+  const replaceMembershipRoomIds = new Set((options.replaceMembershipRoomIds || []).map(String));
+  const rooms = new Map(oldState.rooms.filter(room => !deletedRoomIds.has(String(room.id))).map(room => [room.id, room]));
+  nextState.rooms.forEach(room => {
+    if (deletedRoomIds.has(String(room.id))) return;
+    const previous = rooms.get(room.id);
+    if (!previous) return rooms.set(room.id, room);
+    const joinedUsers = replaceMembershipRoomIds.has(String(room.id))
+      ? [...(room.joinedUsers || [])]
+      : Array.from(new Set([...(previous.joinedUsers || []), ...(room.joinedUsers || [])]));
+    rooms.set(room.id, {
+      ...previous,
+      ...room,
+      joinedUsers,
+      joinedCount: joinedUsers.length,
+      memberProfiles: { ...(previous.memberProfiles || {}), ...(room.memberProfiles || {}) }
+    });
+  });
   const chatLogs = { ...oldState.chatLogs };
   Object.entries(nextState.chatLogs).forEach(([roomId, messages]) => {
     chatLogs[roomId] = mergeMessageLists(chatLogs[roomId] || [], messages);
   });
+  deletedRoomIds.forEach(roomId => delete chatLogs[roomId]);
   const feedbackById = new Map();
   [...oldState.feedbacks, ...nextState.feedbacks].forEach(feedback => {
-    if (feedback && feedback.id) feedbackById.set(String(feedback.id), feedback);
+    if (feedback && feedback.id && !deletedFeedbackIds.has(String(feedback.id))) feedbackById.set(String(feedback.id), feedback);
   });
   const requestById = new Map();
   [...oldState.cityRequests, ...nextState.cityRequests].forEach(request => {
@@ -425,7 +443,11 @@ async function handleApi(req, res, url) {
           return sendJson(res, 400, { ok: false, error: 'Room payload is invalid or expired.' });
         }
       }
-      const merged = mergeState(readState(), incoming);
+      const merged = mergeState(readState(), incoming, {
+        deletedRoomIds: body.deletedRoomIds,
+        deletedFeedbackIds: body.deletedFeedbackIds,
+        replaceMembershipRoomIds: body.replaceMembershipRoomIds
+      });
       const saved = await queueStateWrite(merged);
       return sendJson(res, 200, saved);
     } catch (error) {

@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "wandersync-companion-api",
+  "main": "worker/companion-api.mjs",
+  "compatibility_date": "2026-07-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    "ALLOWED_ORIGINS": "https://wandersync-travel-1779355803.surge.sh,http://localhost:8000,http://localhost:8010"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "wandersync-companion-api-db",
+      "database_id": "1b6e792b-5347-4fd9-82be-ca06136aa8d7",
+      "migrations_dir": "worker/migrations"
+    }
+  ]
+}

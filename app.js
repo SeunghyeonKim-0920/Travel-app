@@ -2987,7 +2987,10 @@ async function pushToRemoteNow(options = {}) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        json_payload: payload
+        json_payload: payload,
+        deletedRoomIds: options.deletedRoomIds || [],
+        deletedFeedbackIds: options.deletedFeedbackIds || [],
+        replaceMembershipRoomIds: options.replaceMembershipRoomIds || []
       })
     });
     if (!res.ok) throw new Error("HTTP error " + res.status);

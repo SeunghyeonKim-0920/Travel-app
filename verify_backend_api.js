@@ -76,6 +76,17 @@ async function main() {
   assert.equal(loaded.feedbacks.some(item => item.id === 'feedback-keep'), true);
   assert.equal(loaded.feedbacks.some(item => item.id === 'feedback-test'), false);
 
+  const deleted = await fetch(`${base}/api/state`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ json_payload: { rooms: [], chatLogs: {}, feedbacks: [] }, deletedRoomIds: [room.id], deletedFeedbackIds: ['feedback-keep'] })
+  });
+  assert.equal(deleted.status, 200);
+  const afterDelete = await fetch(`${base}/api/state`).then(response => response.json());
+  assert.equal(afterDelete.rooms.some(item => item.id === room.id), false);
+  assert.equal(afterDelete.chatLogs[room.id], undefined);
+  assert.equal(afterDelete.feedbacks.some(item => item.id === 'feedback-keep'), false);
+
   const invalid = await fetch(`${base}/api/state`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

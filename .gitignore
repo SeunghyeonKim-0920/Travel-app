@@ -9,6 +9,7 @@ project.zip
 *.log.chatgpt2codex/
 /.chatgpt2codex/
 .data/
+.wrangler/
 .env
 .env.*
 !.env.example
