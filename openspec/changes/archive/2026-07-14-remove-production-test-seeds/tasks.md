@@ -8,4 +8,4 @@
 
 - [x] 2.1 Run automated regression and cleanup tests.
 - [x] 2.2 Deploy Worker and Surge, then verify an empty live companion view with Playwright.
-- [ ] 2.3 Archive the OpenSpec change and commit/push only scoped files.
+- [x] 2.3 Archive the OpenSpec change and commit/push only scoped files.
