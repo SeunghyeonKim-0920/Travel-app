@@ -99,6 +99,21 @@ shared = await request('/api/state').then(response => response.json());
 assert.equal(shared.rooms.length, 0);
 assert.deepEqual(shared.chatLogs, {});
 
+const legitimateRoom = { id: 'real-room', date: futureDate, title: 'Museum companion', joinedUsers: ['Traveler'] };
+const legacySample = { id: '1', date: futureDate, title: 'Legacy sample' };
+const qaRoom = { id: 'qa-room', date: futureDate, title_ko: '\uC6B4\uC601 \uAD50\uCC28 \uC0AC\uC6A9\uC790 \uD655\uC778 123' };
+await putState({
+  rooms: [legitimateRoom, legacySample, qaRoom],
+  chatLogs: {
+    'real-room': [{ id: 'real-message', text: 'hello' }],
+    '1': [{ id: 'sample-message', text: 'sample' }],
+    'qa-room': [{ id: 'qa-message', text: 'qa' }]
+  }
+});
+shared = await request('/api/state').then(response => response.json());
+assert.deepEqual(shared.rooms.map(room => room.id), ['real-room']);
+assert.deepEqual(Object.keys(shared.chatLogs), ['real-room']);
+
 const blocked = await handleRequest(new Request('https://api.example.test/api/state', { headers: { Origin: 'https://attacker.example' } }), env);
 assert.equal(blocked.status, 403);
 
@@ -108,4 +123,4 @@ const oversized = await request('/api/state', {
 });
 assert.equal(oversized.status, 413);
 
-console.log('PASS Worker D1 API persistence, conflict merge, deduplication, deletion, expiry, CORS, and payload limits');
+console.log('PASS Worker D1 API persistence, merge, deletion, expiry, legacy cleanup, CORS, and payload limits');

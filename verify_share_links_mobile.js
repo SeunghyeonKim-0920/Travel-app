@@ -5,7 +5,8 @@ const files = {
   route: fs.readFileSync('route_optimizer.js', 'utf8'),
   html: fs.readFileSync('index.html', 'utf8'),
   fallback: fs.readFileSync('200.html', 'utf8'),
-  css: fs.readFileSync('style.css', 'utf8')
+  css: fs.readFileSync('style.css', 'utf8'),
+  mock: fs.readFileSync('mockData.js', 'utf8')
 };
 
 const checks = [
@@ -27,6 +28,9 @@ const checks = [
   ['feedback content is escaped', files.app.includes('${escapeHtml(entry.text)}') && files.app.includes('${escapeHtml(entry.name)}')],
   ['remote mutations carry deletion metadata', files.app.includes('deletedRoomIds: options.deletedRoomIds || []') && files.app.includes('deletedFeedbackIds: options.deletedFeedbackIds || []') && files.app.includes('replaceMembershipRoomIds: options.replaceMembershipRoomIds || []')],
   ['legacy QA feedback is removed from every browser', files.app.includes("'mobile feedback verification'") && files.app.includes("'anonymous-feedback-qa'") && files.app.includes("safeSetLocalStorage('wander_feedbacks', JSON.stringify(state.feedbacks))")],
+  ['empty remote state is never seeded with mock rooms', !files.app.includes('seed it with the default mock rooms') && files.app.includes('state.rooms = safeGetStoredJson(\'wander_rooms\', []);')],
+  ['legacy test rooms are pruned from browser state', files.app.includes('LEGACY_TEST_ROOM_IDS') && files.app.includes('isRoomExpired(room) || isLegacyTestRoom(room)')],
+  ['legacy companion fixtures are disabled at runtime', files.mock.includes('MOCK_COMPANION_ROOMS.length = 0') && files.mock.includes('delete CHAT_SIMULATOR_RESPONSES[roomId]')],
   ['route icon is map based', files.html.includes('M9 18 3 21V6l6-3 6 3 6-3v15')],
   ['mobile labels exist', (files.html.match(/class="nav-label-mobile"/g) || []).length === 5],
   ['Korean mobile labels are explicit', files.app.includes("nav_planner_short: '코스 생성'") && files.app.includes("nav_routeplanner_short: '도시간 경로'")],

@@ -2500,6 +2500,24 @@ async function fetchRemotePayload() {
   });
 }
 
+const LEGACY_TEST_ROOM_IDS = new Set(['1', '2', '3', '4', '5']);
+const LEGACY_TEST_ROOM_TITLE_PREFIXES = [
+  'cross-client api verification',
+  'ui shared room',
+  '\uC6B4\uC601 \uACF5\uC720 \uD655\uC778 \uB3D9\uD589\uBC29',
+  '\uC6B4\uC601 \uAD50\uCC28 \uC0AC\uC6A9\uC790 \uD655\uC778'
+];
+
+function isLegacyTestRoom(room) {
+  if (!room || typeof room !== 'object') return false;
+  if (LEGACY_TEST_ROOM_IDS.has(String(room.id || ''))) return true;
+  const title = [room.title, room.title_ko, room.title_en]
+    .map(value => repairMojibakeText(String(value || '')).trim().toLowerCase())
+    .filter(Boolean)
+    .join(' ');
+  return title === 'test' || LEGACY_TEST_ROOM_TITLE_PREFIXES.some(prefix => title.includes(prefix));
+}
+
 function isRoomExpired(room) {
   if (!room || !room.date) return false;
   const roomEndOfDay = new Date(`${room.date}T23:59:59.999`);
@@ -2511,7 +2529,7 @@ function pruneExpiredRemotePayload(payload) {
   const activeRooms = [];
   const expiredIds = new Set();
   (payload.rooms || []).forEach(room => {
-    if (isRoomExpired(room)) {
+    if (isRoomExpired(room) || isLegacyTestRoom(room)) {
       expiredIds.add(String(room.id));
     } else {
       activeRooms.push(room);
@@ -3317,22 +3335,8 @@ function init() {
     renderChatRoom();
   }
 
-  // Initial pull from remote
-  pullFromRemote().then(() => {
-    // If the remote server is completely fresh or has no valid rooms, seed it with the default mock rooms!
-    if (state.rooms.length === 0 || (state.rooms.length === 1 && state.rooms[0].title === "Test")) {
-      state.rooms = [...MOCK_COMPANION_ROOMS];
-      state.chatLogs = {};
-      state.rooms.forEach(room => {
-        const welcomeMsg = getRoomSystemMessage('welcome', { name: room.creator.name });
-        
-        state.chatLogs[room.id] = [
-          createMessageObject({ text: welcomeMsg, system: true })
-        ];
-      });
-      pushToRemote();
-    }
-  });
+  // Initial pull from remote. An empty production state must stay empty.
+  pullFromRemote();
 
   // Periodically pull remote updates with jitter so many users do not sync at once.
   const syncIntervalMs = 12000 + Math.floor(Math.random() * 4000);
@@ -3631,10 +3635,10 @@ function loadFromLocalStorage() {
 
   const localRooms = safeGetLocalStorage('wander_rooms');
   if (localRooms) {
-    state.rooms = safeGetStoredJson('wander_rooms', [...MOCK_COMPANION_ROOMS]);
-    if (!Array.isArray(state.rooms)) state.rooms = [...MOCK_COMPANION_ROOMS];
+    state.rooms = safeGetStoredJson('wander_rooms', []);
+    if (!Array.isArray(state.rooms)) state.rooms = [];
   } else {
-    state.rooms = [...MOCK_COMPANION_ROOMS];
+    state.rooms = [];
   }
   state.rooms = pruneExpiredRemotePayload({
     rooms: state.rooms,

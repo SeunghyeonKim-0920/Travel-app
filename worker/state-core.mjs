@@ -9,6 +9,13 @@ const LEGACY_TEST_FEEDBACK_TEXTS = new Set([
   'anonymous-feedback-qa',
   'mobile feedback verification'
 ]);
+const LEGACY_TEST_ROOM_IDS = new Set(['1', '2', '3', '4', '5']);
+const LEGACY_TEST_ROOM_TITLE_PREFIXES = [
+  'cross-client api verification',
+  'ui shared room',
+  '\uC6B4\uC601 \uACF5\uC720 \uD655\uC778 \uB3D9\uD589\uBC29',
+  '\uC6B4\uC601 \uAD50\uCC28 \uC0AC\uC6A9\uC790 \uD655\uC778'
+];
 
 function cleanText(value, max = 5000) {
   return String(value == null ? '' : value)
@@ -28,6 +35,16 @@ function isExpiredRoom(room, now = Date.now()) {
   if (!room || !/^\d{4}-\d{2}-\d{2}$/.test(String(room.date || ''))) return false;
   const endOfDateUtc = Date.parse(`${room.date}T23:59:59.999Z`);
   return Number.isFinite(endOfDateUtc) && endOfDateUtc < now;
+}
+
+function isLegacyTestRoom(room) {
+  if (!room || typeof room !== 'object') return false;
+  if (LEGACY_TEST_ROOM_IDS.has(String(room.id || ''))) return true;
+  const title = [room.title, room.title_ko, room.title_en]
+    .map(value => cleanText(value, 240).trim().toLowerCase())
+    .filter(Boolean)
+    .join(' ');
+  return title === 'test' || LEGACY_TEST_ROOM_TITLE_PREFIXES.some(prefix => title.includes(prefix));
 }
 
 function normalizeRoom(room, now = Date.now()) {
@@ -87,7 +104,7 @@ function normalizeState(value, now = Date.now()) {
   const source = value && typeof value === 'object' ? value : {};
   const rooms = (Array.isArray(source.rooms) ? source.rooms : [])
     .map(room => normalizeRoom(room, now))
-    .filter(room => room && !isExpiredRoom(room, now))
+    .filter(room => room && !isExpiredRoom(room, now) && !isLegacyTestRoom(room))
     .slice(-MAX_ROOMS);
   const activeRoomIds = new Set(rooms.map(room => room.id));
   const chatLogs = {};

@@ -1208,6 +1208,11 @@ const CHAT_SIMULATOR_RESPONSES = {
   ]
 };
 
+// Legacy demo companion content must never enter production state.
+MOCK_USER_PROFILES.length = 0;
+MOCK_COMPANION_ROOMS.length = 0;
+Object.keys(CHAT_SIMULATOR_RESPONSES).forEach(roomId => delete CHAT_SIMULATOR_RESPONSES[roomId]);
+
 
 const EXTRA_CITIES_META = {
   washington: {
