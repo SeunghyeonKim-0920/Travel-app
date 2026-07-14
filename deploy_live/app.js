@@ -1218,9 +1218,15 @@ function getSortedSupportedDestinationCities(lang = state.lang) {
   });
 }
 
-// --- Remote Sync Endpoint (MockBolt) ---
-const REMOTE_GET_URL = 'https://mockbolt.com/b/8e036b0d-2bf4-439f-a36f-b22bc0e3c426';
-const REMOTE_PUT_URL = 'https://mockbolt.com/api/v1/manage/80010013-d710-4a69-9514-3be2eb36dc74';
+// --- Optional remote sync ---
+// The former MockBolt host no longer resolves. Keep remote sync opt-in so a
+// failed third-party endpoint cannot block room creation or spam the console.
+const REMOTE_SYNC_CONFIG = (typeof window !== 'undefined' && window.WANDERSYNC_REMOTE_SYNC) || {};
+const REMOTE_GET_URL = String(REMOTE_SYNC_CONFIG.getUrl || '');
+const REMOTE_PUT_URL = String(REMOTE_SYNC_CONFIG.putUrl || '');
+const REMOTE_SYNC_ENABLED = Boolean(
+  REMOTE_GET_URL && REMOTE_PUT_URL
+);
 const REMOTE_SYNC_TIMEOUT_MS = 8000;
 let remotePushQueue = Promise.resolve();
 
@@ -2473,6 +2479,9 @@ function fetchWithTimeout(url, options = {}, timeoutMs = REMOTE_SYNC_TIMEOUT_MS)
 }
 
 async function fetchRemotePayload() {
+  if (!REMOTE_SYNC_ENABLED) {
+    return { rooms: [], chatLogs: {}, cityRequests: [], feedbacks: [] };
+  }
   const urlWithCacheBuster = REMOTE_GET_URL + '?t=' + Date.now();
   const res = await fetchWithTimeout(urlWithCacheBuster, {
     headers: {
@@ -2877,6 +2886,7 @@ function mergeChatLogs(localLogs, remoteLogs) {
 }
 
 async function pullFromRemote() {
+  if (!REMOTE_SYNC_ENABLED) return false;
   try {
     const data = await fetchRemotePayload();
     if (data && Array.isArray(data.rooms)) {
@@ -2938,6 +2948,11 @@ async function pushToRemote(options = {}) {
 }
 
 async function pushToRemoteNow(options = {}) {
+  if (!REMOTE_SYNC_ENABLED) {
+    state.rooms = state.rooms.map(room => ({ ...room, pendingSync: false }));
+    saveToLocalStorage();
+    return true;
+  }
   try {
     repairStateMojibake();
     const localPayload = {
@@ -9355,6 +9370,43 @@ function getIntraCityTransitOverride(item1, item2, cityId) {
   } : null;
 }
 
+function getVerifiedTransitRouteOverride(item1, item2, cityId) {
+  const registry = (typeof window !== 'undefined' && window.CITY_TRANSIT_ROUTE_OVERRIDES) ||
+    (typeof globalThis !== 'undefined' && globalThis.CITY_TRANSIT_ROUTE_OVERRIDES) || {};
+  if (!registry || !cityId) return null;
+
+  const names = item => Array.from(new Set([
+    item && item.name_en,
+    item && item.name_ko,
+    item && item.name
+  ].filter(Boolean).map(value => normalizeCoordinateLookupText(value)).filter(Boolean)));
+  const fromNames = names(item1);
+  const toNames = names(item2);
+  let record = null;
+  for (const from of fromNames) {
+    for (const to of toNames) {
+      record = registry[`${cityId}|${from}|${to}`] || registry[`${cityId}|${to}|${from}`];
+      if (record) break;
+    }
+    if (record) break;
+  }
+  if (!record) return null;
+
+  const distance = Number(record.distanceKm);
+  const durationSeconds = Number(record.durationSeconds);
+  if (!Number.isFinite(distance) || !Number.isFinite(durationSeconds) || distance < 0 || durationSeconds < 0) return null;
+  const isWalking = String(record.mode || '').includes('walking');
+  return {
+    distance: Number(distance.toFixed(1)),
+    duration: roundTransitMinutes(durationSeconds / 60),
+    type_ko: isWalking ? '도보' : '대중교통',
+    type_en: isWalking ? 'Walk' : 'Public Transit',
+    source: record.source,
+    routeMode: record.mode,
+    provider: record.provider
+  };
+}
+
 const VERIFIED_COORDINATE_CACHE_KEY = 'wandersync_verified_place_coordinates_v1';
 let verifiedCoordinateCache = null;
 
@@ -9538,26 +9590,16 @@ function calculateTransit(item1, item2) {
     : null;
   if (curatedOverride) return curatedOverride;
 
+  const verifiedRoute = preferredCityId
+    ? getVerifiedTransitRouteOverride(item1, item2, preferredCityId)
+    : null;
+  if (verifiedRoute) return verifiedRoute;
+
   let c1 = getAttractionCoords(item1, preferredCityId);
   let c2 = getAttractionCoords(item2, preferredCityId);
   
   let dist = getHaversineDistance(c1.y, c1.x, c2.y, c2.x);
 
-  if (preferredCityId && preferredCityId !== 'reykjavik' && dist > 90 && !isNearbyDayTripItem(item1) && !isNearbyDayTripItem(item2)) {
-    const center = getCityCenterCluster(preferredCityId);
-    if (center && isPlausibleGeoCoord(center)) {
-      const c1FromCenter = getHaversineDistance(c1.y, c1.x, center.y, center.x);
-      const c2FromCenter = getHaversineDistance(c2.y, c2.x, center.y, center.x);
-      if (c1FromCenter > 90) c1 = { x: center.x, y: center.y };
-      if (c2FromCenter > 90) c2 = { x: center.x, y: center.y };
-      dist = getHaversineDistance(c1.y, c1.x, c2.y, c2.x);
-    }
-  }
-
-  if (dist > 350 && preferredCityId !== 'reykjavik') {
-    dist = 8;
-  }
-  
   if (item1.name_ko === item2.name_ko || dist < 0.01) {
     return { distance: 0, duration: 0, type_ko: "도보", type_en: "Walk" };
   }

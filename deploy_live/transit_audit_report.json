@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-07-14T11:12:19.131Z",
+  "totalPairs": 1005,
+  "routeRecords": 1005,
+  "unresolved": [],
+  "failedApiPairsApproved": [
+    "cancun|isla mujeres|museo maya de cancun",
+    "cancun|playa delfines beach|isla mujeres",
+    "cancun|tulum ruins|isla mujeres",
+    "london|hyde park kensington gardens|hyde park serpentine lake walk",
+    "newyork|fifth avenue walk|metropolitan museum egyptian gallery",
+    "hanoi|hanoi old quarter|train street hanoi",
+    "rome|rome vintage vespa motorcycle tour|janiculum hill sunset view",
+    "seoul|seoul forest trails|han river windsurfing kayaking",
+    "seoul|ddp modern art architecture tour|han river windsurfing kayaking",
+    "seoul|tamburins garosu gil store|han river windsurfing kayaking",
+    "tokyo|ginza shopping district|ginza high end luxury boulevard"
+  ]
+}

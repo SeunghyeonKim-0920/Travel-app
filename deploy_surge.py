@@ -14,6 +14,7 @@ DOMAIN = "wandersync-travel-1779355803.surge.sh"
 TOKEN = "6a8bbf987174297a28e613df622429a1"
 EMAIL = "wandersync-family-sharing@outlook.com"
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+SOURCE_DIR = os.path.join(PROJECT_DIR, 'deploy_live')
 
 # Files to deploy (exclude node_modules, .git, python scripts, etc.)
 EXCLUDE_DIRS = {'node_modules', '.git', '__pycache__', '.surge', 'node_portable'}
@@ -27,7 +28,7 @@ EXCLUDE_FILES = {
 
 def collect_files():
     files = {}
-    for root, dirs, filenames in os.walk(PROJECT_DIR):
+    for root, dirs, filenames in os.walk(SOURCE_DIR):
         # Remove excluded dirs in-place
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
         for filename in filenames:
@@ -37,7 +38,7 @@ def collect_files():
             if ext in EXCLUDE_EXTS:
                 continue
             filepath = os.path.join(root, filename)
-            relpath = os.path.relpath(filepath, PROJECT_DIR).replace('\\', '/')
+            relpath = os.path.relpath(filepath, SOURCE_DIR).replace('\\', '/')
             files[relpath] = filepath
     return files
 
@@ -79,7 +80,7 @@ def deploy(zip_data):
         return False
 
 if __name__ == '__main__':
-    print(f"Collecting files from: {PROJECT_DIR}")
+    print(f"Collecting production files from: {SOURCE_DIR}")
     files = collect_files()
     print(f"Found {len(files)} files:")
     for f in sorted(files.keys()):
