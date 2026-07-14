@@ -101,6 +101,9 @@
           if (entry['desc_' + lang]) existing['desc_' + lang] = entry['desc_' + lang];
         });
         if (entry.regionalEssential === true) existing.regionalEssential = true;
+        ['regionalRoute', 'regionalRouteOrder', 'regionalStopOrder', 'regionalVisitDuration', 'regionalLunchAfter'].forEach(function (field) {
+          if (entry[field] !== undefined) existing[field] = entry[field];
+        });
         return;
       }
       var localizedNames = { fr: entry.fr, zh: entry.zh, ja: entry.ja, es: entry.es };
@@ -124,6 +127,11 @@
         desc_en: entry.desc_en || 'A real, city-specific sightseeing stop planned around visitor-friendly routing.',
         curatedEssential: true,
         regionalEssential: entry.regionalEssential === true,
+        regionalRoute: entry.regionalRoute,
+        regionalRouteOrder: entry.regionalRouteOrder,
+        regionalStopOrder: entry.regionalStopOrder,
+        regionalVisitDuration: entry.regionalVisitDuration,
+        regionalLunchAfter: entry.regionalLunchAfter === true,
         coordinateSource: Number.isFinite(entry.x) && Number.isFinite(entry.y) ? 'curated-patch' : undefined
       };
       ['fr', 'zh', 'ja', 'es'].forEach(function (lang) {
@@ -182,6 +190,26 @@
       { cat: 'culture', ko: '프랑크푸르트 현대미술관', en: 'Museum of Modern Art Frankfurt', fr: 'Musée d’art moderne de Francfort', zh: '法兰克福现代艺术博物馆', ja: 'フランクフルト近代美術館', es: 'Museo de Arte Moderno de Fráncfort', dur: 150, rank: 15, x: 8.6854, y: 50.1118, landmark: false, desc_ko: '독특한 건축과 현대미술 소장품으로 알려진 MMK를 관람합니다.', desc_en: 'Visit MMK for its distinctive architecture and modern art collection.' },
       { cat: 'activity', ko: '하이델베르크 구시가지 당일치기', en: 'Heidelberg Old Town Day Trip', fr: 'Excursion dans la vieille ville de Heidelberg', zh: '海德堡老城一日游', ja: 'ハイデルベルク旧市街日帰り旅行', es: 'Excursión al casco antiguo de Heidelberg', dur: 480, rank: 50, x: 8.7156, y: 49.4106, landmark: false, desc_ko: '프랑크푸르트에서 철도로 이동해 하이델베르크 성과 구시가지를 둘러보는 후반부 하루 일정입니다.', desc_en: 'A later full-day rail excursion from Frankfurt to Heidelberg Castle and Old Town.' },
       { cat: 'activity', ko: '마인츠 구시가지와 라인강 당일치기', en: 'Mainz Old Town & Rhine Day Trip', fr: 'Excursion à Mayence et sur le Rhin', zh: '美因茨老城与莱茵河一日游', ja: 'マインツ旧市街とライン川日帰り旅行', es: 'Excursión a Maguncia y el Rin', dur: 480, rank: 51, x: 8.2742, y: 49.9990, landmark: false, desc_ko: '가까운 마인츠의 대성당과 구시가지, 라인강변을 묶어 둘러보는 후반부 하루 일정입니다.', desc_en: 'A later full-day rail excursion to Mainz Cathedral, Old Town, and the Rhine waterfront.' }
+    ],
+    berlin: [
+      { cat: 'culture', ko: '\uBE0C\uB780\uB374\uBD80\uB974\uD06C \uBB38', en: 'Brandenburg Gate', fr: 'Porte de Brandebourg', zh: '\u52C3\u5170\u767B\u5821\u95E8', ja: '\u30D6\u30E9\u30F3\u30C7\u30F3\u30D6\u30EB\u30AF\u9580', es: 'Puerta de Brandeburgo', dur: 90, rank: 1, x: 13.3777, y: 52.5163 },
+      { cat: 'culture', ko: '\uB77C\uC774\uD788\uC2A4\uD0C0\uD06C \uC758\uC0AC\uB2F9', en: 'Reichstag Building', fr: 'Palais du Reichstag', zh: '\u5FB7\u56FD\u56FD\u4F1A\u5927\u53A6', ja: '\u30C9\u30A4\u30C4\u9023\u90A6\u8B70\u4F1A\u8B70\u4E8B\u5802', es: 'Edificio del Reichstag', dur: 150, rank: 2, x: 13.3762, y: 52.5186 },
+      { cat: 'culture', ko: '\uBCA0\uB97C\uB9B0 \uBC15\uBB3C\uAD00\uC12C', en: 'Museum Island Berlin', fr: 'Ile aux Musees de Berlin', zh: '\u67CF\u6797\u535A\u7269\u9986\u5C9B', ja: '\u30D9\u30EB\u30EA\u30F3\u535A\u7269\u9928\u5CF6', es: 'Isla de los Museos de Berlin', dur: 240, rank: 3, x: 13.4010, y: 52.5169 },
+      { cat: 'culture', ko: '\uBCA0\uB97C\uB9B0 \uC7A5\uBCBD \uAE30\uB150\uAD00', en: 'Berlin Wall Memorial', fr: 'Memorial du mur de Berlin', zh: '\u67CF\u6797\u5899\u7EAA\u5FF5\u9986', ja: '\u30D9\u30EB\u30EA\u30F3\u306E\u58C1\u8A18\u5FF5\u9928', es: 'Memorial del Muro de Berlin', dur: 150, rank: 4, x: 13.3903, y: 52.5350 },
+      { cat: 'culture', ko: '\uC774\uC2A4\uD2B8 \uC0AC\uC774\uB4DC \uAC24\uB7EC\uB9AC', en: 'East Side Gallery', fr: 'East Side Gallery', zh: '\u4E1C\u8FB9\u753B\u5ECA', ja: '\u30A4\u30FC\u30B9\u30C8\u30B5\u30A4\u30C9\u30AE\u30E3\u30E9\u30EA\u30FC', es: 'East Side Gallery', dur: 120, rank: 5, x: 13.4394, y: 52.5050 },
+      { cat: 'culture', ko: '\uCCB4\uD06C\uD3EC\uC778\uD2B8 \uCC30\uB9AC', en: 'Checkpoint Charlie', fr: 'Checkpoint Charlie', zh: '\u67E5\u7406\u68C0\u67E5\u7AD9', ja: '\u30C1\u30A7\u30C3\u30AF\u30DD\u30A4\u30F3\u30C8\u30FB\u30C1\u30E3\u30FC\u30EA\u30FC', es: 'Checkpoint Charlie', dur: 90, rank: 6, x: 13.3904, y: 52.5076 },
+      { cat: 'activity', ko: '\uBCA0\uB97C\uB9B0 TV \uD0C0\uC6CC\uC640 \uC54C\uB809\uC0B0\uB354\uD50C\uB77C\uCE20', en: 'Berlin TV Tower & Alexanderplatz', fr: 'Tour de television et Alexanderplatz', zh: '\u67CF\u6797\u7535\u89C6\u5854\u4E0E\u4E9A\u5386\u5C71\u5927\u5E7F\u573A', ja: '\u30D9\u30EB\u30EA\u30F3\u30C6\u30EC\u30D3\u5854\u3068\u30A2\u30EC\u30AF\u30B5\u30F3\u30C0\u30FC\u5E83\u5834', es: 'Torre de Television y Alexanderplatz', dur: 120, rank: 7, x: 13.4094, y: 52.5208 },
+      { cat: 'culture', ko: '\uBCA0\uB97C\uB9B0 \uB300\uC131\uB2F9', en: 'Berlin Cathedral', fr: 'Cathedrale de Berlin', zh: '\u67CF\u6797\u5927\u6559\u5802', ja: '\u30D9\u30EB\u30EA\u30F3\u5927\u8056\u5802', es: 'Catedral de Berlin', dur: 120, rank: 8, x: 13.4010, y: 52.5191 },
+      { cat: 'culture', ko: '\uD6D4\uBCFC\uD2B8 \uD3EC\uB7FC', en: 'Humboldt Forum', fr: 'Forum Humboldt', zh: '\u6D2A\u5821\u8BBA\u575B', ja: '\u30D5\u30F3\u30DC\u30EB\u30C8\u30FB\u30D5\u30A9\u30FC\u30E9\u30E0', es: 'Foro Humboldt', dur: 180, rank: 9, x: 13.4010, y: 52.5175 },
+      { cat: 'culture', ko: '\uC0E4\uB97C\uB85C\uD150\uBD80\uB974\uD06C \uAD81\uC804', en: 'Charlottenburg Palace', fr: 'Chateau de Charlottenburg', zh: '\u590F\u6D1B\u817E\u5821\u5BAB', ja: '\u30B7\u30E3\u30EB\u30ED\u30C3\u30C6\u30F3\u30D6\u30EB\u30AF\u5BAE\u6BBF', es: 'Palacio de Charlottenburg', dur: 210, rank: 10, x: 13.2957, y: 52.5209 },
+      { cat: 'culture', ko: '\uC7A0\uB2E4\uB974\uBA58\uB9C8\uB974\uD2B8', en: 'Gendarmenmarkt', fr: 'Gendarmenmarkt', zh: '\u5FA1\u6797\u5E7F\u573A', ja: '\u30B8\u30E3\u30F3\u30C0\u30EB\u30E1\u30F3\u30DE\u30EB\u30AF\u30C8', es: 'Gendarmenmarkt', dur: 90, rank: 11, x: 13.3927, y: 52.5138, landmark: false },
+      { cat: 'culture', ko: '\uD3EC\uCE20\uB2F4\uD130 \uD50C\uB77C\uCE20', en: 'Potsdamer Platz', fr: 'Potsdamer Platz', zh: '\u6CE2\u8328\u5766\u5E7F\u573A', ja: '\u30DD\u30C4\u30C0\u30E0\u5E83\u5834', es: 'Potsdamer Platz', dur: 120, rank: 12, x: 13.3760, y: 52.5096, landmark: false },
+      { cat: 'culture', ko: '\uD14C\uB7EC\uC758 \uC9C0\uD615\uB3C4', en: 'Topography of Terror', fr: 'Topographie de la Terreur', zh: '\u6050\u6016\u5730\u5F62\u56FE', ja: '\u30C6\u30ED\u306E\u30C8\u30DD\u30B0\u30E9\u30D5\u30A3\u30FC', es: 'Topografia del Terror', dur: 150, rank: 13, x: 13.3827, y: 52.5069, landmark: false },
+      { cat: 'shopping', ko: '\uB9C8\uB974\uD2B8\uD560\uB808 \uB098\uC778', en: 'Markthalle Neun', fr: 'Markthalle Neun', zh: '\u4E5D\u53F7\u5E02\u573A\u5927\u5385', ja: '\u30DE\u30EB\u30AF\u30C8\u30CF\u30EC\u30FB\u30CE\u30A4\u30F3', es: 'Markthalle Neun', dur: 120, rank: 14, x: 13.4314, y: 52.4991, landmark: false },
+      { cat: 'healing', ko: '\uD2F0\uC5B4\uAC00\uB974\uD150\uACFC \uC2B9\uB9AC\uC758 \uAE30\uB150\uD0D1', en: 'Tiergarten & Victory Column', fr: 'Tiergarten et colonne de la Victoire', zh: '\u8482\u5C14\u52A0\u817E\u516C\u56ED\u4E0E\u80DC\u5229\u7EAA\u5FF5\u67F1', ja: '\u30C6\u30A3\u30FC\u30A2\u30AC\u30EB\u30C6\u30F3\u3068\u6226\u52DD\u8A18\u5FF5\u5854', es: 'Tiergarten y Columna de la Victoria', dur: 150, rank: 15, x: 13.3501, y: 52.5145, landmark: false },
+      { cat: 'culture', ko: '\uBCA0\uB97C\uB9B0 \uC720\uB300\uC778 \uBC15\uBB3C\uAD00', en: 'Jewish Museum Berlin', fr: 'Musee juif de Berlin', zh: '\u67CF\u6797\u72B9\u592A\u535A\u7269\u9986', ja: '\u30D9\u30EB\u30EA\u30F3\u30FB\u30E6\u30C0\u30E4\u535A\u7269\u9928', es: 'Museo Judio de Berlin', dur: 180, rank: 16, x: 13.3956, y: 52.5022, landmark: false },
+      { cat: 'healing', ko: '\uD15C\uD50C\uD638\uD37C \uD3A0\uD2B8', en: 'Tempelhofer Feld', fr: 'Champ de Tempelhof', zh: '\u6CF0\u666E\u5C14\u970D\u592B\u516C\u56ED', ja: '\u30C6\u30F3\u30DA\u30EB\u30DB\u30FC\u30D5\u516C\u5712', es: 'Campo de Tempelhof', dur: 150, rank: 17, x: 13.4049, y: 52.4731, landmark: false },
+      { cat: 'shopping', ko: '\uCFE0\uB974\uD4F4\uB974\uC2A4\uD150\uB2F4\uACFC \uCE74\uC774\uC800 \uBE4C\uD5EC\uB984 \uAE30\uB150\uAD50\uD68C', en: 'Kurfurstendamm & Kaiser Wilhelm Memorial Church', fr: 'Kurfurstendamm et eglise du Souvenir', zh: '\u9009\u5E1D\u4FAF\u5927\u8857\u4E0E\u5A01\u5EC9\u7687\u5E1D\u7EAA\u5FF5\u6559\u5802', ja: '\u30AF\u30FC\u30A2\u30D5\u30E5\u30EB\u30B9\u30C6\u30F3\u30C0\u30E0\u3068\u30AB\u30A4\u30B6\u30FC\u30FB\u30F4\u30A3\u30EB\u30D8\u30EB\u30E0\u8A18\u5FF5\u6559\u4F1A', es: 'Kurfurstendamm e Iglesia Memorial Kaiser Wilhelm', dur: 150, rank: 18, x: 13.3353, y: 52.5048, landmark: false }
     ],
     interlaken: [
       { cat: 'healing', ko: '회에마테 공원과 회에베크 산책', en: 'Höhematte Park & Höheweg Walk', fr: 'Parc Höhematte et promenade Höheweg', zh: '荷黑马特公园与荷黑威格漫步', ja: 'ヘーエマッテ公園とヘーエ通り散策', es: 'Parque Höhematte y paseo Höheweg', dur: 120, rank: 1, x: 7.8589, y: 46.6852, desc_ko: '인터라켄 중심의 넓은 공원과 산책로에서 융프라우 방향의 전망을 즐깁니다.', desc_en: 'Walk Interlaken central park and boulevard with views toward the Jungfrau massif.' },
@@ -336,6 +364,42 @@
         : 150;
       return { cat: cat, ko: ko, en: en, dur: dur, rank: 20 + idx, landmark: true };
     }));
+  });
+
+  E.interlaken.push({
+    cat: 'activity', ko: '\uD074\uB77C\uC774\uB124 \uC0E4\uC774\uB370\uD06C \uC0B0\uC545\uC5ED', en: 'Kleine Scheidegg Mountain Pass',
+    fr: 'Col de la Kleine Scheidegg', zh: '\u5C0F\u8F9B\u514B\u5CE1\u8C37', ja: '\u30AF\u30E9\u30A4\u30CD\u30FB\u30B7\u30E3\u30A4\u30C7\u30C3\u30AF', es: 'Paso de Kleine Scheidegg',
+    dur: 90, rank: 12, x: 7.9614, y: 46.5849,
+    desc_ko: '\uC544\uC774\uAC70\u00B7\uBB3C\uD788\u00B7\uC735\uD504\uB77C\uC6B0\uB97C \uC870\uB9DD\uD558\uB294 \uC0B0\uC545 \uC5ED\uACFC \uACE0\uAC1C\uB97C \uB458\uB7EC\uBD05\uB2C8\uB2E4.',
+    desc_en: 'Stop at the mountain pass and railway junction for close views of the Eiger, Monch, and Jungfrau.'
+  });
+
+  var interlakenRoutes = {
+    'Lauterbrunnen Valley': ['lauterbrunnen', 1, 1, 150, false],
+    'Staubbach Falls': ['lauterbrunnen', 1, 2, 60, true],
+    'Wengen Village Walk': ['lauterbrunnen', 1, 3, 120, false],
+    'Grindelwald Village': ['grindelwald', 2, 1, 150, false],
+    'Grindelwald-First Viewpoint': ['grindelwald', 2, 2, 180, true],
+    'Bachalpsee Hiking Trail': ['grindelwald', 2, 3, 180, false],
+    'Kleine Scheidegg Mountain Pass': ['jungfrau', 3, 1, 90, true],
+    'Jungfraujoch Top of Europe': ['jungfrau', 3, 2, 300, false],
+    'M\u00FCrren Village Walk': ['murren', 4, 1, 120, true],
+    'Schilthorn Viewpoint': ['murren', 4, 2, 180, false],
+    'Lake Brienz Cruise': ['brienz', 5, 1, 120, true],
+    'Giessbach Falls': ['brienz', 5, 2, 120, false],
+    'Spiez Castle & Lakefront': ['thun', 6, 1, 120, true],
+    'Thun Old Town Walk': ['thun', 6, 2, 150, false]
+  };
+  E.interlaken.forEach(function (entry) {
+    var route = interlakenRoutes[entry.en]
+      || (/rren Village Walk$/.test(entry.en || '') ? ['murren', 4, 1, 120, true] : null);
+    if (!route) return;
+    entry.regionalEssential = true;
+    entry.regionalRoute = route[0];
+    entry.regionalRouteOrder = route[1];
+    entry.regionalStopOrder = route[2];
+    entry.regionalVisitDuration = route[3];
+    entry.regionalLunchAfter = route[4];
   });
 
   Object.keys(E).forEach(function (cityId) {

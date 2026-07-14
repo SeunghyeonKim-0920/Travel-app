@@ -2518,10 +2518,16 @@ function pruneExpiredRemotePayload(payload) {
   };
 }
 
+const LEGACY_TEST_FEEDBACK_IDS = new Set([
+  'feedback-1783887539379-t59ej7',
+  'feedback-1783885879766-9zl97i'
+]);
+
 function normalizeFeedbackCollection(entries) {
   const byId = new Map();
   (Array.isArray(entries) ? entries : []).forEach(entry => {
     if (!entry || !entry.id) return;
+    if (LEGACY_TEST_FEEDBACK_IDS.has(String(entry.id))) return;
     const timestamp = Number(entry.timestamp) || 0;
     byId.set(String(entry.id), {
       id: String(entry.id),
@@ -5360,7 +5366,9 @@ function dedupeAttractionPoolsForCity(cityId, options = {}) {
         removed += 1;
         return;
       }
-      const keys = getGlobalPlaceKeys(item);
+      const keys = item.regionalRoute
+        ? [`regional:${item.regionalRoute}:${Number(item.regionalStopOrder) || 0}`]
+        : getGlobalPlaceKeys(item);
       if (keys.length && hasUsedPlaceKeys(keys, usedKeys)) {
         removed += 1;
         return;
@@ -5750,6 +5758,12 @@ function fillSparseDaysFromPools(dayPlans, cityPools, cityId) {
   });
 }
 
+function countNearbyTripDays(dayPlans) {
+  return (Array.isArray(dayPlans) ? dayPlans : []).filter(dayPlan =>
+    dayPlan && Array.isArray(dayPlan.items) && dayPlan.items.some(isNearbyDayTripItem)
+  ).length;
+}
+
 function ensureNonEmptySightseeingDays(dayPlans, cityPools, cityId) {
   if (!Array.isArray(dayPlans) || !cityPools) return;
   const usedKeys = getUsedSightseeingKeys(dayPlans);
@@ -5762,14 +5776,22 @@ function ensureNonEmptySightseeingDays(dayPlans, cityPools, cityId) {
 
   dayPlans.forEach(dayPlan => {
     if (!isSparseSightseeingDay(dayPlan)) return;
-    const allowDayTrip = dayPlans.length >= 4 && dayPlan.day >= 4;
+    const allowDayTrip = dayPlans.length >= 5 && dayPlan.day >= 4 && countNearbyTripDays(dayPlans) < 2;
     const allowOtherFullDay = dayPlans.length >= 5 && dayPlan.day >= 5;
-    const candidate = candidates.find(item => {
-      if (isNearbyDayTripItem(item)) return allowDayTrip && isReasonableNearbyDayTripForCity(item, cityId) && !hasUsedPlaceKeys(getGlobalPlaceKeys(item), usedKeys);
+    const hasUnusedLocal = candidates.some(item =>
+      !isNearbyDayTripItem(item) && !hasUsedPlaceKeys(getGlobalPlaceKeys(item), usedKeys)
+    );
+    let candidate = candidates.find(item => {
+      if (isNearbyDayTripItem(item)) return false;
       if (!allowOtherFullDay && isFullDayAnchorItem(item)) return false;
       const keys = getGlobalPlaceKeys(item);
       return !hasUsedPlaceKeys(keys, usedKeys);
     });
+    if (!candidate && !hasUnusedLocal && allowDayTrip) {
+      candidate = candidates.find(item => isNearbyDayTripItem(item)
+        && isReasonableNearbyDayTripForCity(item, cityId)
+        && !hasUsedPlaceKeys(getGlobalPlaceKeys(item), usedKeys));
+    }
     if (!candidate) return;
     const coords = getAttractionCoords(candidate, cityId);
     const item = { ...candidate, cityId, x: candidate.x ?? coords.x, y: candidate.y ?? coords.y };
@@ -5793,15 +5815,23 @@ function ensureEveryDayHasSightseeing(dayPlans, cityPools, cityId) {
 
   dayPlans.forEach(dayPlan => {
     if (getRealSightseeingItems(dayPlan).length > 0) return;
-    const allowDayTrip = dayPlans.length >= 4 && dayPlan.day >= 4;
+    const allowDayTrip = dayPlans.length >= 5 && dayPlan.day >= 4 && countNearbyTripDays(dayPlans) < 2;
     const allowOtherFullDay = dayPlans.length >= 5 && dayPlan.day >= 5;
+    const hasUnusedLocal = candidates.some(item =>
+      !isNearbyDayTripItem(item) && !hasUsedPlaceKeys(getGlobalPlaceKeys(item), usedKeys)
+    );
     let candidate = candidates.find(item => {
-      if (isNearbyDayTripItem(item)) return allowDayTrip && isReasonableNearbyDayTripForCity(item, cityId) && !hasUsedPlaceKeys(getGlobalPlaceKeys(item), usedKeys);
+      if (isNearbyDayTripItem(item)) return false;
       if (!allowOtherFullDay && isFullDayAnchorItem(item)) return false;
       const keys = getGlobalPlaceKeys(item);
       return !hasUsedPlaceKeys(keys, usedKeys);
     });
-    if (!candidate && allowDayTrip) {
+    if (!candidate && !hasUnusedLocal && allowDayTrip) {
+      candidate = candidates.find(item => isNearbyDayTripItem(item)
+        && isReasonableNearbyDayTripForCity(item, cityId)
+        && !hasUsedPlaceKeys(getGlobalPlaceKeys(item), usedKeys));
+    }
+    if (!candidate && !hasUnusedLocal && allowDayTrip) {
       candidate = getDynamicNearbyCityDayTripCandidate(cityId, usedKeys);
     }
     if (!candidate) return;
@@ -6160,6 +6190,32 @@ function normalizeNearbyDayTripDays(course) {
   });
 }
 
+function enforceNearbyTripPolicy(course) {
+  if (!course || !Array.isArray(course.days) || course.days.length < 5) return;
+  const localPayloads = [];
+  const nearbyPayloads = [];
+  const emptyPayloads = [];
+
+  course.days.forEach(dayPlan => {
+    const items = Array.isArray(dayPlan.items) ? dayPlan.items : [];
+    const sightseeing = getRealSightseeingItems(dayPlan);
+    if (sightseeing.some(isNearbyDayTripItem)) {
+      nearbyPayloads.push(items);
+    } else if (sightseeing.length) {
+      localPayloads.push(items);
+    } else {
+      emptyPayloads.push(items);
+    }
+  });
+
+  const keptNearby = nearbyPayloads.slice(0, 2);
+  const droppedNearby = nearbyPayloads.slice(2).map(() => []);
+  const orderedPayloads = [...localPayloads, ...keptNearby, ...emptyPayloads, ...droppedNearby];
+  course.days.forEach((dayPlan, index) => {
+    dayPlan.items = orderedPayloads[index] || [];
+  });
+}
+
 function getClockMinuteValues(timeSlot) {
   const matches = String(timeSlot || '').matchAll(/(\d+):(\d{2})/g);
   return Array.from(matches, match => (parseInt(match[1], 10) * 60) + parseInt(match[2], 10));
@@ -6267,7 +6323,7 @@ function repairEmptySightseeingDays(course) {
     if (!dayPlan || !Array.isArray(dayPlan.items)) return;
     if (getRealSightseeingItems(dayPlan).length > 0) return;
     let candidate = null;
-    if ((Number(dayPlan.day) || 1) >= 4) {
+    if (course.days.length >= 5 && (Number(dayPlan.day) || 1) >= 4 && countNearbyTripDays(course.days) < 2) {
       candidate = getDynamicNearbyCityDayTripCandidate(course.cityId, usedKeys);
     }
     if (!candidate) return;
@@ -6331,6 +6387,8 @@ function normalizeCourseTimeDisplay(course) {
   repairEmptySightseeingDays(course);
   normalizeNearbyDayTripDays(course);
   removeDuplicateSightseeingAcrossDays(course);
+  enforceNearbyTripPolicy(course);
+  normalizeInterlakenRegionalDays(course);
   return course;
 }
 
@@ -9362,8 +9420,7 @@ function isNearbyDayTripItem(item) {
     'oslofjord', 'delphi', 'meteora', 'sounion', 'saronic', 'hydra', 'aegina',
     'poros', 'mycenae', 'epidaurus', 'zaanse schans', 'volendam', 'delft',
     'cliffs of moher', 'glendalough', 'wicklow', 'giant s causeway',
-    'uppsala', 'sigtuna', 'archipelago', 'gyeongju', 'monaco', 'eze',
-    'national park', 'safari',
+    'uppsala', 'sigtuna', 'archipelago', 'gyeongju', 'eze',
     '\uADFC\uAD50', '\uB2F9\uC77C\uCE58\uAE30', '\uC218\uD5A5', '\uACE0\uC9C4', '\uC8FC\uC790\uC790\uC624', '\uC8FC\uC790\uC9C0\uC544\uC624'
   ].some(kw => text.includes(kw));
 }
@@ -9515,6 +9572,34 @@ function createDessertBreakItem(cityId, customCityName, coords, duration) {
 }
 
 const NEARBY_DAY_TRIP_SUPPLEMENTS = {
+  berlin: [
+    {
+      name_ko: '\uD3EC\uCE20\uB2F4 \uC0B0\uC218\uC2DC \uAD81\uC804\uACFC \uAD6C\uC2DC\uAC00\uC9C0 \uB2F9\uC77C\uCE58\uAE30',
+      name_en: 'Potsdam Sanssouci & Historic Center Day Trip',
+      duration: 480,
+      oneWayTravelMinutes: 35,
+      isLandmark: false,
+      x: 13.0406,
+      y: 52.4030,
+      open: 480,
+      close: 1260,
+      desc_ko: '\uBCA0\uB97C\uB9B0\uC5D0\uC11C \uC9C1\uD1B5 \uAD50\uD1B5\uC73C\uB85C \uC774\uB3D9\uD574 \uC0B0\uC218\uC2DC \uAD81\uC804\uACFC \uD3EC\uCE20\uB2F4 \uC5ED\uC0AC \uC9C0\uAD6C\uB97C \uB458\uB7EC\uBCF4\uB294 \uD6C4\uBC18\uBD80 \uD558\uB8E8 \uC77C\uC815',
+      desc_en: 'A later full-day rail excursion from Berlin to Sanssouci Palace and Potsdam historic center.'
+    },
+    {
+      name_ko: '\uC288\uD504\uB808\uBC1C\uD2B8 \uB8E8\uBCA0\uB098\uC6B0 \uC6B4\uD558 \uB2F9\uC77C\uCE58\uAE30',
+      name_en: 'Spreewald Lubbenau Canals Day Trip',
+      duration: 480,
+      oneWayTravelMinutes: 70,
+      isLandmark: false,
+      x: 13.9665,
+      y: 51.8680,
+      open: 480,
+      close: 1260,
+      desc_ko: '\uBCA0\uB97C\uB9B0\uC5D0\uC11C \uC774\uB3D9\uD574 \uB8E8\uBCA0\uB098\uC6B0\uC758 \uC288\uD504\uB808\uBC1C\uD2B8 \uC6B4\uD558\uC640 \uC5ED\uC0AC \uC911\uC2EC\uC744 \uB458\uB7EC\uBCF4\uB294 \uD6C4\uBC18\uBD80 \uD558\uB8E8 \uC77C\uC815',
+      desc_en: 'A later full-day excursion from Berlin to the Spreewald canals and Lubbenau historic center.'
+    }
+  ],
   milan: [
     {
       name_ko: '\uCF54\uBAA8\uC640 \uCF54\uBAA8 \uD638\uC218 \uB2F9\uC77C\uCE58\uAE30',
@@ -9626,7 +9711,10 @@ function addNearbyDayTripSupplements(cityPools, cityId, days) {
   const trips = NEARBY_DAY_TRIP_SUPPLEMENTS[cityId];
   if (!trips || !cityPools) return;
   const totalSightseeing = ['healing', 'culture', 'activity', 'shopping']
-    .reduce((sum, cat) => sum + ((cityPools[cat] || []).length), 0);
+    .flatMap(cat => Array.isArray(cityPools[cat]) ? cityPools[cat] : [])
+    .filter(item => item && !isNearbyDayTripItem(item) && !isFoodOrDrinkAttraction(item))
+    .filter(item => !isInvalidGeneratedPlaceForCity(item, cityId) && hasUsableAttractionCoords(item, cityId))
+    .length;
   if (totalSightseeing >= days * 3) return;
 
   cityPools.activity = cityPools.activity || [];
@@ -9636,7 +9724,7 @@ function addNearbyDayTripSupplements(cityPools, cityId, days) {
       rememberUsedPlaceKeys(item, existing);
     });
   });
-  trips.forEach(trip => {
+  trips.slice(0, 2).forEach(trip => {
     if (!isReasonableNearbyDayTripForCity({ ...trip, cityId }, cityId)) return;
     const keys = getGlobalPlaceKeys(trip);
     if (!hasUsedPlaceKeys(keys, existing)) {
@@ -9806,6 +9894,11 @@ function buildCourseStructure(cityId, days, preferences, customCityName, wikiPoo
       activity: [...(originalPools.activity || [])],
       shopping: [...(originalPools.shopping || [])]
     };
+    if (cityId === 'interlaken') {
+      ['healing', 'culture', 'activity', 'shopping'].forEach(category => {
+        cityPools[category] = cityPools[category].filter(item => !item.regionalRoute);
+      });
+    }
 
     // Supplement curated pools with wiki data when attractions are insufficient
     // Each day needs ~4 sightseeing spots; if total sightseeing < days * 4, merge wiki items
@@ -11675,13 +11768,12 @@ function deleteFeedback(feedbackId) {
   normalizeNearbyDayTripDays(draftCourse);
   repairImpossibleClockTimes(draftCourse);
 
-  return {
-    cityId,
-    cityName: customCityName || getCityDisplayName(cityId),
-    preferences: Array.isArray(preferences) ? [...preferences] : [],
-    durationDays: days,
-    days: dayPlans
-  };
+  draftCourse.cityName = customCityName || getCityDisplayName(cityId);
+  draftCourse.preferences = Array.isArray(preferences) ? [...preferences] : [];
+  draftCourse.durationDays = days;
+  enforceNearbyTripPolicy(draftCourse);
+  normalizeInterlakenRegionalDays(draftCourse);
+  return draftCourse;
 }
 
 function renderItinerary(itinerary) {
@@ -12579,6 +12671,55 @@ function updateFeedbackStarUI() {
     button.classList.toggle('active', value <= sharedFeedbackSelectedRating);
     button.setAttribute('aria-pressed', value === sharedFeedbackSelectedRating ? 'true' : 'false');
     button.setAttribute('aria-label', getFeedbackStarLabel(value));
+  });
+}
+
+function normalizeInterlakenRegionalDays(course) {
+  if (!course || course.cityId !== 'interlaken' || !Array.isArray(course.days) || typeof ATTRACTIONS === 'undefined') return;
+  const pools = ATTRACTIONS.interlaken || {};
+  const regionalStops = ['healing', 'culture', 'activity', 'shopping']
+    .flatMap(category => Array.isArray(pools[category]) ? pools[category] : [])
+    .filter(item => item && item.regionalRoute && Number.isFinite(Number(item.regionalRouteOrder)))
+    .sort((a, b) => (Number(a.regionalRouteOrder) - Number(b.regionalRouteOrder))
+      || (Number(a.regionalStopOrder) - Number(b.regionalStopOrder)));
+  if (!regionalStops.length) return;
+
+  const routes = new Map();
+  regionalStops.forEach(item => {
+    const routeOrder = Number(item.regionalRouteOrder);
+    if (!routes.has(routeOrder)) routes.set(routeOrder, []);
+    routes.get(routeOrder).push(item);
+  });
+
+  course.days.slice(1).forEach((dayPlan, dayIndex) => {
+    const routeStops = routes.get(dayIndex + 1);
+    if (!routeStops || !routeStops.length || !dayPlan || !Array.isArray(dayPlan.items)) return;
+    const startLodging = dayPlan.items.find(item => item && item.isLodging && item.isStart) || null;
+    const endLodging = dayPlan.items.find(item => item && item.isLodging && item.isEnd) || null;
+    const lunch = createFallbackMealBreakItem('lunch');
+    const dinner = createFallbackMealBreakItem('dinner');
+    const ordered = [...(startLodging ? [startLodging] : [])];
+    let lunchInserted = false;
+    routeStops.forEach(source => {
+      const item = {
+        ...source,
+        cityId: 'interlaken',
+        duration: Number(source.regionalVisitDuration) || Number(source.duration) || 120
+      };
+      delete item.isAllDayTrip;
+      delete item.hideDuration;
+      delete item.timeSlot;
+      ordered.push(item);
+      if (source.regionalLunchAfter && !lunchInserted) {
+        ordered.push(lunch);
+        lunchInserted = true;
+      }
+    });
+    if (!lunchInserted) ordered.splice(Math.min(2, ordered.length), 0, lunch);
+    ordered.push(dinner);
+    if (endLodging) ordered.push(endLodging);
+    dayPlan.items = ordered;
+    if (typeof recalculateDayPlanTimes === 'function') recalculateDayPlanTimes(dayPlan, 'interlaken');
   });
 }
 

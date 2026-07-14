@@ -38,7 +38,7 @@ const browserStubs = `
 
 const runtime = new Function(
   browserStubs + runtimeFiles.map(read).join('\n') +
-  '\nreturn { CITIES, ATTRACTIONS, CITY_CLUSTERS, CITY_DEFAULT_COORDS, ROUTE_CITY_CENTERS, getTravelData, getBestTransport, getRecommendedStayDays, isBlockedUnopenedPlace, buildCourseStructure, state, getAttractionCoords, getCanonicalPlaceCoordinate, isSyntheticAttractionCoordinate, hasUsableAttractionCoords };'
+  '\nreturn { CITIES, ATTRACTIONS, CITY_CLUSTERS, CITY_DEFAULT_COORDS, ROUTE_CITY_CENTERS, getTravelData, getBestTransport, getRecommendedStayDays, isBlockedUnopenedPlace, buildCourseStructure, state, getAttractionCoords, getCanonicalPlaceCoordinate, isSyntheticAttractionCoordinate, hasUsableAttractionCoords, getRealSightseeingItems, isNearbyDayTripItem, isInvalidGeneratedPlaceForCity, getGlobalPlaceKeys, placeKeysOverlap };'
 )();
 
 const failures = [];
@@ -167,7 +167,7 @@ const interlakenAllAttractions = Object.values(runtime.ATTRACTIONS.interlaken ||
 const interlakenSplitPlaces = [
   'Lauterbrunnen Valley', 'Staubbach Falls', 'Wengen Village Walk',
   'Grindelwald Village', 'Grindelwald-First Viewpoint', 'Bachalpsee Hiking Trail',
-  'Jungfraujoch Top of Europe', 'Mürren Village Walk', 'Schilthorn Viewpoint',
+  'Kleine Scheidegg Mountain Pass', 'Jungfraujoch Top of Europe', 'Mürren Village Walk', 'Schilthorn Viewpoint',
   'Lake Brienz Cruise', 'Giessbach Falls', 'Spiez Castle & Lakefront', 'Thun Old Town Walk'
 ];
 interlakenSplitPlaces.forEach(name => {
@@ -177,9 +177,25 @@ interlakenSplitPlaces.forEach(name => {
   );
 });
 assert(
-  !interlakenAllAttractions.some(p => p.regionalEssential === true),
-  'Interlaken must not have any regionalEssential full-day bundles'
+  !interlakenAllAttractions.some(p => p.regionalEssential === true && p.isAllDayTrip === true),
+  'Interlaken regional stops must remain individual timed places, not full-day bundles'
 );
+assert(interlakenAllAttractions.filter(p => p.regionalRoute).length === 14,
+  'Interlaken must expose 14 individually scheduled regional stops');
+
+const requiredBerlinPlaces = [
+  'Brandenburg Gate', 'Reichstag Building', 'Museum Island Berlin',
+  'Berlin Wall Memorial', 'Potsdamer Platz', 'Markthalle Neun'
+];
+const berlinAttractions = Object.values(runtime.ATTRACTIONS.berlin || {})
+  .flatMap(pool => Array.isArray(pool) ? pool : []);
+requiredBerlinPlaces.forEach(name => {
+  const matches = berlinAttractions.filter(item => item.name_en === name);
+  assert(matches.length === 1, `Berlin must contain ${name} exactly once`);
+  const item = matches[0];
+  assert(item && Number(item.duration) > 0, `Berlin ${name} must have a positive visit duration`);
+  assert(item && runtime.hasUsableAttractionCoords(item, 'berlin'), `Berlin ${name} must have usable Berlin coordinates`);
+});
 
 ['relaxed', 'moderate', 'packed'].forEach(pace => {
   runtime.state.travelPace = pace;
@@ -206,6 +222,25 @@ interlakenSevenDay.days.forEach((day, dayIndex) => {
   const sightseeing = (day.items || []).filter(item => item && !item.isMeal && !item.isTransit && !item.isRest && !item.isLodging);
   assert(sightseeing.length > 0, `Interlaken moderate day ${dayIndex + 1} must contain sightseeing`);
 });
+interlakenSevenDay.days.slice(1).forEach((day, dayIndex) => {
+  const regional = runtime.getRealSightseeingItems(day).filter(item => item.regionalRoute);
+  assert(regional.length >= 2, `Interlaken regional day ${dayIndex + 2} must show at least two individual stops`);
+  assert(new Set(regional.map(item => item.regionalRoute)).size === 1,
+    `Interlaken regional day ${dayIndex + 2} must stay within one coherent area`);
+  assert(regional.every(item => !item.isAllDayTrip),
+    `Interlaken regional day ${dayIndex + 2} must not collapse into a full-day card`);
+});
+
+const berlinSevenDay = runtime.buildCourseStructure('berlin', 7, ['culture', 'healing', 'activity', 'shopping'], null, null);
+const berlinNames = berlinSevenDay.days.flatMap(day => runtime.getRealSightseeingItems(day).map(item => item.name_en || item.name_ko));
+requiredBerlinPlaces.forEach(name => assert(berlinNames.includes(name), `Berlin 7-day course must schedule ${name}`));
+const berlinNearbyDays = berlinSevenDay.days.filter(day => runtime.getRealSightseeingItems(day).some(runtime.isNearbyDayTripItem));
+assert(berlinNearbyDays.length <= 2, 'Berlin course must use no more than two nearby-trip days');
+const firstBerlinTripDay = berlinSevenDay.days.findIndex(day => runtime.getRealSightseeingItems(day).some(runtime.isNearbyDayTripItem));
+const lastBerlinLocalDay = berlinSevenDay.days.reduce((last, day, index) =>
+  runtime.getRealSightseeingItems(day).some(item => !runtime.isNearbyDayTripItem(item)) ? index : last, -1);
+assert(firstBerlinTripDay === -1 || firstBerlinTripDay > lastBerlinLocalDay,
+  'Berlin nearby trips must follow all scheduled Berlin sightseeing');
 
 const frankfurtInterlakenRoute = runtime.getTravelData('frankfurt', 'interlaken');
 assert(frankfurtInterlakenRoute && frankfurtInterlakenRoute.train && frankfurtInterlakenRoute.train.time === 315,
