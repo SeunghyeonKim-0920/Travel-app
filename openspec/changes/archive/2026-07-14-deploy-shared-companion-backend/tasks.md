@@ -18,4 +18,4 @@
 
 ## 4. Delivery
 
-- [ ] 4.1 Archive the completed OpenSpec change, commit only scoped files, and push the current branch.
+- [x] 4.1 Archive the completed OpenSpec change, commit only scoped files, and push the current branch.
