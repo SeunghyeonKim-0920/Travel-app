@@ -14,5 +14,5 @@
 
 - [x] 3.1 Add GitHub Actions Android and unsigned iOS simulator compilation workflows.
 - [x] 3.2 Expand mobile verification and store documentation with artifact, signing, moderation, and account-boundary evidence.
-- [ ] 3.3 Run regressions, mobile browser QA, security checks, and CI verification.
-- [ ] 3.4 Archive OpenSpec and commit/push only scoped changes while preserving existing worktree changes.
+- [x] 3.3 Run regressions, mobile browser QA, security checks, and CI verification.
+- [x] 3.4 Archive OpenSpec and commit/push only scoped changes while preserving existing worktree changes.
