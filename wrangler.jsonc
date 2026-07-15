@@ -8,6 +8,9 @@
   "vars": {
     "ALLOWED_ORIGINS": "https://wandersync-travel-1779355803.surge.sh,http://localhost:8000,http://localhost:8010"
   },
+  "ai": {
+    "binding": "AI"
+  },
   "d1_databases": [
     {
       "binding": "DB",

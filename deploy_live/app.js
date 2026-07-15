@@ -1224,6 +1224,8 @@ function getSortedSupportedDestinationCities(lang = state.lang) {
 const REMOTE_SYNC_CONFIG = (typeof window !== 'undefined' && window.WANDERSYNC_REMOTE_SYNC) || {};
 const REMOTE_GET_URL = String(REMOTE_SYNC_CONFIG.getUrl || '');
 const REMOTE_PUT_URL = String(REMOTE_SYNC_CONFIG.putUrl || '');
+const PUBLIC_API_BASE_URL = String((typeof window !== 'undefined' && window.WANDERSYNC_API_BASE) || '').replace(/\/$/, '');
+const FEEDBACK_TRANSLATION_URL = PUBLIC_API_BASE_URL ? `${PUBLIC_API_BASE_URL}/api/translate` : '';
 const REMOTE_SYNC_ENABLED = Boolean(
   REMOTE_GET_URL && REMOTE_PUT_URL
 );
@@ -1451,12 +1453,12 @@ function applyEnhancedTranslations() {
     TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
   });
   const feedbackActionLanguagePatches = {
-    ko: { feedback_edit: '편집', feedback_delete: '삭제', feedback_save: '저장', feedback_cancel: '취소', feedback_delete_confirm: '이 피드백을 삭제할까요?', feedback_updated: '피드백을 수정했습니다.', feedback_deleted: '피드백을 삭제했습니다.', feedback_update_failed: '피드백 수정 내용을 저장하지 못했습니다.', feedback_delete_failed: '피드백을 삭제하지 못했습니다.', feedback_edited: '수정됨' },
-    en: { feedback_edit: 'Edit', feedback_delete: 'Delete', feedback_save: 'Save', feedback_cancel: 'Cancel', feedback_delete_confirm: 'Delete this feedback?', feedback_updated: 'Feedback updated.', feedback_deleted: 'Feedback deleted.', feedback_update_failed: 'Could not save the feedback update.', feedback_delete_failed: 'Could not delete the feedback.', feedback_edited: 'Edited' },
-    fr: { feedback_edit: 'Modifier', feedback_delete: 'Supprimer', feedback_save: 'Enregistrer', feedback_cancel: 'Annuler', feedback_delete_confirm: 'Supprimer cet avis ?', feedback_updated: 'Avis modifié.', feedback_deleted: 'Avis supprimé.', feedback_update_failed: "Impossible d'enregistrer la modification.", feedback_delete_failed: "Impossible de supprimer l'avis.", feedback_edited: 'Modifié' },
-    zh: { feedback_edit: '编辑', feedback_delete: '删除', feedback_save: '保存', feedback_cancel: '取消', feedback_delete_confirm: '要删除这条反馈吗？', feedback_updated: '反馈已更新。', feedback_deleted: '反馈已删除。', feedback_update_failed: '无法保存反馈修改。', feedback_delete_failed: '无法删除反馈。', feedback_edited: '已编辑' },
-    ja: { feedback_edit: '編集', feedback_delete: '削除', feedback_save: '保存', feedback_cancel: 'キャンセル', feedback_delete_confirm: 'このフィードバックを削除しますか？', feedback_updated: 'フィードバックを更新しました。', feedback_deleted: 'フィードバックを削除しました。', feedback_update_failed: '変更を保存できませんでした。', feedback_delete_failed: 'フィードバックを削除できませんでした。', feedback_edited: '編集済み' },
-    es: { feedback_edit: 'Editar', feedback_delete: 'Eliminar', feedback_save: 'Guardar', feedback_cancel: 'Cancelar', feedback_delete_confirm: '¿Eliminar este comentario?', feedback_updated: 'Comentario actualizado.', feedback_deleted: 'Comentario eliminado.', feedback_update_failed: 'No se pudo guardar el cambio.', feedback_delete_failed: 'No se pudo eliminar el comentario.', feedback_edited: 'Editado' }
+    ko: { feedback_edit: '편집', feedback_delete: '삭제', feedback_save: '저장', feedback_cancel: '취소', feedback_delete_confirm: '이 피드백을 삭제할까요?', feedback_updated: '피드백을 수정했습니다.', feedback_deleted: '피드백을 삭제했습니다.', feedback_update_failed: '피드백 수정 내용을 저장하지 못했습니다.', feedback_delete_failed: '피드백을 삭제하지 못했습니다.', feedback_edited: '수정됨', feedback_empty: '아직 피드백이 없습니다.', feedback_required: '피드백 내용을 입력해주세요.', feedback_rating_required: '평점을 선택해주세요.', feedback_submitted: '피드백을 등록했습니다. 감사합니다!', feedback_submit_failed: '피드백을 서버에 저장하지 못했습니다. 다시 시도해주세요.' },
+    en: { feedback_edit: 'Edit', feedback_delete: 'Delete', feedback_save: 'Save', feedback_cancel: 'Cancel', feedback_delete_confirm: 'Delete this feedback?', feedback_updated: 'Feedback updated.', feedback_deleted: 'Feedback deleted.', feedback_update_failed: 'Could not save the feedback update.', feedback_delete_failed: 'Could not delete the feedback.', feedback_edited: 'Edited', feedback_empty: 'No feedback yet.', feedback_required: 'Please enter your feedback.', feedback_rating_required: 'Please select a rating.', feedback_submitted: 'Feedback submitted. Thank you!', feedback_submit_failed: 'Could not save your feedback. Please try again.' },
+    fr: { feedback_edit: 'Modifier', feedback_delete: 'Supprimer', feedback_save: 'Enregistrer', feedback_cancel: 'Annuler', feedback_delete_confirm: 'Supprimer cet avis ?', feedback_updated: 'Avis modifié.', feedback_deleted: 'Avis supprimé.', feedback_update_failed: "Impossible d'enregistrer la modification.", feedback_delete_failed: "Impossible de supprimer l'avis.", feedback_edited: 'Modifié', feedback_empty: 'Aucun avis pour le moment.', feedback_required: 'Veuillez saisir votre avis.', feedback_rating_required: 'Veuillez choisir une note.', feedback_submitted: 'Avis envoyé. Merci !', feedback_submit_failed: "Impossible d'enregistrer votre avis. Veuillez réessayer." },
+    zh: { feedback_edit: '编辑', feedback_delete: '删除', feedback_save: '保存', feedback_cancel: '取消', feedback_delete_confirm: '要删除这条反馈吗？', feedback_updated: '反馈已更新。', feedback_deleted: '反馈已删除。', feedback_update_failed: '无法保存反馈修改。', feedback_delete_failed: '无法删除反馈。', feedback_edited: '已编辑', feedback_empty: '暂无反馈。', feedback_required: '请输入反馈内容。', feedback_rating_required: '请选择评分。', feedback_submitted: '反馈已提交，谢谢！', feedback_submit_failed: '无法保存反馈，请重试。' },
+    ja: { feedback_edit: '編集', feedback_delete: '削除', feedback_save: '保存', feedback_cancel: 'キャンセル', feedback_delete_confirm: 'このフィードバックを削除しますか？', feedback_updated: 'フィードバックを更新しました。', feedback_deleted: 'フィードバックを削除しました。', feedback_update_failed: '変更を保存できませんでした。', feedback_delete_failed: 'フィードバックを削除できませんでした。', feedback_edited: '編集済み', feedback_empty: 'まだフィードバックはありません。', feedback_required: 'フィードバックを入力してください。', feedback_rating_required: '評価を選択してください。', feedback_submitted: 'フィードバックを送信しました。ありがとうございます。', feedback_submit_failed: 'フィードバックを保存できませんでした。もう一度お試しください。' },
+    es: { feedback_edit: 'Editar', feedback_delete: 'Eliminar', feedback_save: 'Guardar', feedback_cancel: 'Cancelar', feedback_delete_confirm: '¿Eliminar este comentario?', feedback_updated: 'Comentario actualizado.', feedback_deleted: 'Comentario eliminado.', feedback_update_failed: 'No se pudo guardar el cambio.', feedback_delete_failed: 'No se pudo eliminar el comentario.', feedback_edited: 'Editado', feedback_empty: 'Aún no hay comentarios.', feedback_required: 'Escribe tu comentario.', feedback_rating_required: 'Selecciona una puntuación.', feedback_submitted: 'Comentario enviado. ¡Gracias!', feedback_submit_failed: 'No se pudo guardar tu comentario. Inténtalo de nuevo.' }
   };
   Object.entries(feedbackActionLanguagePatches).forEach(([lang, patch]) => {
     TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
@@ -2562,20 +2564,67 @@ function isLegacyTestFeedback(entry) {
   return LEGACY_TEST_FEEDBACK_TEXTS.has(String(entry.text || '').trim().toLowerCase());
 }
 
+function detectFeedbackLanguage(text, hintedLanguage = '') {
+  const value = cleanUiText(String(text || ''));
+  if (/[\uAC00-\uD7AF]/.test(value)) return 'ko';
+  if (/[\u3040-\u30FF]/.test(value)) return 'ja';
+  if (/[\u3400-\u9FFF]/.test(value)) return 'zh';
+  const hinted = String(hintedLanguage || '').toLowerCase();
+  return SUPPORTED_LANG_CODES.includes(hinted) ? hinted : 'en';
+}
+
+function normalizeFeedbackTranslations(value, sourceText, sourceLanguage) {
+  const translations = {};
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    Object.entries(value).forEach(([language, text]) => {
+      const code = String(language || '').toLowerCase();
+      const normalizedText = cleanUiText(String(text || '')).slice(0, 500).trim();
+      if (SUPPORTED_LANG_CODES.includes(code) && normalizedText) translations[code] = normalizedText;
+    });
+  }
+  if (sourceText) translations[sourceLanguage] = sourceText;
+  return translations;
+}
+
 function normalizeFeedbackCollection(entries) {
   const byId = new Map();
   (Array.isArray(entries) ? entries : []).forEach(entry => {
     if (!entry || !entry.id) return;
     if (isLegacyTestFeedback(entry)) return;
+    const id = String(entry.id);
     const timestamp = Number(entry.timestamp) || 0;
-    byId.set(String(entry.id), {
-      id: String(entry.id),
+    const text = cleanUiText(String(entry.text || '')).slice(0, 500);
+    const language = detectFeedbackLanguage(text, entry.lang);
+    const translations = normalizeFeedbackTranslations(
+      entry.translationSource && cleanUiText(String(entry.translationSource)) !== text ? {} : entry.translations,
+      text,
+      language
+    );
+    const normalized = {
+      id,
       name: cleanUiText(String(entry.name || '')).slice(0, 30),
-      text: cleanUiText(String(entry.text || '')).slice(0, 500),
+      text,
       rating: Math.max(1, Math.min(5, Number(entry.rating) || 1)),
       timestamp,
       updatedAt: Number(entry.updatedAt) || 0,
-      lang: normalizeLanguageCode(entry.lang || 'en')
+      lang: language,
+      translationSource: text,
+      translations
+    };
+    const previous = byId.get(id);
+    if (!previous) {
+      byId.set(id, normalized);
+      return;
+    }
+    const sameSource = previous.text === normalized.text;
+    const previousVersion = previous.updatedAt || previous.timestamp;
+    const normalizedVersion = normalized.updatedAt || normalized.timestamp;
+    const preferred = normalizedVersion >= previousVersion ? normalized : previous;
+    byId.set(id, {
+      ...preferred,
+      translations: sameSource
+        ? { ...previous.translations, ...normalized.translations }
+        : { ...preferred.translations }
     });
   });
   return Array.from(byId.values())
@@ -4004,7 +4053,7 @@ function getText(key) {
 
 function runLocalizationAudit() {
   applyEnhancedTranslations();
-  const attributes = ['data-i18n', 'data-i18n-placeholder', 'data-i18n-title'];
+  const attributes = ['data-i18n', 'data-i18n-placeholder', 'data-i18n-title', 'data-i18n-aria-label'];
   const keys = Array.from(new Set(
     Array.from(document.querySelectorAll(attributes.map(attr => `[${attr}]`).join(',')))
       .flatMap(elem => attributes.map(attr => elem.getAttribute(attr)))
@@ -4014,7 +4063,7 @@ function runLocalizationAudit() {
     fr: new Set(['nav_logo', 'profile_mbti', 'comp_category_restaurant', 'modal_room_date']),
     zh: new Set(['nav_logo', 'profile_mbti']),
     ja: new Set(['nav_logo', 'profile_mbti']),
-    es: new Set(['nav_logo', 'profile_mbti', 'comp_category_restaurant', 'modal_room_date'])
+    es: new Set(['nav_logo', 'profile_mbti', 'comp_category_restaurant', 'modal_room_date', 'nav_planner_short'])
   };
   const report = {};
   SUPPORTED_LANG_CODES.forEach(lang => {
@@ -4033,7 +4082,15 @@ function runLocalizationAudit() {
         }
       });
     }
-    report[lang] = { missing, untranslated, pass: missing.length === 0 && untranslated.length === 0 };
+    const keyLiterals = keys.filter(key => cleanUiText(table[key] !== undefined ? table[key] : english[key]) === key);
+    const malformed = keys.filter(key => /(?:Ã[\u0080-\u00BF]|Â(?:[\u0080-\u00BF]|\s)|â[\u0080-\u00BF]{1,2}|ð[\u0080-\u00BF]|\uFFFD)/.test(cleanUiText(table[key] !== undefined ? table[key] : english[key])));
+    report[lang] = {
+      missing,
+      untranslated,
+      keyLiterals,
+      malformed,
+      pass: missing.length === 0 && untranslated.length === 0 && keyLiterals.length === 0 && malformed.length === 0
+    };
   });
   return {
     keyCount: keys.length,
@@ -13075,9 +13132,91 @@ let feedbackEditingId = null;
 let ownedFeedbackIds = new Set();
 const pendingFeedbackEdits = new Map();
 const pendingFeedbackDeletes = new Set();
+const pendingFeedbackTranslations = new Map();
+const feedbackTranslationRetryAfter = new Map();
 
 function getFeedbackStarLabel(value) {
   return getInlineText({ ko: `${value}점`, en: `${value} stars`, fr: `${value} étoiles`, zh: `${value}星`, ja: `${value}つ星`, es: `${value} estrellas` });
+}
+
+function getFeedbackRatingSummary(value) {
+  return getInlineText({
+    ko: `5점 만점에 ${value}점`,
+    en: `${value} out of 5 stars`,
+    fr: `${value} étoiles sur 5`,
+    zh: `5星满分，${value}星`,
+    ja: `5つ星のうち${value}つ星`,
+    es: `${value} de 5 estrellas`
+  });
+}
+
+function getLocalizedFeedbackAuthor(entry) {
+  const name = cleanUiText(String(entry && entry.name || '')).trim();
+  const anonymousNames = new Set(['anonymous', 'anonyme', 'anónimo', '익명', '匿名']);
+  if (anonymousNames.has(name.toLowerCase())) {
+    return getInlineText({ ko: '익명', en: 'Anonymous', fr: 'Anonyme', zh: '匿名', ja: '匿名', es: 'Anónimo' });
+  }
+  return name;
+}
+
+function getFeedbackDisplayText(entry) {
+  const targetLanguage = normalizeLanguageCode(state.lang);
+  const sourceLanguage = detectFeedbackLanguage(entry && entry.text, entry && entry.lang);
+  const translations = entry && entry.translations && typeof entry.translations === 'object' ? entry.translations : {};
+  const translated = cleanUiText(String(translations[targetLanguage] || '')).trim();
+  if (translated) return translated;
+  if (entry && entry.text && targetLanguage !== sourceLanguage) requestFeedbackTranslations(entry, [targetLanguage]);
+  return cleanUiText(String(entry && entry.text || ''));
+}
+
+function requestFeedbackTranslations(entry, requestedLanguages) {
+  if (!entry || !entry.id || !entry.text || !FEEDBACK_TRANSLATION_URL) return Promise.resolve(false);
+  const sourceLanguage = detectFeedbackLanguage(entry.text, entry.lang);
+  const existing = entry.translations && typeof entry.translations === 'object' ? entry.translations : {};
+  const targetLanguages = Array.from(new Set((requestedLanguages || [])
+    .map(normalizeLanguageCode)
+    .filter(language => language !== sourceLanguage && !cleanUiText(String(existing[language] || '')).trim())));
+  const now = Date.now();
+  const availableTargets = targetLanguages.filter(language => {
+    const key = `${entry.id}:${language}`;
+    return !pendingFeedbackTranslations.has(key) && (feedbackTranslationRetryAfter.get(key) || 0) <= now;
+  });
+  if (!availableTargets.length) return Promise.resolve(false);
+
+  const sourceText = cleanUiText(String(entry.text)).slice(0, 500);
+  const task = (async () => {
+    try {
+      const response = await fetchWithTimeout(FEEDBACK_TRANSLATION_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: sourceText, sourceLang: sourceLanguage, targetLangs: availableTargets })
+      }, 20000);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const payload = await response.json();
+      const translatedValues = normalizeFeedbackTranslations(payload.translations, '', sourceLanguage);
+      const unavailableTargets = Array.isArray(payload.unavailableTargets)
+        ? payload.unavailableTargets.map(normalizeLanguageCode).filter(language => availableTargets.includes(language))
+        : [];
+      unavailableTargets.forEach(language => feedbackTranslationRetryAfter.set(`${entry.id}:${language}`, Date.now() + 300000));
+      const current = (state.feedbacks || []).find(item => item.id === entry.id);
+      if (!current || current.text !== sourceText) return false;
+      current.lang = sourceLanguage;
+      current.translationSource = sourceText;
+      current.translations = normalizeFeedbackTranslations({ ...(current.translations || {}), ...translatedValues }, sourceText, sourceLanguage);
+      state.feedbacks = normalizeFeedbackCollection(state.feedbacks);
+      saveFeedbacksToStorage();
+      renderFeedbackList();
+      await pushToRemote();
+      return true;
+    } catch (error) {
+      availableTargets.forEach(language => feedbackTranslationRetryAfter.set(`${entry.id}:${language}`, Date.now() + 300000));
+      console.warn('Feedback translation unavailable:', error && error.message ? error.message : error);
+      return false;
+    }
+  })();
+  availableTargets.forEach(language => pendingFeedbackTranslations.set(`${entry.id}:${language}`, task));
+  task.finally(() => availableTargets.forEach(language => pendingFeedbackTranslations.delete(`${entry.id}:${language}`)));
+  return task;
 }
 
 function loadOwnedFeedbackIds() {
@@ -13203,11 +13342,11 @@ async function submitFeedback() {
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
   if (!text) {
-    showToast(getInlineText({ ko: '피드백 내용을 입력해주세요.', en: 'Please enter your feedback.', fr: 'Veuillez saisir votre avis.', zh: '请输入反馈内容。', ja: 'フィードバックを入力してください。', es: 'Escribe tu comentario.' }));
+    showToast(getText('feedback_required'));
     return;
   }
   if (!sharedFeedbackSelectedRating) {
-    showToast(getInlineText({ ko: '평점을 선택해주세요.', en: 'Please select a rating.', fr: 'Veuillez choisir une note.', zh: '请选择评分。', ja: '評価を選択してください。', es: 'Selecciona una puntuación.' }));
+    showToast(getText('feedback_rating_required'));
     return;
   }
   const entry = {
@@ -13216,7 +13355,9 @@ async function submitFeedback() {
     text: cleanUiText(text).slice(0, 500),
     rating: sharedFeedbackSelectedRating,
     timestamp: Date.now(),
-    lang: normalizeLanguageCode(state.lang)
+    lang: normalizeLanguageCode(state.lang),
+    translationSource: cleanUiText(text).slice(0, 500),
+    translations: { [normalizeLanguageCode(state.lang)]: cleanUiText(text).slice(0, 500) }
   };
   state.feedbacks = normalizeFeedbackCollection([entry, ...(state.feedbacks || [])]);
   saveFeedbacksToStorage();
@@ -13229,14 +13370,13 @@ async function submitFeedback() {
     sharedFeedbackSelectedRating = 0;
     updateFeedbackStarUI();
     renderFeedbackList();
+    requestFeedbackTranslations(entry, SUPPORTED_LANG_CODES);
   } else {
     state.feedbacks = state.feedbacks.filter(item => item.id !== entry.id);
     saveFeedbacksToStorage();
     renderFeedbackList();
   }
-  showToast(saved
-    ? getInlineText({ ko: '피드백이 등록되었습니다. 감사합니다!', en: 'Feedback submitted. Thank you!', fr: 'Avis envoyé. Merci !', zh: '反馈已提交，谢谢！', ja: 'フィードバックを送信しました。', es: 'Comentario enviado. ¡Gracias!' })
-    : getInlineText({ ko: '서버 저장에 실패했습니다. 다시 시도해주세요.', en: 'Could not save feedback to the server. Please try again.', fr: "Impossible d'enregistrer l'avis. Réessayez.", zh: '无法保存反馈，请重试。', ja: 'サーバーに保存できませんでした。', es: 'No se pudo guardar. Inténtalo de nuevo.' }));
+  showToast(getText(saved ? 'feedback_submitted' : 'feedback_submit_failed'));
 }
 
 function beginFeedbackEdit(feedbackId) {
@@ -13262,8 +13402,9 @@ async function saveFeedbackEdit(feedbackId) {
   const editor = document.querySelector(`[data-feedback-editor="${CSS.escape(id)}"]`);
   if (!original || !editor) return;
   const text = cleanUiText(editor.value.trim()).slice(0, 500);
-  if (!text) return showToast(getInlineText({ ko: '피드백 내용을 입력해주세요.', en: 'Please enter your feedback.', fr: 'Veuillez saisir votre avis.', zh: '请输入反馈内容。', ja: 'フィードバックを入力してください。', es: 'Escribe tu comentario.' }));
-  const updated = { ...original, text, updatedAt: Date.now() };
+  if (!text) return showToast(getText('feedback_required'));
+  const language = normalizeLanguageCode(state.lang);
+  const updated = { ...original, text, lang: language, translationSource: text, translations: { [language]: text }, updatedAt: Date.now() };
   pendingFeedbackEdits.set(id, updated);
   state.feedbacks = normalizeFeedbackCollection([updated, ...state.feedbacks.filter(entry => entry.id !== id)]);
   feedbackEditingId = null;
@@ -13277,6 +13418,7 @@ async function saveFeedbackEdit(feedbackId) {
   }
   renderFeedbackList();
   showToast(getText(saved ? 'feedback_updated' : 'feedback_update_failed'));
+  if (saved) requestFeedbackTranslations(updated, SUPPORTED_LANG_CODES);
 }
 
 async function deleteFeedback(feedbackId) {
@@ -13306,23 +13448,25 @@ function renderFeedbackList() {
   if (!container) return;
   const entries = normalizeFeedbackCollection(state.feedbacks);
   if (!entries.length) {
-    container.innerHTML = `<div class="feedback-empty">${escapeHtml(getInlineText({ ko: '아직 피드백이 없습니다.', en: 'No feedback yet.', fr: 'Aucun avis pour le moment.', zh: '暂无反馈。', ja: 'まだフィードバックはありません。', es: 'Aún no hay comentarios.' }))}</div>`;
+    container.innerHTML = `<div class="feedback-empty">${escapeHtml(getText('feedback_empty'))}</div>`;
     return;
   }
   container.innerHTML = entries.map(entry => {
     const id = escapeHtml(entry.id);
-    const dateText = new Date(entry.timestamp).toLocaleDateString(normalizeLanguageCode(state.lang));
+    const dateText = new Date(entry.timestamp).toLocaleDateString(getLanguageLocale(state.lang));
     const edited = entry.updatedAt ? `<span class="feedback-edited">${escapeHtml(getText('feedback_edited'))}</span>` : '';
     const stars = '★'.repeat(entry.rating) + '☆'.repeat(5 - entry.rating);
+    const displayText = getFeedbackDisplayText(entry);
+    const displayAuthor = getLocalizedFeedbackAuthor(entry);
     const editing = feedbackEditingId === entry.id && isOwnedFeedback(entry);
     const busy = pendingFeedbackEdits.has(entry.id) || pendingFeedbackDeletes.has(entry.id);
     const body = editing
       ? `<textarea class="form-control feedback-inline-editor" maxlength="500" data-feedback-editor="${id}">${escapeHtml(entry.text)}</textarea><div class="feedback-card-actions"><button type="button" class="feedback-action-btn feedback-save-btn" data-feedback-action="save" data-feedback-id="${id}">${escapeHtml(getText('feedback_save'))}</button><button type="button" class="feedback-action-btn" data-feedback-action="cancel" data-feedback-id="${id}">${escapeHtml(getText('feedback_cancel'))}</button></div>`
-      : `<div class="feedback-card-text">${escapeHtml(entry.text)}</div>`;
+      : `<div class="feedback-card-text" lang="${escapeHtml(normalizeLanguageCode(state.lang))}">${escapeHtml(displayText)}</div>`;
     const controls = !editing && !busy && isOwnedFeedback(entry)
       ? `<div class="feedback-card-actions"><button type="button" class="feedback-action-btn" data-feedback-action="edit" data-feedback-id="${id}">${escapeHtml(getText('feedback_edit'))}</button><button type="button" class="feedback-action-btn feedback-delete-btn" data-feedback-action="delete" data-feedback-id="${id}">${escapeHtml(getText('feedback_delete'))}</button></div>`
       : '';
-    return `<article class="feedback-card"><div class="feedback-card-header"><span class="feedback-author">${escapeHtml(entry.name)}</span><span class="feedback-date">${escapeHtml(dateText)} ${edited}</span></div><div class="feedback-card-stars" aria-label="${entry.rating}/5">${stars}</div>${body}${controls}</article>`;
+    return `<article class="feedback-card"><div class="feedback-card-header"><span class="feedback-author">${escapeHtml(displayAuthor)}</span><span class="feedback-date">${escapeHtml(dateText)} ${edited}</span></div><div class="feedback-card-stars" aria-label="${escapeHtml(getFeedbackRatingSummary(entry.rating))}">${stars}</div>${body}${controls}</article>`;
   }).join('');
 }
 

@@ -50,7 +50,18 @@ class MemoryD1 {
 }
 
 const origin = 'https://wandersync-travel-1779355803.surge.sh';
-const env = { DB: new MemoryD1(), ALLOWED_ORIGINS: `${origin},http://localhost:8000` };
+const aiCalls = [];
+const env = {
+  DB: new MemoryD1(),
+  ALLOWED_ORIGINS: `${origin},http://localhost:8000`,
+  AI: {
+    async run(model, input) {
+      aiCalls.push({ model, input });
+      const languageCodes = { korean: 'ko', english: 'en', french: 'fr', chinese: 'zh', japanese: 'ja', spanish: 'es' };
+      return { translated_text: `[${languageCodes[input.target_lang]}] ${input.text}` };
+    }
+  }
+};
 const futureDate = '2099-12-31';
 
 function request(path, options = {}) {
@@ -66,6 +77,50 @@ async function putState(state, mutation = {}) {
 
 const health = await request('/api/health');
 assert.equal(health.status, 200);
+
+const translationPreflight = await request('/api/translate', { method: 'OPTIONS' });
+assert.equal(translationPreflight.status, 204);
+assert.match(translationPreflight.headers.get('Access-Control-Allow-Methods') || '', /POST/);
+
+const translated = await request('/api/translate', {
+  method: 'POST',
+  body: JSON.stringify({ text: 'Great route planner', sourceLang: 'en', targetLangs: ['ko', 'fr'] })
+});
+assert.equal(translated.status, 200);
+const translatedBody = await translated.json();
+assert.deepEqual(translatedBody.translations, { en: 'Great route planner', ko: '[ko] Great route planner', fr: '[fr] Great route planner' });
+assert.equal(aiCalls.length, 2);
+assert.deepEqual(aiCalls.map(call => [call.input.source_lang, call.input.target_lang]), [['english', 'korean'], ['english', 'french']]);
+
+const invalidTranslation = await request('/api/translate', {
+  method: 'POST',
+  body: JSON.stringify({ text: '', sourceLang: 'en', targetLang: 'ko' })
+});
+assert.equal(invalidTranslation.status, 400);
+
+const unavailableTranslation = await handleRequest(new Request('https://api.example.test/api/translate', {
+  method: 'POST',
+  headers: { Origin: origin, 'Content-Type': 'application/json' },
+  body: JSON.stringify({ text: 'hello', sourceLang: 'en', targetLang: 'ko' })
+}), { DB: new MemoryD1(), ALLOWED_ORIGINS: origin });
+assert.equal(unavailableTranslation.status, 503);
+
+const inferenceUnavailable = await handleRequest(new Request('https://api.example.test/api/translate', {
+  method: 'POST',
+  headers: { Origin: origin, 'Content-Type': 'application/json' },
+  body: JSON.stringify({ text: 'hello', sourceLang: 'en', targetLang: 'ko' })
+}), {
+  DB: new MemoryD1(),
+  ALLOWED_ORIGINS: origin,
+  AI: { async run() { throw new Error('inference unavailable'); } }
+});
+assert.equal(inferenceUnavailable.status, 200);
+assert.deepEqual(await inferenceUnavailable.json(), {
+  ok: true,
+  sourceLang: 'en',
+  translations: { en: 'hello' },
+  unavailableTargets: ['ko']
+});
 
 const roomA = { id: 'room-a', date: futureDate, title: 'A', joinedUsers: ['A'], creator: { name: 'A' } };
 const roomB = { id: 'room-b', date: futureDate, title: 'B', joinedUsers: ['B'], creator: { name: 'B' } };
@@ -123,4 +178,4 @@ const oversized = await request('/api/state', {
 });
 assert.equal(oversized.status, 413);
 
-console.log('PASS Worker D1 API persistence, merge, deletion, expiry, legacy cleanup, CORS, and payload limits');
+console.log('PASS Worker D1 API persistence, translation, merge, deletion, expiry, legacy cleanup, CORS, and payload limits');

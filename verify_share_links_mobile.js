@@ -25,7 +25,7 @@ const checks = [
   ['feedback ownership remains browser local', files.app.includes("const OWNED_FEEDBACK_IDS_KEY = 'wander_feedback_owned_ids_v1'") && !/ownerId\s*:/.test(files.app)],
   ['owned feedback actions exist', files.app.includes('data-feedback-action="edit"') && files.app.includes('data-feedback-action="delete"')],
   ['in-flight feedback actions are hidden', files.app.includes('const busy = pendingFeedbackEdits.has(entry.id) || pendingFeedbackDeletes.has(entry.id)')],
-  ['feedback content is escaped', files.app.includes('${escapeHtml(entry.text)}') && files.app.includes('${escapeHtml(entry.name)}')],
+  ['feedback content is escaped', files.app.includes('${escapeHtml(displayText)}') && files.app.includes('${escapeHtml(displayAuthor)}') && files.app.includes('${escapeHtml(entry.text)}')],
   ['remote mutations carry deletion metadata', files.app.includes('deletedRoomIds: options.deletedRoomIds || []') && files.app.includes('deletedFeedbackIds: options.deletedFeedbackIds || []') && files.app.includes('replaceMembershipRoomIds: options.replaceMembershipRoomIds || []')],
   ['room IDs are normalized as opaque strings', files.app.includes('function normalizeRoomId(value)') && files.app.includes('normalized.id = normalizeRoomId(normalized.id);')],
   ['legacy numeric and server string room IDs compare consistently', files.app.includes('function roomIdsEqual(first, second)') && files.app.includes('roomIdsEqual(r.id, roomId)')],

@@ -4,6 +4,17 @@ const MAX_MESSAGES_PER_ROOM = 500;
 const MAX_FEEDBACKS = 1000;
 const MAX_CITY_REQUESTS = 500;
 const STATE_ID = 'global';
+const SUPPORTED_LANGUAGES = new Set(['ko', 'en', 'fr', 'zh', 'ja', 'es']);
+const MODEL_LANGUAGE_NAMES = {
+  ko: 'korean',
+  en: 'english',
+  fr: 'french',
+  zh: 'chinese',
+  ja: 'japanese',
+  es: 'spanish'
+};
+const MAX_TRANSLATION_TEXT_LENGTH = 500;
+const TRANSLATION_MODEL = '@cf/meta/m2m100-1.2b';
 
 const LEGACY_TEST_FEEDBACK_TEXTS = new Set([
   'anonymous-feedback-qa',
@@ -25,6 +36,24 @@ function cleanText(value, max = 5000) {
 
 function uniqueStrings(values, max = 100) {
   return Array.from(new Set((Array.isArray(values) ? values : []).map(value => cleanText(value, 120)).filter(Boolean))).slice(0, max);
+}
+
+function normalizeLanguage(value) {
+  const language = cleanText(value, 8).trim().toLowerCase();
+  return SUPPORTED_LANGUAGES.has(language) ? language : '';
+}
+
+function normalizeTranslations(value, sourceText = '', sourceLanguage = '') {
+  const translations = {};
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    Object.entries(value).forEach(([language, text]) => {
+      const normalizedLanguage = normalizeLanguage(language);
+      const normalizedText = cleanText(text, MAX_TRANSLATION_TEXT_LENGTH).trim();
+      if (normalizedLanguage && normalizedText) translations[normalizedLanguage] = normalizedText;
+    });
+  }
+  if (sourceLanguage && sourceText) translations[sourceLanguage] = sourceText;
+  return translations;
 }
 
 function emptyState() {
@@ -89,6 +118,7 @@ function normalizeFeedback(entry) {
   if (!entry || typeof entry !== 'object' || !entry.id) return null;
   const text = cleanText(entry.text, 500);
   if (LEGACY_TEST_FEEDBACK_TEXTS.has(text.trim().toLowerCase())) return null;
+  const language = normalizeLanguage(entry.lang) || 'en';
   return {
     ...entry,
     id: cleanText(entry.id, 160),
@@ -96,7 +126,14 @@ function normalizeFeedback(entry) {
     text,
     rating: Math.max(1, Math.min(5, Number(entry.rating) || 1)),
     timestamp: Number(entry.timestamp) || 0,
-    updatedAt: Number(entry.updatedAt) || 0
+    updatedAt: Number(entry.updatedAt) || 0,
+    lang: language,
+    translationSource: text,
+    translations: normalizeTranslations(
+      entry.translationSource && cleanText(entry.translationSource, MAX_TRANSLATION_TEXT_LENGTH) !== text ? {} : entry.translations,
+      text,
+      language
+    )
   };
 }
 
@@ -188,8 +225,29 @@ function mergeState(currentValue, incomingValue, mutation = {}, now = Date.now()
   deletedRoomIds.forEach(roomId => delete chatLogs[roomId]);
 
   const feedbacks = new Map();
-  [...current.feedbacks, ...incoming.feedbacks].forEach(entry => {
+  current.feedbacks.forEach(entry => {
     if (entry && entry.id && !deletedFeedbackIds.has(String(entry.id))) feedbacks.set(String(entry.id), entry);
+  });
+  incoming.feedbacks.forEach(entry => {
+    if (!entry || !entry.id || deletedFeedbackIds.has(String(entry.id))) return;
+    const id = String(entry.id);
+    const previous = feedbacks.get(id);
+    if (!previous) {
+      feedbacks.set(id, entry);
+      return;
+    }
+    const sameSource = cleanText(previous.text, MAX_TRANSLATION_TEXT_LENGTH) === cleanText(entry.text, MAX_TRANSLATION_TEXT_LENGTH);
+    const previousVersion = Number(previous.updatedAt) || Number(previous.timestamp) || 0;
+    const incomingVersion = Number(entry.updatedAt) || Number(entry.timestamp) || 0;
+    const preferred = incomingVersion >= previousVersion ? entry : previous;
+    feedbacks.set(id, {
+      ...previous,
+      ...entry,
+      ...preferred,
+      translations: sameSource
+        ? { ...(previous.translations || {}), ...(entry.translations || {}) }
+        : { ...(preferred.translations || {}) }
+    });
   });
   const cityRequests = new Map();
   [...current.cityRequests, ...incoming.cityRequests].forEach(request => {
@@ -217,7 +275,7 @@ function corsHeaders(request, env) {
   const origin = request.headers.get('Origin');
   const allowed = allowedOrigins(env);
   const headers = {
-    'Access-Control-Allow-Methods': 'GET,PUT,OPTIONS',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-Wandersync-Client, Cache-Control, Pragma, Expires',
     'Access-Control-Max-Age': '86400',
     'Cache-Control': 'no-store',
@@ -292,6 +350,46 @@ async function readJsonBody(request) {
   }
 }
 
+function getTranslatedText(result) {
+  if (!result || typeof result !== 'object') return '';
+  return cleanText(result.translated_text || result.translation || result.response || '', MAX_TRANSLATION_TEXT_LENGTH).trim();
+}
+
+async function translateText(env, text, sourceLanguage, targetLanguage) {
+  const result = await env.AI.run(TRANSLATION_MODEL, {
+    text,
+    source_lang: MODEL_LANGUAGE_NAMES[sourceLanguage],
+    target_lang: MODEL_LANGUAGE_NAMES[targetLanguage]
+  });
+  const translated = getTranslatedText(result);
+  if (!translated) throw new Error('Translation model returned no text.');
+  return translated;
+}
+
+async function handleTranslationRequest(request, env) {
+  if (!env.AI || typeof env.AI.run !== 'function') {
+    return { status: 503, body: { ok: false, error: 'Translation service is unavailable.' } };
+  }
+  const body = await readJsonBody(request);
+  const text = cleanText(body.text, MAX_TRANSLATION_TEXT_LENGTH + 1).trim();
+  const sourceLanguage = normalizeLanguage(body.sourceLang);
+  const requestedTargets = Array.isArray(body.targetLangs) ? body.targetLangs : [body.targetLang];
+  const targetLanguages = Array.from(new Set(requestedTargets.map(normalizeLanguage).filter(Boolean))).slice(0, 5);
+  if (!text || text.length > MAX_TRANSLATION_TEXT_LENGTH || !sourceLanguage || !targetLanguages.length) {
+    return { status: 400, body: { ok: false, error: 'Translation request is invalid.' } };
+  }
+  const targets = targetLanguages.filter(language => language !== sourceLanguage);
+  const translations = { [sourceLanguage]: text };
+  if (!targets.length) return { status: 200, body: { ok: true, sourceLang: sourceLanguage, translations } };
+  const results = await Promise.allSettled(targets.map(async language => [language, await translateText(env, text, sourceLanguage, language)]));
+  const unavailableTargets = [];
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') translations[result.value[0]] = result.value[1];
+    else unavailableTargets.push(targets[index]);
+  });
+  return { status: 200, body: { ok: true, sourceLang: sourceLanguage, translations, unavailableTargets } };
+}
+
 async function handleRequest(request, env) {
   if (!isOriginAllowed(request, env)) return jsonResponse(request, env, 403, { ok: false, error: 'Origin is not allowed.' });
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders(request, env) });
@@ -303,6 +401,15 @@ async function handleRequest(request, env) {
       return jsonResponse(request, env, 200, { ok: true, service: 'wandersync-companion-api', database: 'd1' });
     } catch (error) {
       return jsonResponse(request, env, 503, { ok: false, service: 'wandersync-companion-api', database: 'unavailable' });
+    }
+  }
+
+  if (url.pathname === '/api/translate' && request.method === 'POST') {
+    try {
+      const result = await handleTranslationRequest(request, env);
+      return jsonResponse(request, env, result.status, result.body);
+    } catch (error) {
+      return jsonResponse(request, env, error.statusCode || 500, { ok: false, error: error.message || 'Translation failed.' });
     }
   }
 
