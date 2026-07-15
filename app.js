@@ -1228,7 +1228,7 @@ const REMOTE_SYNC_ENABLED = Boolean(
   REMOTE_GET_URL && REMOTE_PUT_URL
 );
 const REMOTE_SYNC_TIMEOUT_MS = 8000;
-let remotePushQueue = Promise.resolve();
+let remoteSyncQueue = Promise.resolve();
 
 const WINDOWS_1252_BYTE_OVERRIDES = {
   0x20AC: 0x80, 0x201A: 0x82, 0x0192: 0x83, 0x201E: 0x84, 0x2026: 0x85,
@@ -2629,9 +2629,22 @@ function repairStateMojibake() {
   repairMojibakeDeep(state.savedCourses, 'savedCourses');
 }
 
+function normalizeRoomId(value) {
+  if (value === null || value === undefined) return null;
+  const normalized = String(value).trim();
+  return normalized || null;
+}
+
+function roomIdsEqual(first, second) {
+  const left = normalizeRoomId(first);
+  const right = normalizeRoomId(second);
+  return left !== null && right !== null && left === right;
+}
+
 function normalizeRoomRecord(room) {
   if (!room) return room;
   const normalized = repairMojibakeDeep({ ...room }, 'room');
+  normalized.id = normalizeRoomId(normalized.id);
   const members = Array.isArray(normalized.joinedUsers) ? [...normalized.joinedUsers] : [];
   const creatorName = normalized.creator && normalized.creator.name;
   if (creatorName && !members.includes(creatorName)) {
@@ -2915,7 +2928,14 @@ function mergeChatLogs(localLogs, remoteLogs) {
   return merged;
 }
 
-async function pullFromRemote() {
+function pullFromRemote() {
+  remoteSyncQueue = remoteSyncQueue
+    .catch(() => {})
+    .then(() => pullFromRemoteNow());
+  return remoteSyncQueue;
+}
+
+async function pullFromRemoteNow() {
   if (!REMOTE_SYNC_ENABLED) return false;
   try {
     const data = await fetchRemotePayload();
@@ -2938,7 +2958,7 @@ async function pullFromRemote() {
       
       // Auto-kick / room-deleted logic
       if (state.joinedRoomId !== null) {
-        const joinedRoom = state.rooms.find(r => r.id === state.joinedRoomId);
+        const joinedRoom = state.rooms.find(r => roomIdsEqual(r.id, state.joinedRoomId));
         if (!joinedRoom) {
           // Room was deleted
           state.joinedRoomId = null;
@@ -2971,10 +2991,10 @@ async function pullFromRemote() {
 }
 
 async function pushToRemote(options = {}) {
-  remotePushQueue = remotePushQueue
+  remoteSyncQueue = remoteSyncQueue
     .catch(() => {})
     .then(() => pushToRemoteNow(options));
-  return remotePushQueue;
+  return remoteSyncQueue;
 }
 
 async function pushToRemoteNow(options = {}) {
@@ -3673,7 +3693,7 @@ function loadFromLocalStorage() {
 
   const localJoinedRoom = safeGetLocalStorage('wander_joined_room_id');
   if (localJoinedRoom) {
-    state.joinedRoomId = parseInt(localJoinedRoom, 10) || null;
+    state.joinedRoomId = normalizeRoomId(localJoinedRoom);
   } else {
     state.joinedRoomId = null;
   }
@@ -7003,7 +7023,7 @@ function setupEventListeners() {
   document.getElementById('leaveChatRoomBtn').addEventListener('click', async () => {
     await pullFromRemote();
     const leavingRoomId = state.joinedRoomId;
-    const room = state.rooms.find(r => r.id === leavingRoomId);
+    const room = state.rooms.find(r => roomIdsEqual(r.id, leavingRoomId));
     if (room) {
       if (!room.joinedUsers) {
         room.joinedUsers = [room.creator.name];
@@ -7129,10 +7149,10 @@ function closeCreateModal() {
 }
 
 function openEditRoomModal(roomId) {
-  const room = state.rooms.find(r => r.id === roomId);
+  const room = state.rooms.find(r => roomIdsEqual(r.id, roomId));
   if (!room) return;
 
-  state.editingRoomId = roomId;
+  state.editingRoomId = normalizeRoomId(room.id);
 
   // Pre-fill fields with room's current data
   document.getElementById('modalRoomTitle').value = getLocalizedRoomField(room, 'title');
@@ -12487,24 +12507,24 @@ function renderCompanionRooms() {
 
     // Bind Join Room event
     card.querySelector('.join-chat-btn').addEventListener('click', (e) => {
-      const roomId = parseInt(e.currentTarget.getAttribute('data-room-id'), 10);
-      joinCompanionRoom(roomId);
+      const roomId = normalizeRoomId(e.currentTarget.getAttribute('data-room-id'));
+      if (roomId) joinCompanionRoom(roomId);
     });
 
     // Bind Edit Room event if creator
     if (isCreator) {
       card.querySelector('.edit-room-btn').addEventListener('click', (e) => {
         e.stopPropagation();
-        const roomId = parseInt(e.currentTarget.getAttribute('data-room-id'), 10);
-        openEditRoomModal(roomId);
+        const roomId = normalizeRoomId(e.currentTarget.getAttribute('data-room-id'));
+        if (roomId) openEditRoomModal(roomId);
       });
     }
 
     // Bind Delete Room event if creator
     if (isCreator) {
       card.querySelector('.delete-room-btn').addEventListener('click', (e) => {
-        const roomId = parseInt(e.currentTarget.getAttribute('data-room-id'), 10);
-        deleteCompanionRoom(roomId);
+        const roomId = normalizeRoomId(e.currentTarget.getAttribute('data-room-id'));
+        if (roomId) deleteCompanionRoom(roomId);
       });
     }
 
@@ -12515,8 +12535,9 @@ function renderCompanionRooms() {
 async function joinCompanionRoom(roomId) {
   syncProfileFromInputs(true);
   await pullFromRemote();
-  const room = state.rooms.find(r => r.id === roomId);
+  const room = state.rooms.find(r => roomIdsEqual(r.id, roomId));
   if (!room) return;
+  const canonicalRoomId = normalizeRoomId(room.id);
 
   // Initialize joinedUsers array if not present
   if (!room.joinedUsers) {
@@ -12535,10 +12556,10 @@ async function joinCompanionRoom(roomId) {
       // Add join notification to chat log
       const joinMsg = getRoomSystemMessage('joined', { name: state.activeProfile.name });
       
-      if (!state.chatLogs[roomId]) {
-        state.chatLogs[roomId] = [];
+      if (!state.chatLogs[canonicalRoomId]) {
+        state.chatLogs[canonicalRoomId] = [];
       }
-      state.chatLogs[roomId].push(createMessageObject({ text: joinMsg, system: true }));
+      state.chatLogs[canonicalRoomId].push(createMessageObject({ text: joinMsg, system: true }));
       await pushToRemote();
     } else {
       showToast(getText('room_full'));
@@ -12546,7 +12567,8 @@ async function joinCompanionRoom(roomId) {
     }
   }
 
-  state.joinedRoomId = roomId;
+  state.joinedRoomId = canonicalRoomId;
+  saveToLocalStorage();
 
   // Switch view to chat page
   state.currentView = 'chat';
@@ -12590,7 +12612,7 @@ async function createCompanionRoom(e) {
 
   // ── EDIT MODE ──
   if (state.editingRoomId !== null) {
-    const room = state.rooms.find(r => r.id === state.editingRoomId);
+    const room = state.rooms.find(r => roomIdsEqual(r.id, state.editingRoomId));
     if (room && room.creator.name === state.activeProfile.name) {
       room[roomTitleKey] = title;
       if (roomLang === 'ko') {
@@ -12621,7 +12643,7 @@ async function createCompanionRoom(e) {
       }
 
       const updateSaved = await pushToRemote();
-      const updatedRoomExists = state.rooms.some(candidate => candidate.id === room.id);
+      const updatedRoomExists = state.rooms.some(candidate => roomIdsEqual(candidate.id, room.id));
       if (!updateSaved || !updatedRoomExists) {
         showToast(getText('room_update_failed'));
         return;
@@ -12634,7 +12656,7 @@ async function createCompanionRoom(e) {
     return;
   }
 
-  const newRoomId = Date.now() + Math.floor(Math.random() * 1000);
+  const newRoomId = String(Date.now() + Math.floor(Math.random() * 1000));
   const creatorProfile = getPublicProfileSnapshot();
   const newRoom = {
     id: newRoomId,
@@ -12689,9 +12711,9 @@ async function createCompanionRoom(e) {
   saveToLocalStorage();
 
   const createSaved = await pushToRemote();
-  const createdRoom = state.rooms.find(room => room.id === newRoomId);
+  const createdRoom = state.rooms.find(room => roomIdsEqual(room.id, newRoomId));
   if (!createSaved || !createdRoom) {
-    state.rooms = state.rooms.filter(room => room.id !== newRoomId);
+    state.rooms = state.rooms.filter(room => !roomIdsEqual(room.id, newRoomId));
     delete state.chatLogs[newRoomId];
     saveToLocalStorage();
     showToast(getText('room_create_failed'));
@@ -12723,7 +12745,7 @@ async function deleteCompanionRoom(roomId) {
 
   await pullFromRemote();
 
-  state.rooms = state.rooms.filter(r => r.id !== roomId);
+  state.rooms = state.rooms.filter(r => !roomIdsEqual(r.id, roomId));
   if (state.chatLogs[roomId]) {
     delete state.chatLogs[roomId];
   }
@@ -12736,7 +12758,7 @@ async function deleteCompanionRoom(roomId) {
 
 // --- Live Chat Room Simulation ---
 function renderChatRoom() {
-  const room = state.rooms.find(r => r.id === state.joinedRoomId);
+  const room = state.rooms.find(r => roomIdsEqual(r.id, state.joinedRoomId));
   if (!room) return;
 
   const shareBtn = document.getElementById('chatShareCourseBtn');
@@ -12973,7 +12995,7 @@ function triggerSimulatedReply(userText) {
   responses.forEach(resp => {
     setTimeout(async () => {
       // Check if user is still in the same room
-      if (state.joinedRoomId !== roomId) return;
+      if (!roomIdsEqual(state.joinedRoomId, roomId)) return;
 
       const replyText = state.lang === 'ko' ? resp.message_ko : localizeRuntimeText(resp.message_en);
       
@@ -12993,7 +13015,7 @@ function triggerSimulatedReply(userText) {
       await pushToRemote();
       
       // If we are currently viewing this chat room, re-render
-      if (state.currentView === 'chat' && state.joinedRoomId === roomId) {
+      if (state.currentView === 'chat' && roomIdsEqual(state.joinedRoomId, roomId)) {
         renderChatMessages();
       }
     }, resp.delay);
@@ -13014,7 +13036,7 @@ async function kickMember(username) {
   if (!confirm(confirmMsg)) return;
 
   await pullFromRemote();
-  const room = state.rooms.find(r => r.id === state.joinedRoomId);
+  const room = state.rooms.find(r => roomIdsEqual(r.id, state.joinedRoomId));
   if (!room) return;
 
   // Only creator can kick

@@ -7,7 +7,7 @@ Define durable, cross-user storage and operational behavior for companion rooms 
 ## Requirements
 
 ### Requirement: Companion state is shared across users
-The production backend SHALL persist active companion rooms, chat messages, feedback, and city requests in durable shared storage.
+The production backend SHALL persist active companion rooms, chat messages, feedback, and city requests in durable shared storage. Room identifiers SHALL be treated as opaque canonical strings at client storage and interaction boundaries while remaining compatible with legacy numeric identifiers.
 
 #### Scenario: Room created by one traveler is visible to another
 - **WHEN** one browser creates a valid future-dated companion room
@@ -16,6 +16,14 @@ The production backend SHALL persist active companion rooms, chat messages, feed
 #### Scenario: Message is visible to another room member
 - **WHEN** a traveler sends a message to a shared room
 - **THEN** another browser retrieving shared state SHALL receive the message exactly once
+
+#### Scenario: Traveler enters a server-loaded room
+- **WHEN** the room list is refreshed from the shared backend and a traveler selects an active room
+- **THEN** the client SHALL resolve the server-provided string identifier and open that room's chat view from that single action even when a background refresh is pending
+
+#### Scenario: Legacy numeric room remains actionable
+- **WHEN** a browser restores a previously stored numeric room identifier
+- **THEN** join, edit, delete, leave, and membership operations SHALL match the equivalent canonical string identifier
 
 ### Requirement: Shared writes preserve unrelated changes
 The backend SHALL merge records by stable identifiers and SHALL honor explicit deletion and membership-replacement metadata.
