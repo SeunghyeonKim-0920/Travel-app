@@ -18,7 +18,8 @@ const TRANSLATION_MODEL = '@cf/meta/m2m100-1.2b';
 
 const LEGACY_TEST_FEEDBACK_TEXTS = new Set([
   'anonymous-feedback-qa',
-  'mobile feedback verification'
+  'mobile feedback verification',
+  'qfqgeeg'
 ]);
 const LEGACY_TEST_ROOM_IDS = new Set(['1', '2', '3', '4', '5']);
 const LEGACY_TEST_ROOM_TITLE_PREFIXES = [

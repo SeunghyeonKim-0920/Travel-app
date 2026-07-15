@@ -2555,7 +2555,8 @@ const LEGACY_TEST_FEEDBACK_IDS = new Set([
 
 const LEGACY_TEST_FEEDBACK_TEXTS = new Set([
   'anonymous-feedback-qa',
-  'mobile feedback verification'
+  'mobile feedback verification',
+  'qfqgeeg'
 ]);
 
 function isLegacyTestFeedback(entry) {
