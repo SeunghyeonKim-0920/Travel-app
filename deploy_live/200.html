@@ -513,6 +513,11 @@
             <span data-i18n="profile_save">프로필 저장하기</span>
           </button>
         </form>
+        <section class="blocked-participants" aria-labelledby="blockedParticipantsTitle">
+          <h3 id="blockedParticipantsTitle" data-i18n="blocked_participants_title">Blocked participants</h3>
+          <p data-i18n="blocked_participants_desc">Blocked participants and their content are hidden on this device.</p>
+          <div id="blockedParticipantsList"></div>
+        </section>
         <nav class="store-legal-links" data-i18n-aria-label="legal_links_label" aria-label="법적 고지 및 지원">
           <a href="privacy.html" target="_blank" rel="noopener" data-i18n="privacy_policy">개인정보처리방침</a>
           <a href="support.html" target="_blank" rel="noopener" data-i18n="support_center">지원 센터</a>
@@ -567,6 +572,36 @@
     </section>
 
   </main>
+
+  <div class="modal-overlay" id="reportContentModal" role="dialog" aria-modal="true" aria-labelledby="reportContentTitle">
+    <div class="modal-content moderation-modal">
+      <div class="modal-header">
+        <h3 id="reportContentTitle" data-i18n="report_content_title">Report content</h3>
+        <button type="button" class="modal-close" id="closeReportContentBtn" data-i18n-aria-label="modal_cancel" aria-label="Cancel">&times;</button>
+      </div>
+      <form id="reportContentForm">
+        <div class="form-group">
+          <label class="form-label" for="reportReason" data-i18n="report_reason_label">Reason</label>
+          <select class="form-control" id="reportReason" required>
+            <option value="safety" data-i18n="report_reason_safety">Safety concern</option>
+            <option value="harassment" data-i18n="report_reason_harassment">Harassment</option>
+            <option value="spam" data-i18n="report_reason_spam">Spam</option>
+            <option value="fraud" data-i18n="report_reason_fraud">Fraud or money request</option>
+            <option value="inappropriate" data-i18n="report_reason_inappropriate">Inappropriate content</option>
+            <option value="other" data-i18n="report_reason_other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reportDetails" data-i18n="report_details_label">Additional details (optional)</label>
+          <textarea class="form-control" id="reportDetails" maxlength="1000" rows="4"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancelReportContentBtn" data-i18n="modal_cancel">Cancel</button>
+          <button type="submit" class="btn-primary" data-i18n="report_submit">Submit report</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- CREATE COMPANION ROOM MODAL -->
   <div class="modal-overlay" id="createRoomModal">

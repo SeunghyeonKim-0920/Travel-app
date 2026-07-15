@@ -23,6 +23,16 @@ class MemoryStatement {
   }
 
   async run() {
+    if (/INSERT INTO moderation_reports/i.test(this.sql)) {
+      this.db.reports.push({
+        id: this.values[0],
+        reportType: this.values[1],
+        targetId: this.values[2],
+        reporterClientId: this.values[7],
+        reason: this.values[8]
+      });
+      return { meta: { changes: 1 } };
+    }
     if (/INSERT OR IGNORE/i.test(this.sql)) {
       if (this.db.row) return { meta: { changes: 0 } };
       const [, payload, revision] = this.values;
@@ -42,6 +52,7 @@ class MemoryStatement {
 class MemoryD1 {
   constructor() {
     this.row = null;
+    this.reports = [];
   }
 
   prepare(sql) {
@@ -97,6 +108,41 @@ const invalidTranslation = await request('/api/translate', {
   body: JSON.stringify({ text: '', sourceLang: 'en', targetLang: 'ko' })
 });
 assert.equal(invalidTranslation.status, 400);
+
+const report = await request('/api/reports', {
+  method: 'POST',
+  body: JSON.stringify({
+    reportType: 'message',
+    targetId: 'message-1',
+    roomId: 'room-a',
+    messageId: 'message-1',
+    reportedClientId: 'client-b',
+    reportedName: 'Traveler B',
+    reporterClientId: 'client-a',
+    reason: 'harassment',
+    details: 'Repeated unwanted contact',
+    evidence: { text: 'sample message' }
+  })
+});
+assert.equal(report.status, 201);
+const reportBody = await report.json();
+assert.equal(reportBody.ok, true);
+assert.match(reportBody.reportId, /^[0-9a-f-]{36}$/i);
+assert.equal(env.DB.reports.length, 1);
+assert.deepEqual(env.DB.reports[0], {
+  id: reportBody.reportId,
+  reportType: 'message',
+  targetId: 'message-1',
+  reporterClientId: 'client-a',
+  reason: 'harassment'
+});
+
+const invalidReport = await request('/api/reports', {
+  method: 'POST',
+  body: JSON.stringify({ reportType: 'message', targetId: 'message-1', reporterClientId: 'client-a', reason: 'invalid' })
+});
+assert.equal(invalidReport.status, 400);
+assert.equal((await request('/api/reports')).status, 404);
 
 const unavailableTranslation = await handleRequest(new Request('https://api.example.test/api/translate', {
   method: 'POST',
@@ -178,4 +224,4 @@ const oversized = await request('/api/state', {
 });
 assert.equal(oversized.status, 413);
 
-console.log('PASS Worker D1 API persistence, translation, merge, deletion, expiry, legacy cleanup, CORS, and payload limits');
+console.log('PASS Worker D1 API persistence, translation, moderation reports, merge, deletion, expiry, legacy cleanup, CORS, and payload limits');

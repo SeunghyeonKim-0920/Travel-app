@@ -15,6 +15,8 @@ const MODEL_LANGUAGE_NAMES = {
 };
 const MAX_TRANSLATION_TEXT_LENGTH = 500;
 const TRANSLATION_MODEL = '@cf/meta/m2m100-1.2b';
+const REPORT_TYPES = new Set(['room', 'member', 'message']);
+const REPORT_REASONS = new Set(['safety', 'harassment', 'spam', 'fraud', 'inappropriate', 'other']);
 
 const LEGACY_TEST_FEEDBACK_TEXTS = new Set([
   'anonymous-feedback-qa',
@@ -391,6 +393,47 @@ async function handleTranslationRequest(request, env) {
   return { status: 200, body: { ok: true, sourceLang: sourceLanguage, translations, unavailableTargets } };
 }
 
+async function handleReportRequest(request, env) {
+  const body = await readJsonBody(request);
+  const reportType = cleanText(body.reportType, 20).trim().toLowerCase();
+  const reason = cleanText(body.reason, 30).trim().toLowerCase();
+  const targetId = cleanText(body.targetId, 160).trim();
+  const reporterClientId = cleanText(body.reporterClientId, 160).trim();
+  const details = cleanText(body.details, 1000).trim();
+  if (!REPORT_TYPES.has(reportType) || !REPORT_REASONS.has(reason) || !targetId || !reporterClientId) {
+    return { status: 400, body: { ok: false, error: 'Report payload is invalid.' } };
+  }
+  const reportId = crypto.randomUUID();
+  const createdAt = new Date().toISOString();
+  const evidence = body.evidence && typeof body.evidence === 'object' && !Array.isArray(body.evidence)
+    ? {
+        title: cleanText(body.evidence.title, 240),
+        text: cleanText(body.evidence.text, 1000)
+      }
+    : {};
+  await env.DB.prepare(`INSERT INTO moderation_reports (
+    id, report_type, target_id, room_id, message_id, reported_client_id,
+    reported_name, reporter_client_id, reason, details, evidence_json,
+    status, created_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open', ?)`)
+    .bind(
+      reportId,
+      reportType,
+      targetId,
+      cleanText(body.roomId, 160).trim() || null,
+      cleanText(body.messageId, 160).trim() || null,
+      cleanText(body.reportedClientId, 160).trim() || null,
+      cleanText(body.reportedName, 120).trim() || null,
+      reporterClientId,
+      reason,
+      details || null,
+      JSON.stringify(evidence),
+      createdAt
+    )
+    .run();
+  return { status: 201, body: { ok: true, reportId } };
+}
+
 async function handleRequest(request, env) {
   if (!isOriginAllowed(request, env)) return jsonResponse(request, env, 403, { ok: false, error: 'Origin is not allowed.' });
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders(request, env) });
@@ -411,6 +454,15 @@ async function handleRequest(request, env) {
       return jsonResponse(request, env, result.status, result.body);
     } catch (error) {
       return jsonResponse(request, env, error.statusCode || 500, { ok: false, error: error.message || 'Translation failed.' });
+    }
+  }
+
+  if (url.pathname === '/api/reports' && request.method === 'POST') {
+    try {
+      const result = await handleReportRequest(request, env);
+      return jsonResponse(request, env, result.status, result.body);
+    } catch (error) {
+      return jsonResponse(request, env, error.statusCode || 500, { ok: false, error: error.message || 'Report submission failed.' });
     }
   }
 

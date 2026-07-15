@@ -1226,6 +1226,9 @@ const REMOTE_GET_URL = String(REMOTE_SYNC_CONFIG.getUrl || '');
 const REMOTE_PUT_URL = String(REMOTE_SYNC_CONFIG.putUrl || '');
 const PUBLIC_API_BASE_URL = String((typeof window !== 'undefined' && window.WANDERSYNC_API_BASE) || '').replace(/\/$/, '');
 const FEEDBACK_TRANSLATION_URL = PUBLIC_API_BASE_URL ? `${PUBLIC_API_BASE_URL}/api/translate` : '';
+const MODERATION_REPORT_URL = PUBLIC_API_BASE_URL ? `${PUBLIC_API_BASE_URL}/api/reports` : '';
+const CLIENT_ID_STORAGE_KEY = 'wander_client_id_v1';
+const BLOCKED_PARTICIPANTS_STORAGE_KEY = 'wander_blocked_companion_ids_v1';
 const REMOTE_SYNC_ENABLED = Boolean(
   REMOTE_GET_URL && REMOTE_PUT_URL
 );
@@ -1472,6 +1475,17 @@ function applyEnhancedTranslations() {
     es: { privacy_policy: 'Pol\u00EDtica de privacidad', support_center: 'Centro de ayuda', legal_links_label: 'Enlaces legales y de ayuda' }
   };
   Object.entries(storeLanguagePatches).forEach(([lang, patch]) => {
+    TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
+  });
+  const moderationLanguagePatches = {
+    ko: { report: '\uC2E0\uACE0', block: '\uCC28\uB2E8', unblock: '\uCC28\uB2E8 \uD574\uC81C', report_content_title: '\uCF58\uD150\uCE20 \uC2E0\uACE0', report_reason_label: '\uC2E0\uACE0 \uC0AC\uC720', report_reason_safety: '\uC548\uC804 \uC6B0\uB824', report_reason_harassment: '\uAD34\uB86D\uD798', report_reason_spam: '\uC2A4\uD338', report_reason_fraud: '\uC0AC\uAE30 \uB610\uB294 \uAE08\uC804 \uC694\uAD6C', report_reason_inappropriate: '\uBD80\uC801\uC808\uD55C \uCF58\uD150\uCE20', report_reason_other: '\uAE30\uD0C0', report_details_label: '\uCD94\uAC00 \uC124\uBA85 (\uC120\uD0DD)', report_submit: '\uC2E0\uACE0 \uC811\uC218', report_success: '\uC2E0\uACE0\uAC00 \uC811\uC218\uB418\uC5C8\uC2B5\uB2C8\uB2E4.', report_error: '\uC2E0\uACE0\uB97C \uC811\uC218\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694.', block_confirm: '{name}\uB2D8\uC744 \uCC28\uB2E8\uD558\uBA74 \uC774 \uAE30\uAE30\uC5D0\uC11C \uBC29\uACFC \uBA54\uC2DC\uC9C0\uAC00 \uC228\uACA8\uC9D1\uB2C8\uB2E4. \uCC28\uB2E8\uD560\uAE4C\uC694?', blocked_success: '{name}\uB2D8\uC744 \uCC28\uB2E8\uD588\uC2B5\uB2C8\uB2E4.', blocked_participants_title: '\uCC28\uB2E8\uD55C \uCC38\uC5EC\uC790', blocked_participants_desc: '\uCC28\uB2E8\uD55C \uCC38\uC5EC\uC790\uC640 \uCF58\uD150\uCE20\uB294 \uC774 \uAE30\uAE30\uC5D0\uC11C \uC228\uACA8\uC9D1\uB2C8\uB2E4.', blocked_participants_empty: '\uCC28\uB2E8\uD55C \uCC38\uC5EC\uC790\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.' },
+    en: { report: 'Report', block: 'Block', unblock: 'Unblock', report_content_title: 'Report content', report_reason_label: 'Reason', report_reason_safety: 'Safety concern', report_reason_harassment: 'Harassment', report_reason_spam: 'Spam', report_reason_fraud: 'Fraud or money request', report_reason_inappropriate: 'Inappropriate content', report_reason_other: 'Other', report_details_label: 'Additional details (optional)', report_submit: 'Submit report', report_success: 'Your report was submitted.', report_error: 'Could not submit the report. Please try again.', block_confirm: 'Block {name}? Their rooms and messages will be hidden on this device.', blocked_success: '{name} was blocked.', blocked_participants_title: 'Blocked participants', blocked_participants_desc: 'Blocked participants and their content are hidden on this device.', blocked_participants_empty: 'No blocked participants.' },
+    fr: { report: 'Signaler', block: 'Bloquer', unblock: 'D\u00E9bloquer', report_content_title: 'Signaler le contenu', report_reason_label: 'Motif', report_reason_safety: 'Probl\u00E8me de s\u00E9curit\u00E9', report_reason_harassment: 'Harc\u00E8lement', report_reason_spam: 'Spam', report_reason_fraud: "Fraude ou demande d'argent", report_reason_inappropriate: 'Contenu inappropri\u00E9', report_reason_other: 'Autre', report_details_label: 'D\u00E9tails suppl\u00E9mentaires (facultatif)', report_submit: 'Envoyer le signalement', report_success: 'Votre signalement a \u00E9t\u00E9 envoy\u00E9.', report_error: "Impossible d'envoyer le signalement. R\u00E9essayez.", block_confirm: 'Bloquer {name} ? Ses salles et messages seront masqu\u00E9s sur cet appareil.', blocked_success: '{name} a \u00E9t\u00E9 bloqu\u00E9.', blocked_participants_title: 'Participants bloqu\u00E9s', blocked_participants_desc: 'Les participants bloqu\u00E9s et leur contenu sont masqu\u00E9s sur cet appareil.', blocked_participants_empty: 'Aucun participant bloqu\u00E9.' },
+    zh: { report: '\u4E3E\u62A5', block: '\u5C4F\u853D', unblock: '\u53D6\u6D88\u5C4F\u853D', report_content_title: '\u4E3E\u62A5\u5185\u5BB9', report_reason_label: '\u539F\u56E0', report_reason_safety: '\u5B89\u5168\u95EE\u9898', report_reason_harassment: '\u9A9A\u6270', report_reason_spam: '\u5783\u573E\u4FE1\u606F', report_reason_fraud: '\u8BC8\u9A97\u6216\u91D1\u94B1\u8981\u6C42', report_reason_inappropriate: '\u4E0D\u5F53\u5185\u5BB9', report_reason_other: '\u5176\u4ED6', report_details_label: '\u8865\u5145\u8BF4\u660E\uFF08\u53EF\u9009\uFF09', report_submit: '\u63D0\u4EA4\u4E3E\u62A5', report_success: '\u4E3E\u62A5\u5DF2\u63D0\u4EA4\u3002', report_error: '\u65E0\u6CD5\u63D0\u4EA4\u4E3E\u62A5\uFF0C\u8BF7\u91CD\u8BD5\u3002', block_confirm: '\u5C4F\u853D{name}\uFF1F\u5176\u623F\u95F4\u548C\u6D88\u606F\u5C06\u5728\u6B64\u8BBE\u5907\u4E0A\u9690\u85CF\u3002', blocked_success: '\u5DF2\u5C4F\u853D{name}\u3002', blocked_participants_title: '\u5DF2\u5C4F\u853D\u7684\u53C2\u4E0E\u8005', blocked_participants_desc: '\u5DF2\u5C4F\u853D\u7684\u53C2\u4E0E\u8005\u53CA\u5176\u5185\u5BB9\u5C06\u5728\u6B64\u8BBE\u5907\u4E0A\u9690\u85CF\u3002', blocked_participants_empty: '\u6CA1\u6709\u5DF2\u5C4F\u853D\u7684\u53C2\u4E0E\u8005\u3002' },
+    ja: { report: '\u901A\u5831', block: '\u30D6\u30ED\u30C3\u30AF', unblock: '\u30D6\u30ED\u30C3\u30AF\u89E3\u9664', report_content_title: '\u30B3\u30F3\u30C6\u30F3\u30C4\u3092\u901A\u5831', report_reason_label: '\u7406\u7531', report_reason_safety: '\u5B89\u5168\u4E0A\u306E\u61F8\u5FF5', report_reason_harassment: '\u5ACC\u304C\u3089\u305B', report_reason_spam: '\u30B9\u30D1\u30E0', report_reason_fraud: '\u8A50\u6B3A\u307E\u305F\u306F\u91D1\u92AD\u8981\u6C42', report_reason_inappropriate: '\u4E0D\u9069\u5207\u306A\u30B3\u30F3\u30C6\u30F3\u30C4', report_reason_other: '\u305D\u306E\u4ED6', report_details_label: '\u8FFD\u52A0\u8AAC\u660E\uFF08\u4EFB\u610F\uFF09', report_submit: '\u901A\u5831\u3092\u9001\u4FE1', report_success: '\u901A\u5831\u3092\u53D7\u3051\u4ED8\u3051\u307E\u3057\u305F\u3002', report_error: '\u901A\u5831\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F\u3002\u3082\u3046\u4E00\u5EA6\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002', block_confirm: '{name}\u3092\u30D6\u30ED\u30C3\u30AF\u3057\u307E\u3059\u304B\uFF1F\u3053\u306E\u7AEF\u672B\u3067\u30EB\u30FC\u30E0\u3068\u30E1\u30C3\u30BB\u30FC\u30B8\u304C\u975E\u8868\u793A\u306B\u306A\u308A\u307E\u3059\u3002', blocked_success: '{name}\u3092\u30D6\u30ED\u30C3\u30AF\u3057\u307E\u3057\u305F\u3002', blocked_participants_title: '\u30D6\u30ED\u30C3\u30AF\u4E2D\u306E\u53C2\u52A0\u8005', blocked_participants_desc: '\u30D6\u30ED\u30C3\u30AF\u4E2D\u306E\u53C2\u52A0\u8005\u3068\u30B3\u30F3\u30C6\u30F3\u30C4\u306F\u3053\u306E\u7AEF\u672B\u3067\u975E\u8868\u793A\u306B\u306A\u308A\u307E\u3059\u3002', blocked_participants_empty: '\u30D6\u30ED\u30C3\u30AF\u4E2D\u306E\u53C2\u52A0\u8005\u306F\u3044\u307E\u305B\u3093\u3002' },
+    es: { report: 'Denunciar', block: 'Bloquear', unblock: 'Desbloquear', report_content_title: 'Denunciar contenido', report_reason_label: 'Motivo', report_reason_safety: 'Problema de seguridad', report_reason_harassment: 'Acoso', report_reason_spam: 'Spam', report_reason_fraud: 'Fraude o solicitud de dinero', report_reason_inappropriate: 'Contenido inapropiado', report_reason_other: 'Otro', report_details_label: 'Detalles adicionales (opcional)', report_submit: 'Enviar denuncia', report_success: 'Tu denuncia fue enviada.', report_error: 'No se pudo enviar la denuncia. Int\u00E9ntalo de nuevo.', block_confirm: '\u00BFBloquear a {name}? Sus salas y mensajes se ocultar\u00E1n en este dispositivo.', blocked_success: '{name} fue bloqueado.', blocked_participants_title: 'Participantes bloqueados', blocked_participants_desc: 'Los participantes bloqueados y su contenido se ocultan en este dispositivo.', blocked_participants_empty: 'No hay participantes bloqueados.' }
+  };
+  Object.entries(moderationLanguagePatches).forEach(([lang, patch]) => {
     TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
   });
   Object.keys(TRANSLATIONS).forEach(lang => {
@@ -2647,6 +2661,7 @@ function normalizeFeedbackCollection(entries) {
 function getPublicProfileSnapshot(profile = state.activeProfile) {
   const p = profile || {};
   return {
+    clientId: p.clientId || (p === state.activeProfile ? getClientId() : ''),
     name: repairMojibakeText(p.name || ''),
     ageRange: p.ageRange || p.age || '30s',
     gender: repairMojibakeText(p.gender || ''),
@@ -2949,11 +2964,12 @@ function safeRenderRouteOptimizerTab() {
 }
 
 // --- Message Helper ---
-function createMessageObject({ sender, mbti, text, system = false }) {
+function createMessageObject({ sender, senderId, mbti, text, system = false }) {
   return {
     id: Math.random().toString(36).substring(2, 11) + '-' + Date.now(),
     timestamp: Date.now(),
     system,
+    senderId: system ? '' : cleanUiText(senderId || (sender === state.activeProfile.name ? getClientId() : '')),
     sender: cleanUiText(sender || ''),
     mbti: cleanUiText(mbti || ''),
     text: cleanUiText(text || '')
@@ -6861,6 +6877,25 @@ function syncProfileFromInputs(propagateToRemote = false) {
 
 // --- Event Listeners Setup ---
 function setupEventListeners() {
+  document.getElementById('closeReportContentBtn')?.addEventListener('click', closeReportDialog);
+  document.getElementById('cancelReportContentBtn')?.addEventListener('click', closeReportDialog);
+  document.getElementById('reportContentModal')?.addEventListener('click', event => {
+    if (event.target === event.currentTarget) closeReportDialog();
+  });
+  document.getElementById('reportContentForm')?.addEventListener('submit', async event => {
+    event.preventDefault();
+    const submitButton = event.currentTarget.querySelector('[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
+    try {
+      await submitModerationReport();
+    } catch (error) {
+      console.error('Moderation report failed:', error);
+      showToast(getText('report_error'));
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+    }
+  });
+
   const langControl = document.getElementById('langToggle');
   if (langControl) {
     const applyLanguageChange = (nextLang) => {
@@ -7292,6 +7327,10 @@ function updateView() {
 
   if (state.currentView === 'planner' && state.activeCourse) {
     syncPlannerControlsFromCourse(state.activeCourse);
+  }
+
+  if (state.currentView === 'profile') {
+    renderBlockedParticipants();
   }
 
   saveToLocalStorage();
@@ -9264,6 +9303,109 @@ function getAttractionCoords(item, preferredCityId) {
     y: Math.max(-90, Math.min(90, targetCluster.y + jitterY)),
     coordinateSource: 'estimated-cluster'
   };
+}
+
+function getClientId() {
+  let clientId = safeGetLocalStorage(CLIENT_ID_STORAGE_KEY) || '';
+  if (!/^[a-z0-9-]{16,}$/i.test(clientId)) {
+    clientId = typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : `client-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+    safeSetLocalStorage(CLIENT_ID_STORAGE_KEY, clientId);
+  }
+  return clientId;
+}
+
+function getParticipantBlockToken(participant = {}) {
+  const clientId = cleanUiText(participant.clientId || participant.senderId || '').trim();
+  if (clientId) return `id:${clientId}`;
+  const name = cleanUiText(participant.name || participant.sender || '').trim().normalize('NFKC').toLowerCase();
+  return name ? `name:${name}` : '';
+}
+
+function getBlockedParticipantEntries() {
+  const value = safeGetStoredJson(BLOCKED_PARTICIPANTS_STORAGE_KEY, []);
+  return Array.isArray(value)
+    ? value.filter(entry => entry && typeof entry === 'object' && typeof entry.token === 'string')
+    : [];
+}
+
+function isParticipantBlocked(participant) {
+  const token = getParticipantBlockToken(participant);
+  return Boolean(token && getBlockedParticipantEntries().some(entry => entry.token === token));
+}
+
+function blockParticipant(participant) {
+  const token = getParticipantBlockToken(participant);
+  if (!token || isParticipantBlocked(participant)) return;
+  const name = cleanUiText(participant.name || participant.sender || '') || getText('member_no_info');
+  if (!window.confirm(getText('block_confirm').replace('{name}', name))) return;
+  const entries = getBlockedParticipantEntries();
+  entries.push({ token, name, blockedAt: Date.now() });
+  safeSetLocalStorage(BLOCKED_PARTICIPANTS_STORAGE_KEY, JSON.stringify(entries));
+  renderBlockedParticipants();
+  renderCompanionRooms();
+  if (state.currentView === 'chat') renderChatRoom();
+  showToast(getText('blocked_success').replace('{name}', name));
+}
+
+function renderBlockedParticipants() {
+  const container = document.getElementById('blockedParticipantsList');
+  if (!container) return;
+  const entries = getBlockedParticipantEntries();
+  container.innerHTML = '';
+  if (!entries.length) {
+    container.innerHTML = `<p class="blocked-participants-empty">${escapeHtml(getText('blocked_participants_empty'))}</p>`;
+    return;
+  }
+  entries.forEach(entry => {
+    const row = document.createElement('div');
+    row.className = 'blocked-participant-row';
+    row.innerHTML = `<span>${escapeHtml(entry.name || entry.token)}</span><button type="button" class="moderation-action-btn">${escapeHtml(getText('unblock'))}</button>`;
+    row.querySelector('button').addEventListener('click', () => {
+      safeSetLocalStorage(BLOCKED_PARTICIPANTS_STORAGE_KEY, JSON.stringify(getBlockedParticipantEntries().filter(item => item.token !== entry.token)));
+      renderBlockedParticipants();
+      renderCompanionRooms();
+      if (state.currentView === 'chat') renderChatRoom();
+    });
+    container.appendChild(row);
+  });
+}
+
+let pendingReportTarget = null;
+
+function openReportDialog(target) {
+  pendingReportTarget = target;
+  const modal = document.getElementById('reportContentModal');
+  if (!modal) return;
+  document.getElementById('reportDetails').value = '';
+  document.getElementById('reportReason').value = 'safety';
+  modal.classList.add('active');
+  document.body.classList.add('modal-open');
+  document.getElementById('reportReason').focus();
+}
+
+function closeReportDialog() {
+  pendingReportTarget = null;
+  document.getElementById('reportContentModal')?.classList.remove('active');
+  document.body.classList.remove('modal-open');
+}
+
+async function submitModerationReport() {
+  if (!pendingReportTarget || !MODERATION_REPORT_URL) throw new Error('Moderation API is unavailable.');
+  const response = await fetchWithTimeout(MODERATION_REPORT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Wandersync-Client': getClientId() },
+    body: JSON.stringify({
+      ...pendingReportTarget,
+      reporterClientId: getClientId(),
+      reason: document.getElementById('reportReason').value,
+      details: document.getElementById('reportDetails').value.trim()
+    })
+  });
+  if (!response.ok) throw new Error(`Report request failed (${response.status})`);
+  closeReportDialog();
+  showToast(getText('report_success'));
 }
 
 function getQuadrant(item) {
@@ -12489,6 +12631,7 @@ function renderCompanionRooms() {
 
   // Filter rooms
   const filtered = state.rooms.filter(room => {
+    if (isParticipantBlocked(room.creator || {})) return false;
     if (categoryFilter === 'all') return true;
     return room.category === categoryFilter;
   });
@@ -12531,9 +12674,12 @@ function renderCompanionRooms() {
       `;
     } else {
       actionButtonsHTML = `
-        <button class="btn-primary join-chat-btn" data-room-id="${room.id}" style="width: 100%; justify-content: center; padding: 10px;">
-          <span data-i18n="comp_room_joined">${getText('comp_room_join_btn')}</span>
-        </button>
+        <div class="room-actions-grid">
+          <button class="btn-primary join-chat-btn" data-room-id="${room.id}" style="flex: 1; justify-content: center; padding: 10px;">
+            <span data-i18n="comp_room_joined">${getText('comp_room_join_btn')}</span>
+          </button>
+          <button type="button" class="moderation-action-btn report-room-btn">${getText('report')}</button>
+        </div>
       `;
     }
 
@@ -12578,6 +12724,11 @@ function renderCompanionRooms() {
     card.querySelector('.join-chat-btn').addEventListener('click', (e) => {
       const roomId = normalizeRoomId(e.currentTarget.getAttribute('data-room-id'));
       if (roomId) joinCompanionRoom(roomId);
+    });
+
+    card.querySelector('.report-room-btn')?.addEventListener('click', event => {
+      event.stopPropagation();
+      openReportDialog({ reportType: 'room', targetId: String(room.id), roomId: String(room.id), reportedClientId: room.creator?.clientId || '', reportedName: room.creator?.name || '', evidence: { title, text: desc } });
     });
 
     // Bind Edit Room event if creator
@@ -12878,7 +13029,7 @@ function renderChatRoom() {
 
   const isCreator = room.creator.name === state.activeProfile.name;
 
-  membersList.forEach(m => {
+  membersList.filter(member => !isParticipantBlocked(member)).forEach(m => {
     const isMe = m.name === state.activeProfile.name;
     const isRoomCreator = m.name === room.creator.name;
     const showKick = isCreator && !isMe && !isRoomCreator;
@@ -12887,6 +13038,11 @@ function renderChatRoom() {
       <button class="kick-member-btn" data-username="${m.name}" title="${getText('kick_member')}">
         <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
       </button>` : '';
+    const moderationButtons = !isMe ? `
+      <div class="moderation-actions">
+        <button type="button" class="moderation-action-btn report-member-btn">${getText('report')}</button>
+        <button type="button" class="moderation-action-btn block-member-btn">${getText('block')}</button>
+      </div>` : '';
 
     const memberItem = document.createElement('div');
     memberItem.className = 'member-item';
@@ -12898,6 +13054,7 @@ function renderChatRoom() {
       </div>
       <span class="mbti">${escapeHtml(m.mbti || '')}</span>
       ${kickBtn}
+      ${moderationButtons}
     `;
 
     if (showKick) {
@@ -12906,6 +13063,10 @@ function renderChatRoom() {
       });
     }
 
+    memberItem.querySelector('.report-member-btn')?.addEventListener('click', () => {
+      openReportDialog({ reportType: 'member', targetId: m.clientId || m.name, roomId: String(room.id), reportedClientId: m.clientId || '', reportedName: m.name || '', evidence: { title: getLocalizedRoomField(room, 'title') } });
+    });
+    memberItem.querySelector('.block-member-btn')?.addEventListener('click', () => blockParticipant(m));
     membersContainer.appendChild(memberItem);
   });
 
@@ -12925,14 +13086,16 @@ function renderChatMessages(forceScrollToBottom = false) {
   container.innerHTML = '';
 
   const logs = state.chatLogs[state.joinedRoomId] || [];
+  const room = state.rooms.find(item => roomIdsEqual(item.id, state.joinedRoomId));
 
-  logs.forEach(log => {
+  logs.filter(log => log.system || !isParticipantBlocked(log)).forEach(log => {
     if (log.system) {
       container.insertAdjacentHTML('beforeend', `<div class="chat-msg-system">${escapeHtml(localizeRuntimeText(cleanUiText(log.text)))}</div>`);
     } else if (log.type === 'share_course') {
       const isMe = log.sender === state.activeProfile.name;
       const bubbleClass = isMe ? 'outgoing' : 'incoming';
       const senderText = isMe ? '' : `<span class="chat-msg-sender">${log.sender} (${log.mbti})</span>`;
+      const moderationActions = isMe ? '' : `<div class="moderation-actions"><button type="button" class="moderation-action-btn report-message-btn" data-message-id="${escapeHtml(log.id)}">${getText('report')}</button><button type="button" class="moderation-action-btn block-message-sender-btn" data-message-id="${escapeHtml(log.id)}">${getText('block')}</button></div>`;
       
       const course = normalizeCourseMetadata(log.course);
       const cardId = `chat-card-${log.id}`;
@@ -12962,6 +13125,7 @@ function renderChatMessages(forceScrollToBottom = false) {
               <button class="chat-msg-card-btn" id="${cardId}">${localizeRuntimeText('Load Itinerary')}</button>
             </div>
           </div>
+          ${moderationActions}
         </div>
       `;
       container.insertAdjacentHTML('beforeend', cardHTML);
@@ -13006,15 +13170,45 @@ function renderChatMessages(forceScrollToBottom = false) {
       const isMe = log.sender === state.activeProfile.name;
       const bubbleClass = isMe ? 'outgoing' : 'incoming';
       const senderText = isMe ? '' : `<span class="chat-msg-sender">${log.sender} (${log.mbti})</span>`;
+      const moderationActions = isMe ? '' : `<div class="moderation-actions"><button type="button" class="moderation-action-btn report-message-btn" data-message-id="${escapeHtml(log.id)}">${getText('report')}</button><button type="button" class="moderation-action-btn block-message-sender-btn" data-message-id="${escapeHtml(log.id)}">${getText('block')}</button></div>`;
 
       const msgHTML = `
         <div class="chat-msg-bubble ${bubbleClass}">
           ${senderText}
           <div class="chat-msg-text">${escapeHtml(cleanUiText(log.text))}</div>
+          ${moderationActions}
         </div>
       `;
       container.insertAdjacentHTML('beforeend', msgHTML);
     }
+  });
+
+  const participantForMessage = log => ({
+    ...(room?.memberProfiles?.[log.sender] || {}),
+    name: log.sender,
+    clientId: log.senderId || room?.memberProfiles?.[log.sender]?.clientId || ''
+  });
+  container.querySelectorAll('.report-message-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const log = logs.find(item => String(item.id) === button.dataset.messageId);
+      if (!log) return;
+      const participant = participantForMessage(log);
+      openReportDialog({
+        reportType: 'message',
+        targetId: String(log.id),
+        roomId: String(state.joinedRoomId),
+        messageId: String(log.id),
+        reportedClientId: participant.clientId,
+        reportedName: participant.name,
+        evidence: { title: getLocalizedRoomField(room || {}, 'title'), text: cleanUiText(log.text) }
+      });
+    });
+  });
+  container.querySelectorAll('.block-message-sender-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const log = logs.find(item => String(item.id) === button.dataset.messageId);
+      if (log) blockParticipant(participantForMessage(log));
+    });
   });
 
   // Only scroll to bottom if: user was near the bottom OR we're forcing it (e.g. new message sent by user)
@@ -13225,6 +13419,7 @@ function requestFeedbackTranslations(entry, requestedLanguages) {
       console.warn('Feedback translation unavailable:', error && error.message ? error.message : error);
       return false;
     }
+
   })();
   availableTargets.forEach(language => pendingFeedbackTranslations.set(`${entry.id}:${language}`, task));
   task.finally(() => availableTargets.forEach(language => pendingFeedbackTranslations.delete(`${entry.id}:${language}`)));
@@ -13310,6 +13505,7 @@ function normalizeInterlakenRegionalDays(course) {
         lunchInserted = true;
       }
     });
+
     if (!lunchInserted) ordered.splice(Math.min(2, ordered.length), 0, lunch);
     ordered.push(dinner);
     if (endLodging) ordered.push(endLodging);

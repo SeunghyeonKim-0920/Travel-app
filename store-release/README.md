@@ -17,10 +17,13 @@ This directory is the handoff package for the first Android and iOS store releas
 
 ```powershell
 npm.cmd run mobile:prepare
+npm.cmd run mobile:android:debug
 npm.cmd run mobile:android:bundle
 npm.cmd run mobile:open:ios
 ```
 
-Android release signing requires a private upload keystore configured outside Git. iOS archive and signing require macOS, Xcode, an Apple Developer account, and an App Store Connect record. Confirm the permanent application ID, developer/legal name, support email, and privacy declarations before the first signed upload.
+The Android runner discovers the user-local JDK and SDK automatically. For `bundleRelease`, it reads signing values from `%USERPROFILE%\.triptogether\signing\android-signing.env` or from `TRIPTOGETHER_SIGNING_ENV`; the keystore and passwords must never be committed. Back up the upload key in an owner-controlled encrypted location before the first Play Console upload.
+
+iOS archive and signing require macOS, Xcode, an active Apple Developer membership, an App Store Connect record, owner authentication, and completed legal/privacy declarations. The GitHub Actions simulator build proves source compilation only and does not represent a signed App Store archive.
 
 See `environment-verification.md` for the verified checks and current workstation build blockers.

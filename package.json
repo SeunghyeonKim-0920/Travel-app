@@ -6,7 +6,7 @@
     "test:providers": "node verify_route_providers.js",
     "test:worker": "node verify_worker_api.mjs",
     "backend:dev": "wrangler dev",
-    "backend:deploy": "wrangler deploy && wrangler d1 migrations apply DB --remote",
+    "backend:deploy": "wrangler d1 migrations apply DB --remote && wrangler deploy",
     "mobile:legal": "node scripts/sync-store-pages.mjs",
     "mobile:bridge": "node scripts/build-native-bridge.mjs",
     "mobile:web": "npm run mobile:legal && npm run mobile:bridge",

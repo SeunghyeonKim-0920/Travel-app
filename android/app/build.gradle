@@ -1,8 +1,29 @@
 apply plugin: 'com.android.application'
 
+def releaseSigningValues = [
+    storePath: System.getenv('TRIPTOGETHER_KEYSTORE_PATH'),
+    storePassword: System.getenv('TRIPTOGETHER_KEYSTORE_PASSWORD'),
+    keyAlias: System.getenv('TRIPTOGETHER_KEY_ALIAS'),
+    keyPassword: System.getenv('TRIPTOGETHER_KEY_PASSWORD')
+]
+def hasReleaseSigning = releaseSigningValues.every { key, value -> value != null && !value.trim().isEmpty() }
+if (System.getenv('TRIPTOGETHER_REQUIRE_SIGNING') == 'true' && !hasReleaseSigning) {
+    throw new GradleException('Signed release requested, but TRIPTOGETHER_KEYSTORE_PATH, TRIPTOGETHER_KEYSTORE_PASSWORD, TRIPTOGETHER_KEY_ALIAS, and TRIPTOGETHER_KEY_PASSWORD are required.')
+}
+
 android {
     namespace = "com.triptogether.travel"
     compileSdk = rootProject.ext.compileSdkVersion
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                storeFile file(releaseSigningValues.storePath)
+                storePassword releaseSigningValues.storePassword
+                keyAlias releaseSigningValues.keyAlias
+                keyPassword releaseSigningValues.keyPassword
+            }
+        }
+    }
     defaultConfig {
         applicationId "com.triptogether.travel"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -20,6 +41,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }
