@@ -1463,6 +1463,17 @@ function applyEnhancedTranslations() {
   Object.entries(feedbackActionLanguagePatches).forEach(([lang, patch]) => {
     TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
   });
+  const storeLanguagePatches = {
+    ko: { privacy_policy: '\uAC1C\uC778\uC815\uBCF4\uCC98\uB9AC\uBC29\uCE68', support_center: '\uC9C0\uC6D0 \uC13C\uD130', legal_links_label: '\uBC95\uC801 \uACE0\uC9C0 \uBC0F \uC9C0\uC6D0' },
+    en: { privacy_policy: 'Privacy Policy', support_center: 'Support Center', legal_links_label: 'Legal and support links' },
+    fr: { privacy_policy: 'Politique de confidentialit\u00E9', support_center: "Centre d'assistance", legal_links_label: 'Liens juridiques et assistance' },
+    zh: { privacy_policy: '\u9690\u79C1\u653F\u7B56', support_center: '\u5E2E\u52A9\u4E2D\u5FC3', legal_links_label: '\u6CD5\u5F8B\u4E0E\u5E2E\u52A9\u94FE\u63A5' },
+    ja: { privacy_policy: '\u30D7\u30E9\u30A4\u30D0\u30B7\u30FC\u30DD\u30EA\u30B7\u30FC', support_center: '\u30B5\u30DD\u30FC\u30C8', legal_links_label: '\u6CD5\u7684\u60C5\u5831\u3068\u30B5\u30DD\u30FC\u30C8' },
+    es: { privacy_policy: 'Pol\u00EDtica de privacidad', support_center: 'Centro de ayuda', legal_links_label: 'Enlaces legales y de ayuda' }
+  };
+  Object.entries(storeLanguagePatches).forEach(([lang, patch]) => {
+    TRANSLATIONS[lang] = { ...(TRANSLATIONS[lang] || {}), ...patch };
+  });
   Object.keys(TRANSLATIONS).forEach(lang => {
     const table = TRANSLATIONS[lang];
     if (!table || typeof table !== 'object') return;

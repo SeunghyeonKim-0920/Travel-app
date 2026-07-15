@@ -1,0 +1,36 @@
+{
+  "appId": "com.triptogether.travel",
+  "appName": "TripTogether",
+  "webDir": "deploy_live",
+  "loggingBehavior": "none",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#F7FBFF",
+    "webContentsDebuggingEnabled": false
+  },
+  "ios": {
+    "backgroundColor": "#F7FBFF",
+    "contentInset": "automatic",
+    "scheme": "TripTogether"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "launchShowDuration": 1400,
+      "launchFadeOutDuration": 250,
+      "backgroundColor": "#F7FBFF",
+      "showSpinner": false,
+      "androidScaleType": "CENTER_CROP",
+      "splashFullScreen": true,
+      "splashImmersive": false
+    },
+    "StatusBar": {
+      "overlaysWebView": false,
+      "style": "DARK",
+      "backgroundColor": "#FFFFFF"
+    }
+  }
+}

@@ -6,13 +6,42 @@
     "test:providers": "node verify_route_providers.js",
     "test:worker": "node verify_worker_api.mjs",
     "backend:dev": "wrangler dev",
-    "backend:deploy": "wrangler deploy && wrangler d1 migrations apply DB --remote"
+    "backend:deploy": "wrangler deploy && wrangler d1 migrations apply DB --remote",
+    "mobile:legal": "node scripts/sync-store-pages.mjs",
+    "mobile:bridge": "node scripts/build-native-bridge.mjs",
+    "mobile:web": "npm run mobile:legal && npm run mobile:bridge",
+    "mobile:assets": "capacitor-assets generate --android --ios --assetPath resources --iconBackgroundColor #F7FBFF --iconBackgroundColorDark #F7FBFF --splashBackgroundColor #F7FBFF --splashBackgroundColorDark #F7FBFF",
+    "mobile:sync": "npm run mobile:web && cap sync",
+    "mobile:sync:android": "npm run mobile:web && cap sync android",
+    "mobile:sync:ios": "npm run mobile:web && cap sync ios",
+    "mobile:open:android": "cap open android",
+    "mobile:open:ios": "cap open ios",
+    "mobile:doctor": "cap doctor",
+    "mobile:verify": "node scripts/verify-mobile-release.mjs",
+    "mobile:prepare": "npm run mobile:sync && npm run mobile:verify",
+    "mobile:android:debug": "node scripts/run-android-gradle.mjs assembleDebug",
+    "mobile:android:bundle": "node scripts/run-android-gradle.mjs bundleRelease"
   },
   "devDependencies": {
-    "surge": "^0.27.4",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.4.2",
+    "esbuild": "^0.28.1",
+    "surge": "^0.31.1",
     "wrangler": "^4.45.0"
   },
   "dependencies": {
+    "@capacitor/android": "^8.4.2",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.4.2",
+    "@capacitor/ios": "^8.4.2",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3",
     "pako": "^2.1.0"
+  },
+  "allowScripts": {
+    "sharp@0.32.6": true,
+    "sharp@0.34.5": true,
+    "esbuild@0.28.1": true,
+    "workerd@1.20260708.1": true
   }
 }

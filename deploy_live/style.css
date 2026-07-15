@@ -4362,3 +4362,20 @@ body.theme-postcard-pop .feedback-card:hover {
     border-width: 1px 0 0;
   }
 }
+/* Store review and user support links */
+.store-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-color);
+}
+.store-legal-links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+}
