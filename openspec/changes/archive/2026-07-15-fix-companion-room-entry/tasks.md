@@ -8,4 +8,4 @@
 
 - [x] 2.1 Run frontend, backend, localization, mobile, and data regression tests.
 - [x] 2.2 Deploy Surge and verify live room creation, entry, chat rendering, and test-room cleanup with Playwright.
-- [ ] 2.3 Sync/archive the OpenSpec change and commit/push only scoped files.
+- [x] 2.3 Sync/archive the OpenSpec change and commit/push only scoped files.
